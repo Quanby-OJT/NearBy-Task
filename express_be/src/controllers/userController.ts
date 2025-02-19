@@ -1,0 +1,68 @@
+// controllers/userController.ts
+import { Request, Response } from "express";
+import { User } from "../models/userModel";
+import bcrypt from "bcrypt";
+import { createClient } from "@supabase/supabase-js";
+import { config } from "../config/configuration"; 
+
+const supabase = createClient(config.SUPABASE_URL as string, config.SUPABASE_KEY as string);
+
+class UserController {
+  static async registerUser(req: Request, res: Response): Promise<void> {
+    try {
+      const { first_name, last_name, email, password } = req.body;
+      const imageFile = req.file; // Get uploaded image
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      let imageUrl = "";
+      if (imageFile) {
+        // Upload image to Supabase Storage (crud_bucket)
+        const { data, error } = await supabase.storage
+          .from("crud_bucket")
+          .upload(`users/${Date.now()}_${imageFile.originalname}`, imageFile.buffer, {
+            cacheControl: "3600",
+            upsert: false
+          });
+      
+        if (error) throw new Error(error.message);
+      
+        const { data: publicUrlData } = supabase.storage
+          .from("crud_bucket")
+          .getPublicUrl(data.path);
+      
+        imageUrl = publicUrlData.publicUrl;
+      }
+
+      // Insert user into Supabase database
+      const newUser = await User.create({
+        first_name,
+        last_name,
+        email,
+        password: hashedPassword,
+        image: imageUrl,
+      });
+
+      res.status(201).json({ message: "User registered successfully!", user: newUser });
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  }
+
+  static async getAllUsers(req: Request, res: Response): Promise<void> {
+    try {
+      const { data, error } = await supabase.from("demo").select(); // Adjust table name
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(200).json({ users: data });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  }
+}
+
+export default UserController;
