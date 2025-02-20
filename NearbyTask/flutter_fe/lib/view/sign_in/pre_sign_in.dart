@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/view/sign_in/sign_in.dart';
 
 class PreSignIn extends StatefulWidget {
   const PreSignIn({super.key});
@@ -45,7 +46,12 @@ class _PreSignInState extends State<PreSignIn> {
               padding: EdgeInsets.symmetric(horizontal: 50),
               margin: EdgeInsets.only(bottom: 10, top: 40),
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return SignIn();
+                    }));
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF0272B1),
                       shape: RoundedRectangleBorder(
