@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/view/service_acc/home_page.dart';
+import 'package:flutter_fe/view/service_acc/schedule_management_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class ServiceAccMain extends StatefulWidget {
@@ -29,7 +30,7 @@ class _ServiceAccMainState extends State<ServiceAccMain> {
             _currentIndex = index;
           });
         },
-        children: [HomePage()],
+        children: [HomePage(), ScheduleManagement()],
       ),
       bottomNavigationBar: Container(
         height: 70,
