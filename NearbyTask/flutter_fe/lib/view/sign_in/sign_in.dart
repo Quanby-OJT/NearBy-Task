@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/view/sign_in/sign_up_service_acc.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -109,7 +110,12 @@ class _SignInState extends State<SignIn> {
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return SignUpServiceAcc();
+                      }));
+                    },
                     child: Text(
                       textAlign: TextAlign.right,
                       'Create new account',
