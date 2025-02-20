@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/view/service_acc/service_acc_main_page.dart';
-import 'package:flutter_fe/view/sign_in/sign_up_service_acc.dart';
+import 'package:flutter_fe/view/sign_in/sign_up.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -119,7 +119,7 @@ class _SignInState extends State<SignIn> {
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return SignUpServiceAcc();
+                        return SignUp();
                       }));
                     },
                     child: Text(

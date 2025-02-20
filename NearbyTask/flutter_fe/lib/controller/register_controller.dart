@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../model/user_model.dart';
 import '../service/api_service.dart';
@@ -11,12 +13,12 @@ class RegisterController {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-  Uint8List? imageData; // Store image bytes
+  File? imageData; // Store image bytes
   String? imageName; // Store image name
   // Fetched user inputs End
 
   // Byte for the image start
-  void setImage(Uint8List image, String name) {
+  void setImage(File image, String name) {
     imageData = image;
     imageName = name;
   }
