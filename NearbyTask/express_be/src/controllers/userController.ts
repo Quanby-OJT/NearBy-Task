@@ -2,11 +2,7 @@
 import { Request, Response } from "express";
 import { User } from "../models/userModel";
 import bcrypt from "bcrypt";
-import { createClient } from "@supabase/supabase-js";
-import { config } from "../config/configuration"; 
-
-const supabase = createClient(config.SUPABASE_URL as string, config.SUPABASE_KEY as string);
-
+import {supabase} from "../config/configuration"; 
 class UserController {
   static async registerUser(req: Request, res: Response): Promise<void> {
     try {
@@ -48,6 +44,10 @@ class UserController {
     } catch (error) {
       res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
     }
+  }
+
+  static async create(req: Request, res: Response): Promise <void> {
+      
   }
 
   static async getAllUsers(req: Request, res: Response): Promise<void> {
