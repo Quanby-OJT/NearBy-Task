@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { TableFilterService } from '../../services/table-filter.service';
+import { UserTableFilterService } from 'src/services/user-table-filter';
 
 @Component({
   selector: 'app-table-action',
@@ -8,8 +8,8 @@ import { TableFilterService } from '../../services/table-filter.service';
   templateUrl: './table-action.component.html',
   styleUrl: './table-action.component.css',
 })
-export class TableActionComponent {
-  constructor(public filterService: TableFilterService) {}
+export class UserTableActionComponent {
+  constructor(public filterService: UserTableFilterService) {}
 
   onSearchChange(value: Event) {
     const input = value.target as HTMLInputElement;

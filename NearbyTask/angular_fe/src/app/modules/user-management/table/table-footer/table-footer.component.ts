@@ -7,4 +7,4 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
   templateUrl: './table-footer.component.html',
   styleUrl: './table-footer.component.css',
 })
-export class TableFooterComponent {}
+export class UserTableFooterComponent {}

@@ -7,7 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
   templateUrl: './table-header.component.html',
   styleUrl: './table-header.component.css',
 })
-export class TableHeaderComponent {
+export class UserTableHeaderComponent {
   @Output() onCheck = new EventEmitter<boolean>();
 
   public toggle(event: Event) {

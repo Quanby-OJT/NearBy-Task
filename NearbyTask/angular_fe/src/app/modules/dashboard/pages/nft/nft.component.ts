@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NftAuctionsTableComponent } from '../../components/nft/task-table/nft-auctions-table.component';
 import { RevenueChart } from '../../components/nft/nft-chart-card/nft-chart-card.component';
-import { NftDualCardComponent } from '../../components/nft/nft-dual-card/nft-dual-card.component';
 import { NftHeaderComponent } from '../../components/nft/header/nft-header.component';
 import { NftSingleCardComponent } from '../../components/nft/single-card/nft-single-card.component';
 import { Nft } from '../../models/nft';
@@ -12,7 +11,6 @@ import { UserChartCardComponent } from '../../components/nft/user-chart-card/use
   templateUrl: './nft.component.html',
   imports: [
     NftHeaderComponent,
-    NftDualCardComponent,
     NftSingleCardComponent,
     RevenueChart,
     NftAuctionsTableComponent,
