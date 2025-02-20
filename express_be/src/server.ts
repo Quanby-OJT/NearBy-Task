@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import cors from "cors";
-import { config } from "./config/configuration";
-import userRoutes from "./routes/userRoutes";  // Import user routes
+import { port } from "./config/configuration";
+import server from "./routes/apiRoutes"
 
 const app: Application = express();
 
@@ -10,10 +10,10 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/connect", userRoutes);
+app.use("/connect", server);
 
 // Start server
-const PORT = config.PORT || 5000;
+const PORT = port || 1000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
