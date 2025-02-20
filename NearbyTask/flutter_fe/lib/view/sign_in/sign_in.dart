@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/view/service_acc/service_acc_main_page.dart';
 import 'package:flutter_fe/view/sign_in/sign_up_service_acc.dart';
 
 class SignIn extends StatefulWidget {
@@ -96,7 +97,12 @@ class _SignInState extends State<SignIn> {
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return ServiceAccMain();
+                      }));
+                    },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF0272B1),
                         shape: RoundedRectangleBorder(
