@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/view/welcome_page/welcome_page_view_main.dart';
 import 'view/register_view.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RegisterView(),
+      home: WelcomePageViewMain(),
     );
   }
 }

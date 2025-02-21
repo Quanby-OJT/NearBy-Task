@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
@@ -49,7 +51,7 @@ class _RegisterViewState extends State<RegisterView> {
         _selectedImage = result.files.single.bytes; // Store image bytes
         _imageName = result.files.single.name; // Store file name
         _controller.setImage(
-            _selectedImage!, _imageName!); // Pass image to controller
+            _selectedImage! as File, _imageName!); // Pass image to controller
       });
     }
   }
