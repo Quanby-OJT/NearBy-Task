@@ -1,19 +1,20 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_fe/view/sign_in/sign_in.dart';
+import 'package:flutter_fe/view/sign_in_business_acc/sign_in_business_acc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_fe/controller/register_controller.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignUpBusinessAcc extends StatefulWidget {
+  const SignUpBusinessAcc({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<SignUpBusinessAcc> createState() => _SignUpBusinessAccState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpBusinessAccState extends State<SignUpBusinessAcc> {
   int currentStep = 0;
 
   final RegisterController _controller = RegisterController();
@@ -47,7 +48,7 @@ class _SignUpState extends State<SignUp> {
           child: Column(
             children: [
               Text(
-                'Create Service Account',
+                'Create Business Account',
                 style: TextStyle(
                     color: const Color(0xFF0272B1),
                     fontSize: 30,
@@ -136,7 +137,7 @@ class _SignUpState extends State<SignUp> {
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return SignIn();
+                      return SignInBusinessAcc();
                     }));
                   },
                   child: Text(
