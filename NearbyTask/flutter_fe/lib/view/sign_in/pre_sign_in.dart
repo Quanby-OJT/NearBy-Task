@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/view/sign_in/sign_in.dart';
+import 'package:flutter_fe/view/sign_in_business_acc/sign_in_business_acc.dart';
 
 class PreSignIn extends StatefulWidget {
   const PreSignIn({super.key});
@@ -67,7 +68,12 @@ class _PreSignInState extends State<PreSignIn> {
               padding: EdgeInsets.symmetric(horizontal: 60),
               margin: EdgeInsets.only(bottom: 100),
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return SignInBusinessAcc();
+                    }));
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF0272B1),
                       shape: RoundedRectangleBorder(

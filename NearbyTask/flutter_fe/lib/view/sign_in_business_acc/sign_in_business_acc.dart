@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fe/view/service_acc/service_acc_main_page.dart';
-import 'package:flutter_fe/view/sign_in/sign_up.dart';
+import 'package:flutter_fe/view/business_acc/business_acc_main_page.dart';
+import 'package:flutter_fe/view/sign_in_business_acc/sign_up_business_acc.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+class SignInBusinessAcc extends StatefulWidget {
+  const SignInBusinessAcc({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignInBusinessAcc> createState() => _SignInBusinessAccState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignInBusinessAccState extends State<SignInBusinessAcc> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +24,7 @@ class _SignInState extends State<SignIn> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Service Account',
+                'Business Account',
                 style: TextStyle(
                     color: const Color(0xFF0272B1),
                     fontSize: 30,
@@ -100,7 +100,7 @@ class _SignInState extends State<SignIn> {
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return ServiceAccMain();
+                        return BusinessAccMain();
                       }));
                     },
                     style: ElevatedButton.styleFrom(
@@ -119,7 +119,7 @@ class _SignInState extends State<SignIn> {
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return SignUp();
+                        return SignUpBusinessAcc();
                       }));
                     },
                     child: Text(
