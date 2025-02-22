@@ -5,6 +5,8 @@ import 'package:flutter_fe/view/service_acc/schedule_management_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class BusinessAccMain extends StatefulWidget {
+  const BusinessAccMain({super.key});
+
   @override
   _BusinessAccMainState createState() => _BusinessAccMainState();
 }
@@ -33,7 +35,7 @@ class _BusinessAccMainState extends State<BusinessAccMain> {
         },
         children: [HomePage(), JobPostPage()],
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 70,
         child: GNav(
           selectedIndex: _currentIndex,

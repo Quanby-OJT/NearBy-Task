@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../model/user_model.dart';
 import '../service/api_service.dart';
-import 'dart:typed_data';
 
 class RegisterController {
   // Fetched user inputs Start

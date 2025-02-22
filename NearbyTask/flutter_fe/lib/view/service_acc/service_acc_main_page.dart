@@ -4,6 +4,8 @@ import 'package:flutter_fe/view/service_acc/schedule_management_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class ServiceAccMain extends StatefulWidget {
+  const ServiceAccMain({super.key});
+
   @override
   _ServiceAccMainState createState() => _ServiceAccMainState();
 }
@@ -32,7 +34,7 @@ class _ServiceAccMainState extends State<ServiceAccMain> {
         },
         children: [HomePage(), ScheduleManagement()],
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 70,
         child: GNav(
           selectedIndex: _currentIndex,

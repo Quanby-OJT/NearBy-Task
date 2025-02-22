@@ -13,7 +13,7 @@ app.use(express.json());
 app.use("/connect", server);
 
 // Start server
-const PORT = port || 1000;
+const PORT = port || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

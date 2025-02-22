@@ -63,7 +63,7 @@ class _SignUpBusinessAccState extends State<SignUpBusinessAcc> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 550,
                 child: Theme(
                   data: Theme.of(context).copyWith(
