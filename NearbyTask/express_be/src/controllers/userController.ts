@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import { User } from "../models/userModel";
 import bcrypt from "bcrypt";
-import {supabase} from "../config/configuration"; 
+import { supabase } from "../config/configuration";
 class UserController {
   static async registerUser(req: Request, res: Response): Promise<void> {
     try {
@@ -17,17 +17,21 @@ class UserController {
         // Upload image to Supabase Storage (crud_bucket)
         const { data, error } = await supabase.storage
           .from("crud_bucket")
-          .upload(`users/${Date.now()}_${imageFile.originalname}`, imageFile.buffer, {
-            cacheControl: "3600",
-            upsert: false
-          });
-      
+          .upload(
+            `users/${Date.now()}_${imageFile.originalname}`,
+            imageFile.buffer,
+            {
+              cacheControl: "3600",
+              upsert: false,
+            }
+          );
+
         if (error) throw new Error(error.message);
-      
+
         const { data: publicUrlData } = supabase.storage
           .from("crud_bucket")
           .getPublicUrl(data.path);
-      
+
         imageUrl = publicUrlData.publicUrl;
       }
 
@@ -40,19 +44,23 @@ class UserController {
         image: imageUrl,
       });
 
-      res.status(201).json({ message: "User registered successfully!", user: newUser });
+      res
+        .status(201)
+        .json({ message: "User registered successfully!", user: newUser });
     } catch (error) {
-      res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      res
+        .status(500)
+        .json({
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
     }
   }
 
-  static async create(req: Request, res: Response): Promise <void> {
-      
-  }
+  static async create(req: Request, res: Response): Promise<void> {}
 
   static async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
-      const { data, error } = await supabase.from("demo").select(); // Adjust table name
+      const { data, error } = await supabase.from("demo").select();
 
       if (error) {
         res.status(500).json({ error: error.message });
@@ -60,7 +68,11 @@ class UserController {
         res.status(200).json({ users: data });
       }
     } catch (error) {
-      res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      res
+        .status(500)
+        .json({
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
     }
   }
 }
