@@ -40,9 +40,11 @@ export class SignInComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     const { email, password } = this.form.value;
+    console.log('Email:', email, 'password:', password);
 
     // stop here if form is invalid
     if (this.form.invalid) {
+      console.log('invalid request');
       return;
     }
 
