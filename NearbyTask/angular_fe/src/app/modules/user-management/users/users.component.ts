@@ -1,3 +1,4 @@
+import { ThemeService } from 'src/app/core/services/theme.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +11,8 @@ import { UserTableHeaderComponent } from '../table/table-header/table-header.com
 import { UserTableRowComponent } from '../table/table-row/table-row.component';
 import { Users } from 'src/model/user-management';
 import { UserTableFilterService } from 'src/services/user-table-filter';
+import { AddUserComponent } from '../add-user/add-user.component';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -20,6 +23,8 @@ import { UserTableFilterService } from 'src/services/user-table-filter';
     UserTableFooterComponent,
     UserTableRowComponent,
     UserTableActionComponent,
+    AddUserComponent,
+    RouterOutlet,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -27,7 +32,7 @@ import { UserTableFilterService } from 'src/services/user-table-filter';
 export class UsersComponent implements OnInit {
   users = signal<Users[]>([]);
 
-  constructor(private http: HttpClient, private filterService: UserTableFilterService) {
+  constructor(private http: HttpClient, private filterService: UserTableFilterService, private router: Router) {
     this.http.get<Users[]>('https://freetestapi.com/api/v1/users?limit=8').subscribe({
       next: (data) => this.users.set(data),
       error: (error) => {
@@ -96,4 +101,7 @@ export class UsersComponent implements OnInit {
   });
 
   ngOnInit() {}
+  navigateToAddUser() {
+    this.router.navigate(['user-management/add-user']);
+  }
 }
