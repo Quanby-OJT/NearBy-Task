@@ -6,15 +6,15 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class DemoService {
+export class UserAccountService {
   private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) {}
-  getAllUsers(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/display`);
+  insertUserAccount(userData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/userAdd`, userData);
   }
 
-  insertUser(userData: FormData): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/add`, userData);
+  getAllUsers(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/userDisplay`);
   }
 }

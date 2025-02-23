@@ -1,21 +1,21 @@
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { HttpClient } from '@angular/common/http';
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { toast } from 'ngx-sonner';
-import { dummyData } from 'src/app/shared/dummy/user.dummy';
 import { UserTableActionComponent } from '../table/table-action/table-action.component';
 import { UserTableFooterComponent } from '../table/table-footer/table-footer.component';
 import { UserTableHeaderComponent } from '../table/table-header/table-header.component';
 import { UserTableRowComponent } from '../table/table-row/table-row.component';
-import { Users } from 'src/model/user-management';
-import { UserTableFilterService } from 'src/services/user-table-filter';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { Router, RouterOutlet } from '@angular/router';
+import { UserAccountService } from 'src/app/services/userAccount';
+import { UserTableFilterService } from 'src/services/user-table-filter';
 
 @Component({
   selector: 'app-users',
+  standalone: true,
   imports: [
     AngularSvgIconModule,
     FormsModule,
@@ -27,30 +27,42 @@ import { Router, RouterOutlet } from '@angular/router';
     RouterOutlet,
   ],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css',
+  styleUrls: ['./users.component.css'],
 })
 export class UsersComponent implements OnInit {
-  users = signal<Users[]>([]);
+  users: any[] = [];
 
-  constructor(private http: HttpClient, private filterService: UserTableFilterService, private router: Router) {
-    this.http.get<Users[]>('https://freetestapi.com/api/v1/users?limit=8').subscribe({
-      next: (data) => this.users.set(data),
-      error: (error) => {
-        this.users.set(dummyData);
+  constructor(
+    private http: HttpClient,
+    private filterService: UserTableFilterService,
+    private router: Router,
+    private useraccount: UserAccountService,
+  ) {}
+
+  ngOnInit(): void {
+    this.fetchUsers();
+  }
+
+  fetchUsers(): void {
+    this.useraccount.getAllUsers().subscribe(
+      (response: any) => {
+        this.users = response.users;
+      },
+      (error: any) => {
+        console.error('Error fetching users:', error);
         this.handleRequestError(error);
       },
-    });
+    );
   }
 
-  public toggleUsers(checked: boolean) {
-    this.users.update((users) => {
-      return users.map((user) => {
-        return { ...user, selected: checked };
-      });
-    });
+  toggleUsers(checked: boolean): void {
+    this.users = this.users.map((user) => ({
+      ...user,
+      selected: checked,
+    }));
   }
 
-  private handleRequestError(error: any) {
+  private handleRequestError(error: any): void {
     const msg = 'An error occurred while fetching users. Loading dummy data as fallback.';
     toast.error(msg, {
       position: 'bottom-right',
@@ -63,12 +75,12 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  filteredUsers = computed(() => {
+  get filteredUsers(): any[] {
     const search = this.filterService.searchField().toLowerCase();
     const status = this.filterService.statusField();
     const order = this.filterService.orderField();
 
-    return this.users()
+    return this.users
       .filter(
         (user) =>
           user.name.toLowerCase().includes(search) ||
@@ -98,10 +110,9 @@ export class UsersComponent implements OnInit {
         }
         return 0;
       });
-  });
+  }
 
-  ngOnInit() {}
-  navigateToAddUser() {
+  navigateToAddUser(): void {
     this.router.navigate(['user-management/add-user']);
   }
 }
