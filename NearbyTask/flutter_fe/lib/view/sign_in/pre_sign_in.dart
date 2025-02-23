@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/view/sign_in/sign_in.dart';
 import 'package:flutter_fe/view/sign_in_business_acc/sign_in_business_acc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PreSignIn extends StatefulWidget {
   const PreSignIn({super.key});
@@ -23,20 +24,20 @@ class _PreSignInState extends State<PreSignIn> {
           children: [
             Container(
               margin: EdgeInsets.only(top: 90),
-              child: const Text(
+              child: Text(
                 'NearByTask',
-                style: TextStyle(
+                style: GoogleFonts.openSans(
                     color: Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.bold),
               ),
             ),
             const Spacer(),
-            const Padding(
-              padding: EdgeInsets.only(left: 30, right: 30),
+            Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
               child: Text(
-                'By tapping Create Account or Sign In, you agree to our Terms. Learn how we process your data in our Privacy Policy and Cookies Policy.',
-                style: TextStyle(color: Colors.white),
+                'Select the type of account you want to create, provide service with a service account or hire an expert to complete a task with a business account.',
+                style: GoogleFonts.openSans(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:flutter_fe/view/sign_in/pre_sign_in.dart';
 import 'package:flutter_fe/view/welcome_page/intro_page_1.dart';
 import 'package:flutter_fe/view/welcome_page/intro_page_2.dart';
 import 'package:flutter_fe/view/welcome_page/intro_page_3.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class WelcomePageViewMain extends StatefulWidget {
@@ -40,11 +41,13 @@ class _WelcomePageViewMainState extends State<WelcomePageViewMain> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        _controller.jumpToPage(2);
+                        _controller.animateToPage(2,
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.easeIn);
                       },
                       child: Text(
                         'skip',
-                        style: TextStyle(
+                        style: GoogleFonts.openSans(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       )),
                   SmoothPageIndicator(
@@ -64,7 +67,7 @@ class _WelcomePageViewMainState extends State<WelcomePageViewMain> {
                           },
                           child: Text(
                             'done',
-                            style: TextStyle(
+                            style: GoogleFonts.openSans(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ))
@@ -76,7 +79,7 @@ class _WelcomePageViewMainState extends State<WelcomePageViewMain> {
                           },
                           child: Text(
                             'next',
-                            style: TextStyle(
+                            style: GoogleFonts.openSans(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ))

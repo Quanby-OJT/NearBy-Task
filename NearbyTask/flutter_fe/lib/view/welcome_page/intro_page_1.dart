@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class IntroPage1 extends StatelessWidget {
@@ -16,15 +17,12 @@ class IntroPage1 extends StatelessWidget {
             child: Text(
               textAlign: TextAlign.center,
               'Welcome to NearByTask',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+              style: GoogleFonts.openSans(
+                  color: Colors.white, fontWeight: FontWeight.w400),
             ),
           ),
-          Lottie.network(
-              'https://lottie.host/fbaccb57-c24c-4660-8b4b-a1c534089f98/SgTD5M64sa.json',
-              width: 300,
-              height: 300,
-              fit: BoxFit.fitWidth),
+          Lottie.asset('assets/lottie/welcomeScreen1.json',
+              width: 300, height: 300, fit: BoxFit.fitWidth),
         ],
       ),
     );
