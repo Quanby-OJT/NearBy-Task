@@ -7,7 +7,11 @@ import '../model/user_model.dart';
 
 class ApiService {
   static const String apiUrl =
+<<<<<<< HEAD
       "http://localhost:5000/connect"; // Adjust if needed
+=======
+      "http://192.168.254.101:5000/connect"; // Adjust if needed
+>>>>>>> e798543c7402cc681ed23c2c2e5cd35552ae8df3
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use

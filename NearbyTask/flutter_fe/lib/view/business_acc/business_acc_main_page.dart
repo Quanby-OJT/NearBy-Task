@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/view/business_acc/chat_screen.dart';
 import 'package:flutter_fe/view/business_acc/home_page.dart';
 import 'package:flutter_fe/view/business_acc/job_post_page.dart';
+import 'package:flutter_fe/view/business_acc/likes_screen.dart';
+import 'package:flutter_fe/view/business_acc/profile_screen.dart';
 import 'package:flutter_fe/view/service_acc/schedule_management_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -33,7 +36,13 @@ class _BusinessAccMainState extends State<BusinessAccMain> {
             _currentIndex = index;
           });
         },
-        children: [HomePage(), JobPostPage()],
+        children: [
+          HomePage(),
+          JobPostPage(),
+          ChatScreen(),
+          LikesScreen(),
+          ProfileScreen()
+        ],
       ),
       bottomNavigationBar: SizedBox(
         height: 70,

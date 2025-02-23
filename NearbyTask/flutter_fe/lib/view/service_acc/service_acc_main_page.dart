@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/view/service_acc/chat_screen.dart';
 import 'package:flutter_fe/view/service_acc/home_page.dart';
+import 'package:flutter_fe/view/service_acc/profile_screen.dart';
+import 'package:flutter_fe/view/service_acc/request_screen.dart';
 import 'package:flutter_fe/view/service_acc/schedule_management_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -32,7 +35,13 @@ class _ServiceAccMainState extends State<ServiceAccMain> {
             _currentIndex = index;
           });
         },
-        children: [HomePage(), ScheduleManagement()],
+        children: [
+          HomePage(),
+          ScheduleManagement(),
+          ChatScreen(),
+          RequestScreen(),
+          ProfileScreen()
+        ],
       ),
       bottomNavigationBar: SizedBox(
         height: 70,
