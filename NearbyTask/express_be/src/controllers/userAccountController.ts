@@ -102,6 +102,30 @@ class UserAccountController {
       });
     }
   }
+
+  static async getUserData(req: Request, res: Response): Promise<void> {
+    try {
+      const userID = req.params.id;
+
+      const { data, error } = await supabase
+        .from("user")
+        .select("*")
+        .eq("user_id", userID)
+        .single();
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else if (!data) {
+        res.status(404).json({ error: "User not found" });
+      } else {
+        res.status(200).json({ user: data });
+      }
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
   static async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
       const { data, error } = await supabase.from("user").select();

@@ -1,7 +1,7 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { UserAccountService } from 'src/app/services/userAccount';
 import { ButtonComponent } from 'src/app/shared/components/button/button.component';
 import Swal from 'sweetalert2';
@@ -18,15 +18,22 @@ export class UpdateUserComponent {
   imagePreview: File | null = null;
   duplicateEmailError: any = null;
   success_message: any = null;
+  userId: string | null = null;
+  imageUrl: string | null = null;
 
   constructor(
     private _formBuilder: FormBuilder,
-    private UserAccountService: UserAccountService,
+    private userAccountService: UserAccountService,
     private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
     this.formValidation();
+    this.userId = this.route.snapshot.paramMap.get('id');
+    if (this.userId) {
+      this.loadUserData();
+    }
   }
 
   formValidation(): void {
@@ -36,16 +43,51 @@ export class UpdateUserComponent {
       lastName: ['', Validators.required],
       status: ['', Validators.required],
       userRole: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       bday: ['', Validators.required],
-      profileImage: ['', Validators.required],
+      profileImage: [''],
+    });
+  }
+  loadUserData(): void {
+    const userId = Number(this.userId);
+
+    this.userAccountService.getUserById(userId).subscribe({
+      next: (userData) => {
+        if (userData) {
+          this.form.patchValue({
+            firstName: userData.first_name,
+            middleName: userData.middle_name || '',
+            lastName: userData.last_name,
+            status: userData.acc_status,
+            userRole: userData.user_role,
+            email: userData.email,
+            bday: userData.birthday,
+          });
+
+          this.imagePreview = userData.profile_image ? userData.profile_image : 'https://via.placeholder.com/150';
+          console.log('User Data Loaded:', userData);
+        } else {
+          console.warn('User data is empty or undefined.');
+        }
+      },
+      error: (error) => {
+        console.error('Error loading user data:', error);
+      },
     });
   }
 
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.imagePreview = input.files[0];
+      const file = input.files[0];
+      this.form.patchValue({ profileImage: file });
+
+      // Convert image file to Base64 preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imageUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -57,7 +99,6 @@ export class UpdateUserComponent {
     this.submitted = true;
 
     if (this.form.invalid) {
-      // console.log('Form is invalid. Please check the errors.');
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
@@ -66,11 +107,7 @@ export class UpdateUserComponent {
       return;
     }
 
-    console.log('Form Submitted Successfully!');
-    console.log('Form Values:', this.form.value);
-
     const formData = new FormData();
-
     formData.append('first_name', this.form.value.firstName);
     formData.append('middle_name', this.form.value.middleName);
     formData.append('last_name', this.form.value.lastName);
@@ -81,29 +118,25 @@ export class UpdateUserComponent {
     if (this.imagePreview) {
       formData.append('image', this.imagePreview);
     }
-    this.UserAccountService.insertUserAccount(formData).subscribe(
-      (response) => {
-        // console.log('User added successfully:', response);
-        // console.log(formData);
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'User registered successfully!',
-        });
 
-        this.form.reset();
-        this.submitted = false;
-      },
-      (error: any) => {
-        // console.error('Error adding user:', error);
-        this.duplicateEmailError = 'Email already exists';
-        Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: 'Email already exists. Please use a different email.',
-        });
-      },
-    );
+    // this.userAccountService.updateUserAccount(this.userId, formData).subscribe(
+    //   (response) => {
+    //     Swal.fire({
+    //       icon: 'success',
+    //       title: 'Success',
+    //       text: 'User updated successfully!',
+    //     });
+    //     this.router.navigate(['user-management']);
+    //   },
+    //   (error: any) => {
+    //     this.duplicateEmailError = 'Email already exists';
+    //     Swal.fire({
+    //       icon: 'error',
+    //       title: 'Update Failed',
+    //       text: 'Email already exists. Please use a different email.',
+    //     });
+    //   },
+    // );
   }
 
   navigateToUsermanagement(): void {

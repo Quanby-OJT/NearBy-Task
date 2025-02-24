@@ -41,7 +41,8 @@
   <td class="border-muted/20 border-b px-4 py-3 text-[0.85rem]">
     <div class="grid grid-cols-2 gap-5">
       <button
-        class="text-muted-foreground hover:bg-card hover:text-foreground flex h-7 w-7 cursor-pointer items-center justify-center rounded-md">
+        class="text-muted-foreground hover:bg-card hover:text-foreground flex h-7 w-7 cursor-pointer items-center justify-center rounded-md"
+        (click)="updateUser(user.user_id)">
         <svg-icon src="./assets/icons/heroicons/outline/edit-icon.svg" [svgClass]="'h-5 w-5'"> </svg-icon>
       </button>
       <button

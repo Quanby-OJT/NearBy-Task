@@ -18,4 +18,6 @@ router.get("/userDisplay", UserAccountController.getAllUsers);
 
 router.delete("/deleteUser/:id", UserAccountController.deleteUser);
 
+router.get("/getUserData/:id", UserAccountController.getUserData);
+
 export default router;

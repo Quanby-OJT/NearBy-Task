@@ -46,4 +46,8 @@ export class UserTableRowComponent {
       }
     });
   }
+
+  updateUser(id: Number) {
+    this.route.navigate(['user-management/update-user', id]);
+  }
 }
