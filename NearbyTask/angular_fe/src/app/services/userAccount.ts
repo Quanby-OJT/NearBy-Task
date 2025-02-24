@@ -14,6 +14,10 @@ export class UserAccountService {
     return this.http.post<any>(`${this.apiUrl}/userAdd`, userData);
   }
 
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/deleteUser/${id}`);
+  }
+
   getAllUsers(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/userDisplay`);
   }
