@@ -16,4 +16,6 @@ router.post(
 // Display all records
 router.get("/userDisplay", UserAccountController.getAllUsers);
 
+router.delete("/deleteUser/:id", UserAccountController.deleteUser);
+
 export default router;

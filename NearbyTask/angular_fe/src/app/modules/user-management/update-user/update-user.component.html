@@ -1,8 +1,8 @@
 <div class="mb-4 flex justify-between">
   <div class="inline-block">
-    <h3 class="text-foreground font-semibold">Add User</h3>
+    <h3 class="text-foreground font-semibold">Update User</h3>
     <div class="text-muted-foreground space-x-1 text-xs font-medium">
-      <a href="" class="hover:text-primary">Dashboards > User Management > Add User</a>
+      <a href="" class="hover:text-primary">Dashboards > User Management > Update User</a>
     </div>
   </div>
   <!-- Submit Button -->
@@ -153,7 +153,7 @@
               <div *ngIf="f['email'].errors['required']" class="px-1 pt-1 text-xs text-red-500">Required field</div>
             </div>
             <div *ngIf="duplicateEmailError" class="px-1 pt-1 text-xs text-red-500">
-              {{ duplicateEmailError }}
+              <!-- {{ duplicateEmailError }} -->
             </div>
           </div>
 
@@ -198,7 +198,7 @@
           </div>
           <!-- Submit Button -->
           <div class="">
-            <app-button full impact="bold" shape="rounded" size="medium">Add User</app-button>
+            <app-button full impact="bold" shape="rounded" size="medium">Update User</app-button>
           </div>
         </div>
       </div>

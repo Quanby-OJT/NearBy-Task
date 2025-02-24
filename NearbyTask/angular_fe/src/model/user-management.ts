@@ -1,13 +1,14 @@
 export interface Users {
   id: number;
-  name: string;
-  age: number;
-  username: string;
+  user_id: number;
+  first_name: string;
+  middle_name: number;
+  acc_status: string;
   email: string;
-  phone: string;
-  website: string;
+  user_role: string;
+  last_name: string;
   occupation: string;
-  hobbies: string[];
+  image_link: string[];
   selected: boolean;
   status: number;
   created_at: string;
