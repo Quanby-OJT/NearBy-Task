@@ -136,7 +136,7 @@ class _JobPostPageState extends State<JobPostPage> {
               child: TextFormField(
                 maxLines: 1, // Single line for numbers
                 cursorColor: Color(0xFF0272B1),
-                controller: controller.contactpriceController,
+                controller: controller.contactPriceController,
                 keyboardType: TextInputType.number, // Ensures numeric input
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly

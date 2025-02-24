@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/model/task_model.dart';
 import 'package:flutter_fe/service/job_post_service.dart';
 
 class TaskController {
   final JobPostService _jobPostService = JobPostService();
-
   final jobTitleController = TextEditingController();
   final jobSpecializationController = TextEditingController();
   final jobDescriptionController = TextEditingController();
@@ -11,32 +11,31 @@ class TaskController {
   final jobDurationController = TextEditingController();
   final jobDaysController = TextEditingController();
   final jobUrgencyController = TextEditingController();
-  final contactpriceController = TextEditingController();
+  final contactPriceController = TextEditingController();
   final jobRemarksController = TextEditingController();
   final jobTaskBeginDateController = TextEditingController();
+  final contactpriceController = TextEditingController();
 
   Future<void> postJob() async {
-    // Kinuha ang values mula sa controllers
-    final jobData = {
-      "job_title": jobTitleController.text,
-      "specialization": jobSpecializationController.text,
-      "description": jobDescriptionController.text,
-      "location": jobLocationController.text,
-      "duration": jobDurationController.text,
-      "num_of_days": int.tryParse(jobDaysController.text) ?? 0,
-      "urgency": jobUrgencyController.text,
-      "contact_price": int.tryParse(contactpriceController.text) ?? 0,
-      "remarks": jobRemarksController.text,
-      "task_begin_date": jobTaskBeginDateController.text,
-    };
+    final task = TaskModel(
+      title: jobTitleController.text,
+      specialization: jobSpecializationController.text,
+      description: jobDescriptionController.text,
+      location: jobLocationController.text,
+      duration: jobDurationController.text,
+      numberOfDays: int.tryParse(jobDaysController.text) ?? 0,
+      urgency: jobUrgencyController.text,
+      contactPrice: int.tryParse(contactPriceController.text) ?? 0,
+      remarks: jobRemarksController.text,
+      taskBeginDate: jobTaskBeginDateController.text,
+    );
 
-    // Tatawagin ang service para mag-post ng job
-    bool success = await _jobPostService.postJob(jobData);
+    bool success = await _jobPostService.postJob(task);
 
     if (success) {
-      print("Job posted successfully!");
+      debugPrint("Job posted successfully!");
     } else {
-      print("Failed to post job.");
+      debugPrint("Failed to post job.");
     }
   }
 }
