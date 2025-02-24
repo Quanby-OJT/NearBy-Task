@@ -6,7 +6,6 @@ import generateOTP from "otp-generator"
 class AuthenticationController {
     static async loginAuthentication(req: Request, res: Response): Promise<void> {
         try {
-            console.log("Attempting to verify...")
             const { email, password } = req.body
             const verifyLogin = await Auth.authenticateLogin(email)
 
@@ -15,7 +14,9 @@ class AuthenticationController {
                 return
             }
 
-            const isPasswordValid = await bcrypt.compare(password, verifyLogin.password)
+            console.log(await bcrypt.hash(password, 10))
+
+            const isPasswordValid = await bcrypt.compare(password, verifyLogin.hashed_password)
             if (!isPasswordValid) {
                 res.status(414).json({ error: "Password is incorrect. Please try again." })
                 return

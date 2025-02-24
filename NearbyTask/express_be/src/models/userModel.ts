@@ -26,11 +26,17 @@ class Auth {
 
   static async authenticateLogin(email: string){
     const { data, error } = await supabase
-    .from("user") // Dapat tama ang table name mo sa database
-    .select("user_id, email, password").eq("email", email).single();
+    .from("user")
+    .select("user_id, email, hashed_password").eq("email", email).single();
 
-  if (error) throw new Error(error.message);
-  return data;
+    if (error) {
+      if (error.code === 'PGRST116') { 
+        return null;
+      }
+      throw new Error(error.message);
+    }
+  
+    return data;
   }
 
   static async createOTP(otp_input: {user_id: number, two_fa_code: string}){
@@ -43,7 +49,7 @@ class Auth {
 
     const otp = {
       ...otp_input,
-      two_factor_code_expires_at: addMinutes(Date.now(), 20)
+      two_fa_code_expires_at: addMinutes(Date.now(), 20)
     }
 
     const {data, error} = await supabase.from("two_fa_code").insert([otp])

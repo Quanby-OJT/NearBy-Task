@@ -7,7 +7,7 @@ import '../model/user_model.dart';
 
 class ApiService {
   static const String apiUrl =
-      "http://10.10.2.2:5000/connect"; // Adjust if needed
+      "http://192.168.56.1:5000/connect"; // Adjust if needed
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
@@ -56,28 +56,27 @@ class ApiService {
     }
   }
 
-  static Future<int?> authUser(String email, String password) async {
-    var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/login-auth"));
-
-    request.fields["email"] = email;
-    request.fields["password"] = password;
-
+  static Future<Map<String, dynamic>> authUser(String email, String password) async {
     try{
-      var response = await request.send();
+      var response = await http.post(
+        Uri.parse("$apiUrl/login-auth"),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          "email": email,
+          "password": password,
+        }),
+      );
 
-      var responseBody = await response.stream.bytesToString();
-      var data = json.decode(responseBody);
+      var data = json.decode(response.body);
 
-      if(data.containsKey('user_id')){
-        int userId = data['user_id'];
-        return userId;
+      if(response.statusCode == 200){
+        return {"user_id": data['user_id']};
       }else{
-        print("login failed: $data['error']");
-        return null;
+        return {"error": data['error'] ?? 'Authentication Failed'};
       }
     }catch(e){
       print('Error: $e');
-      return null;
+      return {"error": "An error occured: $e"};
     }
   }
 

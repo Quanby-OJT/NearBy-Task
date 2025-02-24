@@ -11,16 +11,23 @@ class AuthenticationController{
   final TextEditingController otpController = TextEditingController();
   final int userId = 0;
 
-  Future<void> loginAuth(BuildContext context) async{
-    int? user_id = await ApiService.authUser(emailController.text, passwordController.text);
+  Future<void> loginAuth(BuildContext context) async {
+    var response = await ApiService.authUser(emailController.text, passwordController.text);
 
-    if(user_id != null){
-      //Code for redirection to OTP Page
-      Navigator.push(context, MaterialPageRoute(builder: (context){
-        return OtpScreen(userId: user_id);
-      }));
-    }else{
-      SnackBar(content: Text("Sorry. Your Password is Incorrect. Please Try Again."));
+    if (response.containsKey('user_id')) {
+      int userId = response['user_id'];
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OtpScreen(userId: userId),
+        ),
+      );
+    } else {
+      // Display the error message using SnackBar
+      String errorMessage = response['error'] ?? "Unknown error occurred";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
     }
   }
 
@@ -33,7 +40,9 @@ class AuthenticationController{
         return ServiceAccMain();
       }));
     }else{
-      SnackBar(content: Text("Your OTP is incorrect. Please check your email."));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Sorry. Your OTP is Incorrect. Please check your email.")),
+      );
     }
   }
 }
