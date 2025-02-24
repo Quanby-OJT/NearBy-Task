@@ -21,4 +21,8 @@ export class UserAccountService {
   getAllUsers(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/userDisplay`);
   }
+
+  getUserById(userID: Number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getUserData/${userID}`);
+  }
 }

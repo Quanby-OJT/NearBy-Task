@@ -11,7 +11,7 @@ const routes: Routes = [
       { path: '', redirectTo: '', pathMatch: 'full' },
       { path: '', component: UsersComponent },
       { path: 'add-user', component: AddUserComponent },
-      { path: 'update-user', component: UpdateUserComponent },
+      { path: 'update-user/:id', component: UpdateUserComponent },
       { path: '**', redirectTo: 'errors/404' },
     ],
   },
