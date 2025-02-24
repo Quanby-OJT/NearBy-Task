@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, numberAttribute } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { UserAccountService } from 'src/app/services/userAccount';
@@ -20,6 +20,9 @@ export class UpdateUserComponent {
   success_message: any = null;
   userId: string | null = null;
   imageUrl: string | null = null;
+  userData: any = null;
+  first_name: string = '';
+  profileImage: string | null = null;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -43,35 +46,29 @@ export class UpdateUserComponent {
       lastName: ['', Validators.required],
       status: ['', Validators.required],
       userRole: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', Validators.required],
       bday: ['', Validators.required],
-      profileImage: [''],
     });
   }
   loadUserData(): void {
     const userId = Number(this.userId);
 
     this.userAccountService.getUserById(userId).subscribe({
-      next: (userData) => {
-        if (userData) {
-          this.form.patchValue({
-            firstName: userData.first_name,
-            middleName: userData.middle_name || '',
-            lastName: userData.last_name,
-            status: userData.acc_status,
-            userRole: userData.user_role,
-            email: userData.email,
-            bday: userData.birthday,
-          });
-
-          this.imagePreview = userData.profile_image ? userData.profile_image : 'https://via.placeholder.com/150';
-          console.log('User Data Loaded:', userData);
-        } else {
-          console.warn('User data is empty or undefined.');
-        }
+      next: (response: any) => {
+        this.userData = response.user;
+        this.form.patchValue({
+          firstName: response.user.first_name,
+          middleName: response.user.middle_name,
+          lastName: response.user.last_name,
+          bday: response.user.birthdate,
+          userRole: response.user.user_role,
+          email: response.user.email,
+          status: response.user.acc_status,
+        });
+        this.profileImage = response.user.image_link;
       },
-      error: (error) => {
-        console.error('Error loading user data:', error);
+      error: (error: any) => {
+        console.error('Error fetching user data:', error);
       },
     });
   }
@@ -80,9 +77,8 @@ export class UpdateUserComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      this.form.patchValue({ profileImage: file });
+      this.imagePreview = file;
 
-      // Convert image file to Base64 preview
       const reader = new FileReader();
       reader.onload = () => {
         this.imageUrl = reader.result as string;
@@ -107,6 +103,12 @@ export class UpdateUserComponent {
       return;
     }
 
+    const userId = Number(this.userId);
+    const email = this.form.value.email;
+    this.updateUserAccount(userId);
+  }
+
+  updateUserAccount(userId: number): void {
     const formData = new FormData();
     formData.append('first_name', this.form.value.firstName);
     formData.append('middle_name', this.form.value.middleName);
@@ -115,28 +117,34 @@ export class UpdateUserComponent {
     formData.append('email', this.form.value.email);
     formData.append('acc_status', this.form.value.status);
     formData.append('user_role', this.form.value.userRole);
+
     if (this.imagePreview) {
-      formData.append('image', this.imagePreview);
+      formData.append('image', this.imagePreview, this.imagePreview.name);
     }
 
-    // this.userAccountService.updateUserAccount(this.userId, formData).subscribe(
-    //   (response) => {
-    //     Swal.fire({
-    //       icon: 'success',
-    //       title: 'Success',
-    //       text: 'User updated successfully!',
-    //     });
-    //     this.router.navigate(['user-management']);
-    //   },
-    //   (error: any) => {
-    //     this.duplicateEmailError = 'Email already exists';
-    //     Swal.fire({
-    //       icon: 'error',
-    //       title: 'Update Failed',
-    //       text: 'Email already exists. Please use a different email.',
-    //     });
-    //   },
-    // );
+    // for (const [key, value] of (formData as any).entries()) {
+    //   console.log(`${key}:`, value);
+    // }
+
+    this.userAccountService.updateUserAccount(userId, formData).subscribe(
+      (response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'User updated successfully!',
+        }).then(() => {
+          this.router.navigate(['user-management']);
+        });
+      },
+
+      (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Update Failed',
+          text: error.error?.error,
+        });
+      },
+    );
   }
 
   navigateToUsermanagement(): void {

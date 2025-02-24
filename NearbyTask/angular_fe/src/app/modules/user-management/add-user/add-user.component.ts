@@ -81,18 +81,18 @@ export class AddUserComponent {
     if (this.imagePreview) {
       formData.append('image', this.imagePreview);
     }
+
     this.UserAccountService.insertUserAccount(formData).subscribe(
       (response) => {
-        // console.log('User added successfully:', response);
-        // console.log(formData);
         Swal.fire({
           icon: 'success',
           title: 'Success',
           text: 'User registered successfully!',
+        }).then(() => {
+          this.form.reset();
+          this.submitted = false;
+          this.router.navigate(['user-management']);
         });
-
-        this.form.reset();
-        this.submitted = false;
       },
       (error: any) => {
         // console.error('Error adding user:', error);
