@@ -3,7 +3,9 @@ import 'package:flutter_fe/view/service_acc/service_acc_main_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  final int userId;
+
+  const OtpScreen({super.key, required this.userId});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();

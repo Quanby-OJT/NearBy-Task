@@ -12,6 +12,8 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final AuthenticationController _controller = AuthenticationController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,10 +102,7 @@ class _SignInState extends State<SignIn> {
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return OtpScreen();
-                      }));
+                      _controller.loginAuth(context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF0272B1),

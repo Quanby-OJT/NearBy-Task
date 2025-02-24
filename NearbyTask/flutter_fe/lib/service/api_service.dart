@@ -7,7 +7,7 @@ import '../model/user_model.dart';
 
 class ApiService {
   static const String apiUrl =
-      "http://192.168.254.102:5000/connect"; // Adjust if needed
+      "http://10.10.2.2:5000/connect"; // Adjust if needed
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
@@ -56,24 +56,49 @@ class ApiService {
     }
   }
 
-  static Future<bool> authUser(String email, String password) async {
+  static Future<int?> authUser(String email, String password) async {
     var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/login-auth"));
 
     request.fields["email"] = email;
     request.fields["password"] = password;
 
-    var response = await request.send();
-    return response.statusCode == 201 || response.statusCode == 200;
+    try{
+      var response = await request.send();
+
+      var responseBody = await response.stream.bytesToString();
+      var data = json.decode(responseBody);
+
+      if(data.containsKey('user_id')){
+        int userId = data['user_id'];
+        return userId;
+      }else{
+        print("login failed: $data['error']");
+        return null;
+      }
+    }catch(e){
+      print('Error: $e');
+      return null;
+    }
   }
 
   static Future<bool> authOTP(int userId, String otp) async{
-    var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/otp-auth"));
+    final response = await http.post(
+      Uri.parse("$apiUrl/verify-otp"),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({
+        "user_id": userId,
+        "otp": otp,
+      }),
+    );
 
-    request.fields["otp"] = otp;
-    request.fields["user_id"] = userId.toString();
+    if(response.statusCode == 200) {
+      var data = json.decode(response.body);
 
-    var response = await request.send();
-
-    return response.statusCode == 201 || response.statusCode == 200;
+      return true;
+    }else{
+      var error = json.decode(response.body);
+      print("Otp Verification Failed: ${error['error']}");
+      return false;
+    }
   }
 }

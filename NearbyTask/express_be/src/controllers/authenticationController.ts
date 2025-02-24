@@ -2,11 +2,11 @@ import { Request, Response } from "express"
 import { Auth } from "../models/userModel"
 import bcrypt from "bcrypt"
 import generateOTP from "otp-generator"
-import otpGenerator from 'otp-generator'
 
 class AuthenticationController {
     static async loginAuthentication(req: Request, res: Response): Promise<void> {
         try {
+            console.log("Attempting to verify...")
             const { email, password } = req.body
             const verifyLogin = await Auth.authenticateLogin(email)
 
