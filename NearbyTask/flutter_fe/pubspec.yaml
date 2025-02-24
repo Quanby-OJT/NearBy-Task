@@ -72,6 +72,7 @@ flutter:
     - assets/lottie/welcomeScreen1.json
     - assets/lottie/welcomeScreen2.json
     - assets/lottie/welcomeScreen3.json
+    - assets/images/verificationImage.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
