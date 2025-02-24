@@ -4,7 +4,6 @@ import 'package:flutter_fe/view/business_acc/home_page.dart';
 import 'package:flutter_fe/view/business_acc/job_post_page.dart';
 import 'package:flutter_fe/view/business_acc/likes_screen.dart';
 import 'package:flutter_fe/view/business_acc/profile_screen.dart';
-import 'package:flutter_fe/view/service_acc/schedule_management_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class BusinessAccMain extends StatefulWidget {

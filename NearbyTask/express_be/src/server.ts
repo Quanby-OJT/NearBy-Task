@@ -4,6 +4,7 @@ import { port } from "./config/configuration";
 import server from "./routes/apiRoutes";
 import userRoute from "./routes/userRoutes";
 import userAccountRoute from "./routes/userAccountRoutes";
+import taskRoutes from "./routes/taskRoutes";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -14,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/connect", server, userAccountRoute, userRoute);
+app.use("/connect", server, userAccountRoute, userRoute, taskRoutes);
 
 // Start server
 const PORT = port || 3000;
