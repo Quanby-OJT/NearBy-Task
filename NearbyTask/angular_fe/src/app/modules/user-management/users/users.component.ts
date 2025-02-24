@@ -12,6 +12,7 @@ import { AddUserComponent } from '../add-user/add-user.component';
 import { Router, RouterOutlet } from '@angular/router';
 import { UserAccountService } from 'src/app/services/userAccount';
 import { UserTableFilterService } from 'src/services/user-table-filter';
+import { ButtonComponent } from 'src/app/shared/components/button/button.component';
 
 @Component({
   selector: 'app-users',
@@ -25,6 +26,7 @@ import { UserTableFilterService } from 'src/services/user-table-filter';
     UserTableActionComponent,
     AddUserComponent,
     RouterOutlet,
+    ButtonComponent,
   ],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
@@ -114,5 +116,9 @@ export class UsersComponent implements OnInit {
 
   navigateToAddUser(): void {
     this.router.navigate(['user-management/add-user']);
+  }
+
+  navigateToUpdateUser(): void {
+    this.router.navigate(['user-management/update-user']);
   }
 }
