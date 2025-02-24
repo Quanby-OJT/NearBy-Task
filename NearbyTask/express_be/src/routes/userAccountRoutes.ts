@@ -20,4 +20,10 @@ router.delete("/deleteUser/:id", UserAccountController.deleteUser);
 
 router.get("/getUserData/:id", UserAccountController.getUserData);
 
+router.put(
+  "/updateUserInfo/:id/",
+  upload.single("image"),
+  UserAccountController.updateUser
+);
+
 export default router;

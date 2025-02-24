@@ -106,6 +106,7 @@ class UserAccountController {
   static async getUserData(req: Request, res: Response): Promise<void> {
     try {
       const userID = req.params.id;
+      console.log(userID);
 
       const { data, error } = await supabase
         .from("user")
@@ -134,6 +135,88 @@ class UserAccountController {
         res.status(500).json({ error: error.message });
       } else {
         res.status(200).json({ users: data });
+      }
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
+  static async updateUser(req: Request, res: Response): Promise<any> {
+    try {
+      const userId = Number(req.params.id);
+      const {
+        first_name,
+        middle_name,
+        last_name,
+        birthday,
+        email,
+        acc_status,
+        user_role,
+      } = req.body;
+      const imageFile = req.file;
+
+      const { data: existingUser, error: findError } = await supabase
+        .from("user")
+        .select("email, user_id")
+        .eq("email", email)
+        .neq("user_id", userId)
+        .maybeSingle();
+
+      if (existingUser) {
+        return res.status(400).json({ error: "Email already exists" });
+      }
+
+      if (findError && findError.message !== "No rows found") {
+        throw new Error(findError.message);
+      }
+
+      let imageUrl = "";
+      if (imageFile) {
+        const { data, error } = await supabase.storage
+          .from("crud_bucket")
+          .upload(
+            `users/${Date.now()}_${imageFile.originalname}`,
+            imageFile.buffer,
+            {
+              cacheControl: "3600",
+              upsert: false,
+            }
+          );
+
+        if (error) throw new Error(error.message);
+
+        const { data: publicUrlData } = supabase.storage
+          .from("crud_bucket")
+          .getPublicUrl(data.path);
+
+        imageUrl = publicUrlData.publicUrl;
+      }
+
+      const updateData: Record<string, any> = {
+        first_name,
+        middle_name,
+        last_name,
+        birthdate: birthday,
+        email,
+        acc_status,
+        user_role,
+      };
+
+      if (imageFile) {
+        updateData.image_link = imageUrl;
+      }
+
+      const { error } = await supabase
+        .from("user")
+        .update(updateData)
+        .eq("user_id", userId);
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(200).json({ message: "User updated successfully" });
       }
     } catch (error) {
       res.status(500).json({
