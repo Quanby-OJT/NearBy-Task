@@ -1,24 +1,39 @@
+import { supabase } from "./../config/configuration";
 // controllers/userController.ts
 import { Request, Response } from "express";
 import { UserAccount } from "../models/userAccountModel";
 import bcrypt from "bcrypt";
-import { supabase } from "../config/configuration";
 class UserAccountController {
-  static async registerUser(req: Request, res: Response): Promise<void> {
+  static async registerUser(req: Request, res: Response): Promise<any> {
     try {
       const {
         first_name,
         middle_name,
         last_name,
-        birthdate,
+        birthday,
         email,
-        reported,
         acc_status,
+        user_role,
       } = req.body;
       const imageFile = req.file;
 
+      // check if the email exists
+      const { data: existingUser, error: findError } = await supabase
+        .from("user")
+        .select("email")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (existingUser) {
+        return res.status(400).json({ error: "Email already exists" });
+      }
+
+      if (findError && findError.message !== "No rows found") {
+        throw new Error(findError.message);
+      }
+
       // Hash password
-      const hashedPassword = await bcrypt.hash(birthdate, 10);
+      const hashedPassword = await bcrypt.hash(last_name, 10);
 
       let imageUrl = "";
       if (imageFile) {
@@ -48,17 +63,39 @@ class UserAccountController {
         first_name,
         middle_name,
         last_name,
-        birthdate,
+        birthdate: birthday,
         email,
         image_link: imageUrl,
         hashed_password: hashedPassword,
-        reported,
         acc_status,
+        user_role,
       });
 
-      res
-        .status(201)
-        .json({ message: "User registered successfully!", user: newUser });
+      res.status(201).json({
+        message: "User registered successfully!",
+        user: newUser,
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
+  static async deleteUser(req: Request, res: Response): Promise<void> {
+    try {
+      const userID = req.params.id;
+
+      const { data, error } = await supabase
+        .from("user")
+        .delete()
+        .eq("user_id", userID);
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(200).json({ users: data });
+      }
     } catch (error) {
       res.status(500).json({
         error: error instanceof Error ? error.message : "Unknown error",
