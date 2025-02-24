@@ -2,8 +2,9 @@ import { UserAccountService } from './../../../services/userAccount';
 import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/components/button/button.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-user',
@@ -15,8 +16,14 @@ export class AddUserComponent {
   form!: FormGroup;
   submitted = false;
   imagePreview: File | null = null;
+  duplicateEmailError: any = null;
+  success_message: any = null;
 
-  constructor(private _formBuilder: FormBuilder, private UserAccountService: UserAccountService) {}
+  constructor(
+    private _formBuilder: FormBuilder,
+    private UserAccountService: UserAccountService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.formValidation();
@@ -50,7 +57,12 @@ export class AddUserComponent {
     this.submitted = true;
 
     if (this.form.invalid) {
-      console.log('Form is invalid. Please check the errors.');
+      // console.log('Form is invalid. Please check the errors.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Please check the form for errors!',
+      });
       return;
     }
 
@@ -65,21 +77,36 @@ export class AddUserComponent {
     formData.append('birthday', this.form.value.bday);
     formData.append('email', this.form.value.email);
     formData.append('acc_status', this.form.value.status);
-    formData.append('user_role', 'true');
+    formData.append('user_role', this.form.value.userRole);
     if (this.imagePreview) {
       formData.append('image', this.imagePreview);
     }
-
     this.UserAccountService.insertUserAccount(formData).subscribe(
       (response) => {
-        console.log('User added successfully:', response);
-        console.log(formData);
+        // console.log('User added successfully:', response);
+        // console.log(formData);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'User registered successfully!',
+        });
 
         this.form.reset();
+        this.submitted = false;
       },
       (error: any) => {
-        console.error('Error adding user:', error);
+        // console.error('Error adding user:', error);
+        this.duplicateEmailError = 'Email already exists';
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          text: 'Email already exists. Please use a different email.',
+        });
       },
     );
+  }
+
+  navigateToUsermanagement(): void {
+    this.router.navigate(['user-management']);
   }
 }

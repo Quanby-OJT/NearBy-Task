@@ -5,10 +5,15 @@
       <a href="" class="hover:text-primary">Dashboards > User Management > Add User</a>
     </div>
   </div>
+  <!-- Submit Button -->
+  <div class="">
+    <app-button full impact="bold" shape="rounded" size="medium" (click)="navigateToUsermanagement()">Back</app-button>
+  </div>
 </div>
 
 <div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
   <!-- Add User form -->
+
   <form class="my-10 space-y-6" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="space-y-3 text-left">
       <div class="grid grid-cols-3 gap-5 p-5">
@@ -147,6 +152,9 @@
             <div *ngIf="submitted && f['email'].errors" class="px-1 pt-1 text-xs text-red-500">
               <div *ngIf="f['email'].errors['required']" class="px-1 pt-1 text-xs text-red-500">Required field</div>
             </div>
+            <div *ngIf="duplicateEmailError" class="px-1 pt-1 text-xs text-red-500">
+              {{ duplicateEmailError }}
+            </div>
           </div>
 
           <div class="mb-5 grid grid-cols-2 gap-5">
@@ -188,13 +196,12 @@
               </div>
             </div>
           </div>
+          <!-- Submit Button -->
+          <div class="">
+            <app-button full impact="bold" shape="rounded" size="medium">Add User</app-button>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Submit Button -->
-    <div>
-      <app-button full impact="bold" shape="rounded" size="medium">Add User</app-button>
     </div>
   </form>
 </div>
