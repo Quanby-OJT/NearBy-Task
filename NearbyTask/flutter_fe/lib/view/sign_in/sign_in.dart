@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/view/service_acc/service_acc_main_page.dart';
+import 'package:flutter_fe/view/sign_in/otp_screen.dart';
 import 'package:flutter_fe/view/sign_in/sign_up.dart';
 
 class SignIn extends StatefulWidget {
@@ -100,7 +101,7 @@ class _SignInState extends State<SignIn> {
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return ServiceAccMain();
+                        return OtpScreen();
                       }));
                     },
                     style: ElevatedButton.styleFrom(

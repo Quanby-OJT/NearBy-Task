@@ -7,7 +7,7 @@ import '../model/user_model.dart';
 
 class ApiService {
   static const String apiUrl =
-      "http://192.168.254.101:5000/connect"; // Adjust if needed
+      "http://192.168.254.102:5000/connect"; // Adjust if needed
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
@@ -19,7 +19,7 @@ class ApiService {
     request.fields["email"] = user.email;
     request.fields["password"] = user.password;
 
-    // Attach Image (if available)
+    // Attach Image (if available)~
     // if (user.image != null && user.imageName != null) {
     //   request.files.add(
     //     http.MultipartFile.fromBytes(
