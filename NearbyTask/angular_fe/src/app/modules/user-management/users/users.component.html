@@ -32,9 +32,9 @@
         <tr app-table-header (onCheck)="toggleUsers($event)"></tr>
       </thead>
       <tbody>
-        @for (user of filteredUsers(); track $index) {
+        @for (user of users; track $index) {
         <tr class="hover:bg-card/50" app-table-row [user]="user"></tr>
-        } @empty {
+        }@empty {
         <tr>
           <td class="py-4 text-center text-sm" colspan="7">No users found</td>
         </tr>

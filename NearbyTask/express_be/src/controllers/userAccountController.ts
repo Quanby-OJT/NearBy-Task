@@ -1,16 +1,24 @@
 // controllers/userController.ts
 import { Request, Response } from "express";
-import { User } from "../models/userModel";
+import { UserAccount } from "../models/userAccountModel";
 import bcrypt from "bcrypt";
 import { supabase } from "../config/configuration";
-class UserController {
+class UserAccountController {
   static async registerUser(req: Request, res: Response): Promise<void> {
     try {
-      const { first_name, last_name, email, password } = req.body;
+      const {
+        first_name,
+        middle_name,
+        last_name,
+        birthdate,
+        email,
+        reported,
+        acc_status,
+      } = req.body;
       const imageFile = req.file;
 
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(birthdate, 10);
 
       let imageUrl = "";
       if (imageFile) {
@@ -36,12 +44,16 @@ class UserController {
       }
 
       // Insert user into Supabase database
-      const newUser = await User.create({
+      const newUser = await UserAccount.create({
         first_name,
+        middle_name,
         last_name,
+        birthdate,
         email,
-        password: hashedPassword,
-        image: imageUrl,
+        image_link: imageUrl,
+        hashed_password: hashedPassword,
+        reported,
+        acc_status,
       });
 
       res
@@ -53,12 +65,9 @@ class UserController {
       });
     }
   }
-
-  static async create(req: Request, res: Response): Promise<void> {}
-
   static async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
-      const { data, error } = await supabase.from("demo").select();
+      const { data, error } = await supabase.from("user").select();
 
       if (error) {
         res.status(500).json({ error: error.message });
@@ -73,4 +82,4 @@ class UserController {
   }
 }
 
-export default UserController;
+export default UserAccountController;

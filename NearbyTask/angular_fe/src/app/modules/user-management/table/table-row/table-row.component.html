@@ -22,20 +22,20 @@
     </div>
   </td>
   <td class="border-muted/20 border-b px-4 py-3 text-[0.85rem]">
-    {{ user.username }}
+    {{ user.email }}
   </td>
   <td class="border-muted/20 space-x-1 border-b px-4 py-3 text-[0.85rem]">
     @for (hobbie of user.hobbies; track $index) {
     <span class="rounded-[30px] bg-yellow-500/10 px-2 py-0.5 text-xs font-medium text-yellow-800">
-      {{ hobbie }}
+      {{ user.email }}
     </span>
     }
   </td>
   <td class="border-muted/20 border-b px-4 py-3 text-[0.85rem]">
-    {{ user.occupation }}
+    {{ user.email }}
   </td>
   <td class="border-muted/20 border-b px-4 py-3 text-[0.85rem]">
-    {{ user.phone }}
+    {{ user.email }}
   </td>
   <td class="border-muted/20 border-b px-4 py-3 text-center text-[0.85rem]">
     <button
