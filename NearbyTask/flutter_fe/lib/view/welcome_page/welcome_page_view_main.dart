@@ -14,7 +14,7 @@ class WelcomePageViewMain extends StatefulWidget {
 }
 
 class _WelcomePageViewMainState extends State<WelcomePageViewMain> {
-  PageController _controller = new PageController();
+  final PageController _controller = PageController();
   bool onLastPage = false;
   @override
   Widget build(BuildContext context) {

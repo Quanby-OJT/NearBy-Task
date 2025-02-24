@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ScheduleManagement extends StatefulWidget {
+  const ScheduleManagement({super.key});
+
   @override
   _ScheduleManagementState createState() => _ScheduleManagementState();
 }
@@ -10,7 +12,7 @@ class ScheduleManagement extends StatefulWidget {
 class _ScheduleManagementState extends State<ScheduleManagement> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  Map<DateTime, List<TimeSlot>> _availabilitySlots = {};
+  final Map<DateTime, List<TimeSlot>> _availabilitySlots = {};
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +63,11 @@ class _ScheduleManagementState extends State<ScheduleManagement> {
           ? null
           : FloatingActionButton(
               backgroundColor: Color(0xFF0272B1),
+              onPressed: _addTimeSlot,
               child: Icon(
                 Icons.add,
                 color: Colors.white,
               ),
-              onPressed: _addTimeSlot,
             ),
     );
   }
@@ -236,7 +238,7 @@ class NumberPickerDialog extends StatefulWidget {
   final Widget title;
   final Widget message;
 
-  NumberPickerDialog({
+  const NumberPickerDialog({super.key, 
     required this.minValue,
     required this.maxValue,
     required this.title,

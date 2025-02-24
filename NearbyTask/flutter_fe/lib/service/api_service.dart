@@ -55,4 +55,25 @@ class ApiService {
       throw Exception('Failed to load users');
     }
   }
+
+  static Future<bool> authUser(String email, String password) async {
+    var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/login-auth"));
+
+    request.fields["email"] = email;
+    request.fields["password"] = password;
+
+    var response = await request.send();
+    return response.statusCode == 201 || response.statusCode == 200;
+  }
+
+  static Future<bool> authOTP(int userId, String otp) async{
+    var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/otp-auth"));
+
+    request.fields["otp"] = otp;
+    request.fields["user_id"] = userId.toString();
+
+    var response = await request.send();
+
+    return response.statusCode == 201 || response.statusCode == 200;
+  }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/view/welcome_page/welcome_page_view_main.dart';
-import 'view/register_view.dart';
 
 void main() {
   runApp(MyApp());
