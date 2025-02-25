@@ -1,21 +1,27 @@
 import {supabase} from "../config/configuration";
 
-class Tasks{
-    static async create(tasks: {task_title: string, task_description: string, task_begin_date: Date, duration: number, period: string, contact_price: number, urgent: boolean, remarks: string}){
-        const {data, error} = await supabase.from('tasks').insert([tasks])
+class UserModel {
+  
+  async createUser(description: string, duration: string, job_title: string, urgency: string, location: string, num_of_days: number, specialization: string, contact_price: string, remarks: string, task_begin_date: string) {
+    const { data, error } = await supabase.from('job_post').insert([
+      {
+        task_title: job_title,
+        task_description: description,
+        duration: duration,
+        contact_price: contact_price, 
+        urgent: urgency, 
+        remarks: remarks, 
+        task_begin_date: task_begin_date,
+        period: num_of_days, 
+        location: location,
+        specialization: specialization,
+      },
+    ]);
 
-        if (error) throw new Error(error.message);
-
-        return data
-    }
-
-    static async update(tasks: {task_title: string, task_description: string, task_begin_date: Date, duration: number, period: string, contact_price: number, urgent: boolean, remarks: string}, task_id: {task_id: number}){
-        const {data, error} = await supabase.from('tasks').update([tasks]).eq('task_id', [task_id])
-
-        if (error) throw new Error(error.message);
-
-        return data
-    }
+    if (error) throw new Error(error.message);
+    return data;
+  }
 }
 
-export {Tasks}
+const userModel = new UserModel();
+export default userModel;

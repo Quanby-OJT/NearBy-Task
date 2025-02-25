@@ -40,10 +40,14 @@ export class UserTableRowComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.UserAccountService.deleteUser(Number(id)).subscribe(() => {
-          Swal.fire('Deleted!', 'User has been deleted.', 'success');
-          this.UserComponent.ngOnInit();
+          Swal.fire('Deleted!', 'User has been deleted.', 'success').then(() => {
+            this.UserComponent.ngOnInit();
+          });
         });
       }
     });
+  }
+  updateUser(id: Number) {
+    this.route.navigate(['user-management/update-user', id]);
   }
 }

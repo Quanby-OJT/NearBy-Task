@@ -19,16 +19,6 @@ class ApiService {
     request.fields["email"] = user.email;
     request.fields["password"] = user.password;
 
-    // Attach Image (if available)~
-    // if (user.image != null && user.imageName != null) {
-    //   request.files.add(
-    //     http.MultipartFile.fromBytes(
-    //       'image',
-    //       user.image!,
-    //       filename: user.imageName!,
-    //     ),
-    //   );
-    // }
     if (user.image != null && user.imageName != null) {
       final bytes = await File(user.image!.path).readAsBytes();
       request.files.add(
