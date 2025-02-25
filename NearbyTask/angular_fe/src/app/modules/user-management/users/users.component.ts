@@ -1,3 +1,4 @@
+import { Users } from 'src/model/user-management';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -32,7 +33,7 @@ import { ButtonComponent } from 'src/app/shared/components/button/button.compone
   styleUrls: ['./users.component.css'],
 })
 export class UsersComponent implements OnInit {
-  users: any[] = [];
+  public users: any[] = [];
 
   constructor(
     private http: HttpClient,
@@ -45,6 +46,10 @@ export class UsersComponent implements OnInit {
     this.fetchUsers();
   }
 
+  get UserSize(): number {
+    return this.users.length;
+  }
+
   fetchUsers(): void {
     this.useraccount.getAllUsers().subscribe(
       (response: any) => {
@@ -55,6 +60,49 @@ export class UsersComponent implements OnInit {
         this.handleRequestError(error);
       },
     );
+  }
+
+  get filteredUsers(): any[] {
+    const search = this.filterService.searchField().toLowerCase() || '';
+    console.log('Search Value:', search);
+    const status = this.filterService.statusField();
+    const pageSize = this.filterService.pageSizeField();
+    const role = this.filterService.roleField();
+
+    return this.users
+      .filter(
+        (user) =>
+          user.first_name.toLowerCase().includes(search) ||
+          user.last_name.toLowerCase().includes(search) ||
+          user.email.toLowerCase().includes(search),
+      )
+      .filter((user) => {
+        if (!status) return true;
+        switch (status) {
+          case '1':
+            return user.acc_status === 'active';
+          case '2':
+            return user.acc_status === 'blocked';
+          case '3':
+            return user.acc_status === 'review';
+          default:
+            return true;
+        }
+      })
+      .filter((user) => {
+        if (!role) return true;
+        switch (role) {
+          case '1':
+            return user.user_role === 'client';
+          case '2':
+            return user.user_role === 'tasker';
+          case '3':
+            return user.user_role === 'moderator';
+          default:
+            return true;
+        }
+      })
+      .slice(0, pageSize);
   }
 
   toggleUsers(checked: boolean): void {
@@ -75,43 +123,6 @@ export class UsersComponent implements OnInit {
       },
       actionButtonStyle: 'background-color:#DC2626; color:white;',
     });
-  }
-
-  get filteredUsers(): any[] {
-    const search = this.filterService.searchField().toLowerCase();
-    const status = this.filterService.statusField();
-    const order = this.filterService.orderField();
-
-    return this.users
-      .filter(
-        (user) =>
-          user.name.toLowerCase().includes(search) ||
-          user.username.toLowerCase().includes(search) ||
-          user.email.toLowerCase().includes(search) ||
-          user.phone.includes(search),
-      )
-      .filter((user) => {
-        if (!status) return true;
-        switch (status) {
-          case '1':
-            return user.status === 1;
-          case '2':
-            return user.status === 2;
-          case '3':
-            return user.status === 3;
-          default:
-            return true;
-        }
-      })
-      .sort((a, b) => {
-        const defaultNewest = !order || order === '1';
-        if (defaultNewest) {
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-        } else if (order === '2') {
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-        }
-        return 0;
-      });
   }
 
   navigateToAddUser(): void {

@@ -21,8 +21,13 @@ export class UserTableActionComponent {
     this.filterService.statusField.set(selectElement.value);
   }
 
-  onOrderChange(value: Event) {
+  onRoleChange(value: Event) {
     const selectElement = value.target as HTMLSelectElement;
-    this.filterService.orderField.set(selectElement.value);
+    this.filterService.roleField.set(selectElement.value);
   }
+
+  // onOrderChange(value: Event) {
+  //   const selectElement = value.target as HTMLSelectElement;
+  //   this.filterService.orderField.set(selectElement.value);
+  // }
 }
