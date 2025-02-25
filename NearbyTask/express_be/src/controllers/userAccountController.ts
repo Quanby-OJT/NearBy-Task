@@ -3,6 +3,7 @@ import { supabase } from "./../config/configuration";
 import { Request, Response } from "express";
 import { UserAccount } from "../models/userAccountModel";
 import bcrypt from "bcrypt";
+
 class UserAccountController {
   static async registerUser(req: Request, res: Response): Promise<any> {
     try {
@@ -222,6 +223,46 @@ class UserAccountController {
       res.status(500).json({
         error: error instanceof Error ? error.message : "Unknown error",
       });
+    }
+  }
+
+  static async getPaginationUsers(req: Request, res: Response): Promise<any> {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const pageSize = parseInt(req.query.pageSize as string) || 10;
+
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize - 1; // Supabase `.range()` is inclusive
+
+      // Fetch paginated users
+      const { data: users, error } = await supabase
+        .from("user")
+        .select("*") // Select all columns, adjust if needed
+        .order("created_at", { ascending: false }) // Ensure sorting if `createdAt` exists
+        .range(start, end); // Apply pagination
+
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      // Fetch total user count
+      const { count, error: countError } = await supabase
+        .from("user")
+        .select("id", { count: "exact", head: true });
+
+      if (countError) {
+        return res.status(500).json({ error: countError.message });
+      }
+
+      res.json({
+        users,
+        total: count,
+        page,
+        pageSize,
+      });
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ error: "Failed to fetch users" });
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { UserTableFilterService } from 'src/services/user-table-filter';
 import { UsersComponent } from '../../users/users.component';
@@ -17,11 +17,14 @@ export class UserTableFooterComponent {
   }
 
   onPageSizeChange(value: Event) {
-    const selectElement = value.target as HTMLSelectElement;
-    this.filterService.pageSizeField.set(Number(selectElement.value));
-    this.filterService.currentPageField.set(1);
+    // const selectElement = value.target as HTMLSelectElement;
+    // this.filterService.pageSizeField.set(Number(selectElement.value));
+    // this.filterService.currentPageField.set(1);
 
-    console.log(this.UserSize);
+    const newSize = parseInt((value.target as HTMLSelectElement).value);
+    this.filterService.pageSizeField.set(newSize);
+    // Reset to first page when changing page size
+    this.filterService.currentPageField.set(1);
   }
 
   get currentPage(): number {
