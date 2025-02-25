@@ -1,10 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter_fe/view/sign_in/sign_in.dart';
 import 'package:flutter_fe/view/sign_in_business_acc/sign_in_business_acc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_fe/controller/register_controller.dart';
 
 class SignUpBusinessAcc extends StatefulWidget {
@@ -63,7 +60,7 @@ class _SignUpBusinessAccState extends State<SignUpBusinessAcc> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 550,
                 child: Theme(
                   data: Theme.of(context).copyWith(

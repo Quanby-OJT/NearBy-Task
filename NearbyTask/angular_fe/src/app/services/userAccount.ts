@@ -21,4 +21,16 @@ export class UserAccountService {
   getAllUsers(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/userDisplay`);
   }
+
+  getUserById(userID: Number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getUserData/${userID}`);
+  }
+
+  checkEmailExists(email: string, userId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/users/check-email?email=${email}&userId=${userId}`);
+  }
+
+  updateUserAccount(userID: Number, userData: FormData): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/updateUserInfo/${userID}`, userData);
+  }
 }
