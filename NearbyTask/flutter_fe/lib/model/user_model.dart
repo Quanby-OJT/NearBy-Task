@@ -1,5 +1,4 @@
 class UserModel {
-  final int id;
   final String firstName;
   final String lastName;
   final String email;
@@ -10,7 +9,6 @@ class UserModel {
 
 //This is what the controller used
   UserModel({
-    required this.id,
     required this.firstName,
     required this.lastName,
     required this.email,
@@ -22,7 +20,6 @@ class UserModel {
   // Factory constructor to handle image as either URL or binary data, this is for the display record part
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
       firstName: json['first_name'],
       lastName: json['last_name'],
       email: json['email'],

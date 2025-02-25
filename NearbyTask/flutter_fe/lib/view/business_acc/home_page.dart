@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                         } else if (swipeDirection ==
                             CardSwiperDirection.right) {
                           print("Swiped Right (Liked)");
-                          _addToLikesTable(_users[previousIndex].id);
+                          // _addToLikesTable(_users[previousIndex].id);
                         }
                         return true;
                       },
