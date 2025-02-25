@@ -35,8 +35,9 @@ class RegisterController {
 
 // Store the inputs Start
     UserModel user = UserModel(
+      id: 0, // Add a valid id here
       firstName: firstNameController.text,
-      lastName: lastNameController.text,
+      lastName: firstNameController.text,
       email: emailController.text,
       password: passwordController.text,
       image: imageData,

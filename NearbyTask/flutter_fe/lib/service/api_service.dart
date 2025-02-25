@@ -1,13 +1,14 @@
 // service/api_service.dart
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../model/user_model.dart';
 
 class ApiService {
   static const String apiUrl =
-      "http://192.168.254.102:5000/connect"; // Adjust if needed
+      "http://192.168.110.145:5000/connect"; // Adjust if needed
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
@@ -23,12 +24,17 @@ class ApiService {
       final bytes = await File(user.image!.path).readAsBytes();
       request.files.add(
         http.MultipartFile.fromBytes(
-          'image',
+          'image_link',
           bytes,
           filename: user.imageName!,
         ),
       );
     }
+
+    debugPrint("Request Fields: ${request.fields}");
+    debugPrint(
+        "Request Files: ${request.files.map((file) => file.filename).toList()}");
+    debugPrint("Request URL: ${request.url}");
 
     var response = await request.send();
     return response.statusCode == 201;
