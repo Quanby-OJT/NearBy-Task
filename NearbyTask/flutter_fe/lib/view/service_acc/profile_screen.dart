@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fe/controller/authentication_controller.dart';
-import 'package:flutter_fe/view/sign_in/sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatefulWidget {
