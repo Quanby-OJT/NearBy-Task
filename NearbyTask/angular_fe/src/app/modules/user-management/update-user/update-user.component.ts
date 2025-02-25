@@ -1,18 +1,18 @@
-import { UserAccountService } from './../../../services/userAccount';
 import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
+import { UserAccountService } from 'src/app/services/userAccount';
 import { ButtonComponent } from 'src/app/shared/components/button/button.component';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-add-user',
+  selector: 'app-update-user',
   imports: [RouterOutlet, ReactiveFormsModule, NgIf, ButtonComponent, NgClass],
-  templateUrl: './add-user.component.html',
-  styleUrl: './add-user.component.css',
+  templateUrl: './update-user.component.html',
+  styleUrl: './update-user.component.css',
 })
-export class AddUserComponent {
+export class UpdateUserComponent {
   form!: FormGroup;
   submitted = false;
   imagePreview: File | null = null;
