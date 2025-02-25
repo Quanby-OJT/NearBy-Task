@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { Auth } from "../models/userModel"
+import { Auth } from "../models/authenticationModel"
 import bcrypt from "bcrypt"
 import generateOTP from "otp-generator"
 import { mailer } from "../config/configuration"
