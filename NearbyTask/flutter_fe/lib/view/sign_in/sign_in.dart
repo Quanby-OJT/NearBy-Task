@@ -65,6 +65,7 @@ class _SignInState extends State<SignIn> {
               Padding(
                 padding: const EdgeInsets.only(left: 40, right: 40, top: 20),
                 child: TextField(
+                  obscureText: true,
                   controller: _controller.passwordController,
                   cursorColor: Color(0xFF0272B1),
                   decoration: InputDecoration(

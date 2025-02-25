@@ -45,16 +45,16 @@ class RegisterController {
 // Inserting the input End
 
 // Sending to the Services Start
-    bool success = await ApiService.registerUser(user);
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registration Successful!")),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registration Failed!")),
-      );
-    }
+//     bool success = await ApiService.registerUser(user);
+//     if (success) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text("Registration Successful!")),
+//       );
+//     } else {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text("Registration Failed!")),
+//       );
+//     }
 // Sending to the Services End
   }
 }

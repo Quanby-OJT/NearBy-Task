@@ -20,63 +20,104 @@ class User {
 class Auth {
   /**
    * The following methods were meant for user authentication for both email and OTP.
-   * @param email 
-   * @returns 
+   * @param email
+   * @returns
    */
 
-  static async authenticateLogin(email: string){
+  static async authenticateLogin(email: string) {
     const { data, error } = await supabase
-    .from("user")
-    .select("user_id, email, hashed_password").eq("email", email).single();
+      .from("user")
+      .select("user_id, email, hashed_password")
+      .eq("email", email)
+      .single();
 
     if (error) {
-      if (error.code === 'PGRST116') { 
+      if (error.code === 'PGRST116') { // No rows found
         return null;
       }
       throw new Error(error.message);
     }
-  
+
     return data;
   }
 
-  static async createOTP(otp_input: {user_id: number, two_fa_code: string}){
-
+  static async createOTP(otp_input: { user_id: number; two_fa_code: string }) {
     const addMinutes = (date: number, n: number) => {
-      const d = new Date(date)
-      d.setTime(d.getTime() + n * 60_000)
-      return d
-    }
+      const d = new Date(date);
+      d.setTime(d.getTime() + n * 60_000);
+      return d;
+    };
 
     const otp = {
       ...otp_input,
-      two_fa_code_expires_at: addMinutes(Date.now(), 20)
+      two_fa_code_expires_at: addMinutes(Date.now(), 20),
+    };
+
+    const { data: existingUser, error: existingError } = await supabase
+      .from("two_fa_code")
+      .select("two_fa_code, two_fa_code_expires_at")
+      .eq("user_id", otp_input.user_id)
+      .single();
+
+    if (existingError && existingError.code !== 'PGRST116') {
+      throw new Error(existingError.message);
     }
 
-    const {data, error} = await supabase.from("two_fa_code").insert([otp])
+    if (existingUser) {
+      const { data, error } = await supabase
+        .from("two_fa_code")
+        .update({
+          two_fa_code: otp.two_fa_code,
+          two_fa_code_expires_at: otp.two_fa_code_expires_at,
+        })
+        .eq("user_id", otp.user_id);
 
-    if(error) throw new Error(error.message)
+      if (error) throw new Error(error.message);
+      return data;
+    } else {
+      const { data, error } = await supabase
+        .from("two_fa_code")
+        .insert([otp]);
 
-    return data
+      if (error) throw new Error(error.message);
+      return data;
+    }
   }
 
-  static async authenticateOTP(user_id: number){
-    const {data, error} = await supabase.from("two_fa_code").select("two_fa_code, two_fa_code_expires_at").eq("user_id", user_id).single()
+  static async authenticateOTP(user_id: number) {
+    //console.log(`Querying for user_id: ${user_id} (${typeof user_id})`);
 
-    if(error) throw new Error(error.message)
-
-    return data
+    const { data, error } = await supabase
+      .from("two_fa_code")
+      .select("two_fa_code, two_fa_code_expires_at")
+      .eq("user_id", user_id)
+      .maybeSingle(); // Allows 0 or 1 row without error
+  
+    //console.log(data, error);
+    
+    if (error) {
+      throw new Error(error.message);
+    }
+  
+    if (!data) {
+      return null; // No OTP found for this user
+    }
+  
+    return data;
   }
+  
 
-  static async resetOTP(user_id: number){
-    const {data, error} = await supabase.from("two_fa_code")
-    .insert({      
-      two_fa_code: null,
-      two_fa_code_expires_at: null}
-    ).eq("user_id", user_id)
+  static async resetOTP(user_id: number) {
+    const { data, error } = await supabase
+      .from("two_fa_code")
+      .update({
+        two_fa_code: null,
+        two_fa_code_expires_at: null,
+      })
+      .eq("user_id", user_id);
 
-    if(error) throw new Error(error.message)
-
-    return data
+    if (error) throw new Error(error.message);
+    return data;
   }
 }
 
