@@ -18,7 +18,8 @@ app.use(express.json());
 app.use("/connect", server, userAccountRoute, userRoute, taskRoutes);
 
 // Start server
-const PORT = port || 3000;
+const PORT = port || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log("Click this to direct: http://localhost:" + PORT +  "/connect");
 });
