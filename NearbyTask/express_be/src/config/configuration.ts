@@ -21,4 +21,6 @@ export const mailer = nodemailer.createTransport({
   },
 } as SMTPTransport.Options);
 
+export const session_key = crypto.randomUUID()
+
 export const port = process.env.PORT;

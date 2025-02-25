@@ -21,23 +21,23 @@ class _RegisterViewState extends State<RegisterView> {
   List<UserModel> _users =
       []; // Store fetched users, iyo yung sa display record sa baba
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchUsers();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _fetchUsers();
+  // }
 
 //For Displaying the record (record functionality)
-  Future<void> _fetchUsers() async {
-    try {
-      List<UserModel> users = await ApiService.fetchAllUsers();
-      setState(() {
-        _users = users;
-      });
-    } catch (e) {
-      print("Error fetching users: $e");
-    }
-  }
+//   Future<void> _fetchUsers() async {
+//     try {
+//       List<UserModel> users = await ApiService.fetchAllUsers();
+//       setState(() {
+//         _users = users;
+//       });
+//     } catch (e) {
+//       print("Error fetching users: $e");
+//     }
+//   }
 
 //Allow us to pick a File using FilePicker Dependencies
   Future<void> _pickImage() async {
