@@ -1,7 +1,7 @@
 import { Users } from 'src/model/user-management';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { toast } from 'ngx-sonner';
@@ -34,16 +34,37 @@ import { ButtonComponent } from 'src/app/shared/components/button/button.compone
 })
 export class UsersComponent implements OnInit {
   public users: any[] = [];
+  displayedUsers = this.filterService.currentUsers;
 
   constructor(
     private http: HttpClient,
     private filterService: UserTableFilterService,
     private router: Router,
     private useraccount: UserAccountService,
-  ) {}
+  ) {
+    effect(() => {
+      const currentPage = this.filterService.currentPageField();
+      const pageSize = this.filterService.pageSizeField();
+      this.loadUsers(currentPage, pageSize);
+    });
+  }
+
+  loadUsers(page: number, pageSize: number) {
+    this.useraccount.getUsers(page, pageSize).subscribe((response) => {
+      this.filterService.setCurrentUsers(response.users);
+      this.filterService.userSizeField.set(response.total);
+    });
+  }
 
   ngOnInit(): void {
     this.fetchUsers();
+    this.setUserSize();
+  }
+
+  setUserSize(): void {
+    this.useraccount.getUsers(1, 10).subscribe((users) => {
+      this.filterService.setUsers(this.users);
+    });
   }
 
   get UserSize(): number {

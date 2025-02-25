@@ -33,4 +33,8 @@ export class UserAccountService {
   updateUserAccount(userID: Number, userData: FormData): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/updateUserInfo/${userID}`, userData);
   }
+
+  getUsers(page: number, pageSize: number) {
+    return this.http.get<{ users: any[]; total: number }>(`${this.apiUrl}/users?page=${page}&pageSize=${pageSize}`);
+  }
 }

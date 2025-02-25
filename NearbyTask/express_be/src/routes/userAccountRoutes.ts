@@ -20,6 +20,8 @@ router.delete("/deleteUser/:id", UserAccountController.deleteUser);
 
 router.get("/getUserData/:id", UserAccountController.getUserData);
 
+router.get("/users", UserAccountController.getPaginationUsers);
+
 router.put(
   "/updateUserInfo/:id/",
   upload.single("image"),
