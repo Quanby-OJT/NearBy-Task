@@ -232,37 +232,29 @@ class UserAccountController {
       const pageSize = parseInt(req.query.pageSize as string) || 10;
 
       const start = (page - 1) * pageSize;
-      const end = start + pageSize - 1; // Supabase `.range()` is inclusive
+      const end = start + pageSize - 1;
 
-      // Fetch paginated users
       const { data: users, error } = await supabase
         .from("user")
-        .select("*") // Select all columns, adjust if needed
-        .order("created_at", { ascending: false }) // Ensure sorting if `createdAt` exists
-        .range(start, end); // Apply pagination
+        .select("*")
+        .order("created_at")
+        .range(start, end);
 
       if (error) {
         return res.status(500).json({ error: error.message });
       }
 
-      // Fetch total user count
-      const { count, error: countError } = await supabase
-        .from("user")
-        .select("id", { count: "exact", head: true });
-
-      if (countError) {
-        return res.status(500).json({ error: countError.message });
-      }
-
-      res.json({
+      return res.json({
         users,
-        total: count,
+        total: users,
         page,
         pageSize,
       });
     } catch (error) {
       console.error("Error fetching users:", error);
-      res.status(500).json({ error: "Failed to fetch users" });
+      res.status(500).json({
+        error: error instanceof Error ? error.message : "Unknown server error",
+      });
     }
   }
 }

@@ -1,5 +1,3 @@
-import { Users } from 'src/model/user-management';
-import { ThemeService } from 'src/app/core/services/theme.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, effect, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -34,6 +32,7 @@ import { ButtonComponent } from 'src/app/shared/components/button/button.compone
 })
 export class UsersComponent implements OnInit {
   public users: any[] = [];
+  public PaginationUsers: any[] = [];
   displayedUsers = this.filterService.currentUsers;
 
   constructor(
@@ -50,10 +49,16 @@ export class UsersComponent implements OnInit {
   }
 
   loadUsers(page: number, pageSize: number) {
-    this.useraccount.getUsers(page, pageSize).subscribe((response) => {
-      this.filterService.setCurrentUsers(response.users);
-      this.filterService.userSizeField.set(response.total);
-    });
+    this.useraccount.getUsers(page, pageSize).subscribe(
+      (response) => {
+        console.log('Fetched Users:', response.users);
+        this.filterService.setCurrentUsers(response.users || []);
+        this.filterService.userSizeField.set(response.total || 0);
+      },
+      (error) => {
+        console.error('Load Users Error:', error);
+      },
+    );
   }
 
   ngOnInit(): void {
@@ -75,6 +80,7 @@ export class UsersComponent implements OnInit {
     this.useraccount.getAllUsers().subscribe(
       (response: any) => {
         this.users = response.users;
+        this.filterService.setUsers(this.users);
       },
       (error: any) => {
         console.error('Error fetching users:', error);
@@ -89,14 +95,15 @@ export class UsersComponent implements OnInit {
     const status = this.filterService.statusField();
     const pageSize = this.filterService.pageSizeField();
     const role = this.filterService.roleField();
+    this.PaginationUsers = this.filterService.currentUsers();
+    console.log('Current Users:', this.PaginationUsers);
 
-    return this.users
-      .filter(
-        (user) =>
-          user.first_name.toLowerCase().includes(search) ||
-          user.last_name.toLowerCase().includes(search) ||
-          user.email.toLowerCase().includes(search),
-      )
+    return this.PaginationUsers.filter(
+      (user) =>
+        user.first_name.toLowerCase().includes(search) ||
+        user.last_name.toLowerCase().includes(search) ||
+        user.email.toLowerCase().includes(search),
+    )
       .filter((user) => {
         if (!status) return true;
         switch (status) {
@@ -133,17 +140,22 @@ export class UsersComponent implements OnInit {
     }));
   }
 
-  private handleRequestError(error: any): void {
-    const msg = 'An error occurred while fetching users. Loading dummy data as fallback.';
-    toast.error(msg, {
-      position: 'bottom-right',
-      description: error.message,
-      action: {
-        label: 'Undo',
-        onClick: () => console.log('Action!'),
-      },
-      actionButtonStyle: 'background-color:#DC2626; color:white;',
-    });
+  // private handleRequestError(error: any): void {
+  //   const msg = 'An error occurred while fetching users. Loading dummy data as fallback.';
+  //   toast.error(msg, {
+  //     position: 'bottom-right',
+  //     description: error.message,
+  //     action: {
+  //       label: 'Undo',
+  //       onClick: () => console.log('Action!'),
+  //     },
+  //     actionButtonStyle: 'background-color:#DC2626; color:white;',
+  //   });
+  // }
+
+  handleRequestError(error: any): void {
+    console.error('API Request Error:', error);
+    toast.error(error?.message || 'An unknown error occurred');
   }
 
   navigateToAddUser(): void {
