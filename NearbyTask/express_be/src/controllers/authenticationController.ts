@@ -101,6 +101,7 @@ class AuthenticationController {
             }
 
             Auth.resetOTP(user_id)
+            req.session.id = user_id
 
             res.status(200).json({ user_id: user_id })
         } catch (error) {

@@ -2,6 +2,7 @@ import { Router } from "express";
 import AuthenticationController from "../controllers/authenticationController";
 import { validateLogin, validateOTP } from "../validator/authValidator";
 import { handleValidationErrors } from "../middleware/validationMiddleware";
+import { isAuthenticated } from "../middleware/authenticationMiddleware";
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -26,5 +27,8 @@ router.post(
     "/reset",
     AuthenticationController.generateOTP
 )
+
+/**Application Routes (if the user is authenticated) */
+
 
 export default router;
