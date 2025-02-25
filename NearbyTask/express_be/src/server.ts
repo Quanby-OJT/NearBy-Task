@@ -11,6 +11,12 @@ import session from "express-session"
 dotenv.config();
 const app: Application = express();
 
+declare module 'express-session' {
+  interface SessionData {
+    user: string;
+  }
+}
+
 // Middleware
 app.use(cors());
 app.use(express.json());

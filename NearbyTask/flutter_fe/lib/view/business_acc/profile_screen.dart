@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_fe/controller/authentication_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -9,6 +10,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final AuthenticationController _controller = AuthenticationController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -312,7 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 40),
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    _controller.logout(context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: Color(0xFF0272B1),
