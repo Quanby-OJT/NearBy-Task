@@ -3,9 +3,7 @@ import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
-import { Router, RouterOutlet } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/components/button/button.component';
-import Swal from 'sweetalert2';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,14 +18,6 @@ export class AddUserComponent {
   imagePreview: File | null = null;
   duplicateEmailError: any = null;
   success_message: any = null;
-  duplicateEmailError: any = null;
-  success_message: any = null;
-
-  constructor(
-    private _formBuilder: FormBuilder,
-    private UserAccountService: UserAccountService,
-    private router: Router,
-  ) {}
   constructor(
     private _formBuilder: FormBuilder,
     private UserAccountService: UserAccountService,

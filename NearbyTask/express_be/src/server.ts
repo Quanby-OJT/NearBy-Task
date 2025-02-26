@@ -2,14 +2,17 @@ import express, { Application } from "express";
 import cors from "cors";
 import { port, session_key } from "./config/configuration";
 import server from "./routes/apiRoutes";
-import userRoute from "./routes/userRoutes";
-import userAccountRoute from "./routes/userAccountRoutes";
-import taskRoutes from "./routes/taskRoutes";
 import dotenv from "dotenv";
 import session from "express-session"
 
 dotenv.config();
 const app: Application = express();
+
+declare module 'express-session' {
+  interface SessionData {
+    user: string;
+  }
+}
 
 // Middleware
 app.use(cors());
@@ -22,7 +25,7 @@ app.use(session({
 }))
 
 // Routes
-app.use("/connect", server, userAccountRoute, userRoute, taskRoutes);
+app.use("/connect", server);
 
 // Start server
 const PORT = port || 5000;

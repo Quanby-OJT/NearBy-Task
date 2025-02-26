@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fe/service/api_service.dart';
 import 'package:flutter_fe/view/sign_in/otp_screen.dart';
 import 'package:flutter_fe/view/service_acc/service_acc_main_page.dart';
+import 'package:flutter_fe/view/welcome_page/welcome_page_view_main.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AuthenticationController{
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController otpController = TextEditingController();
   int userId;
+  final storage = GetStorage();
 
   AuthenticationController({this.userId = 0});
 
@@ -58,8 +61,9 @@ class AuthenticationController{
     var response = await ApiService.authOTP(userId, otpController.text);
 
     if(response.containsKey('user_id')){
-      //Code for redirection to OTP Page
+      //Code for user Session.
       userId = response['user_id'];
+      await storage.write('user_id', userId);
       Navigator.push(context, MaterialPageRoute(builder: (context){
         return ServiceAccMain();
       }));
@@ -74,5 +78,12 @@ class AuthenticationController{
         SnackBar(content: Text(error)),
       );
     }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    await storage.remove('user_id');
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+        builder: (context) => WelcomePageViewMain()), (route) => false
+    );
   }
 }

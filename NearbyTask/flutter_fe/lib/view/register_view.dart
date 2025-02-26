@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
-import '../controller/register_controller.dart';
+import '../controller/profile_controller.dart';
 import '../service/api_service.dart';
 import '../model/user_model.dart';
 

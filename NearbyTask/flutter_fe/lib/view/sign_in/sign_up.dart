@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter_fe/view/sign_in/sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_fe/controller/register_controller.dart';
+import 'package:flutter_fe/controller/profile_controller.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});

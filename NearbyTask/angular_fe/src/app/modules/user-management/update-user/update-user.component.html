@@ -13,11 +13,7 @@
 
 <div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
   <!-- Add User form -->
-<<<<<<< HEAD
-
-=======
   <div></div>
->>>>>>> df973ae4ff448f3ff020ccef71d20a44589e69b3
   <form class="my-10 space-y-6" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="space-y-3 text-left">
       <div class="grid grid-cols-3 gap-5 p-5">
@@ -25,11 +21,7 @@
           <div class="overflow-hidden rounded-lg bg-white shadow-md">
             <div class="h-50 flex w-full items-center justify-center bg-gray-100">
               <img
-<<<<<<< HEAD
-                [src]="imagePreview || 'https://via.placeholder.com/150'"
-=======
                 [src]="imageUrl ? imageUrl : profileImage || ''"
->>>>>>> df973ae4ff448f3ff020ccef71d20a44589e69b3
                 alt="Uploaded Image"
                 class="h-full w-full object-cover" />
             </div>

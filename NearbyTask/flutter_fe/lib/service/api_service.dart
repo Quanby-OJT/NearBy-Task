@@ -9,52 +9,52 @@ class ApiService {
   static const String apiUrl =
       "http://192.168.56.1:5000/connect"; // Adjust if needed
 
-  // static Future<bool> registerUser(UserModel user) async {
-  //   //Tell Which Route the Backend we going to Use
-  //   var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/add"));
-  //
-  //   // Add text fields
-  //   request.fields["first_name"] = user.firstName;
-  //   request.fields["last_name"] = user.lastName;
-  //   request.fields["email"] = user.email;
-  //   request.fields["password"] = user.password;
-  //
-    // Attach Image (if available)~
-    // if (user.image != null && user.imageName != null) {
-    //   request.files.add(
-    //     http.MultipartFile.fromBytes(
-    //       'image',
-    //       user.image!,
-    //       filename: user.imageName!,
-    //     ),
-    //   );
-    // }
-  //   if (user.image != null && user.imageName != null) {
-  //     final bytes = await File(user.image!.path).readAsBytes();
-  //     request.files.add(
-  //       http.MultipartFile.fromBytes(
-  //         'image',
-  //         bytes,
-  //         filename: user.imageName!,
-  //       ),
-  //     );
-  //   }
-  //
-  //   var response = await request.send();
-  //   return response.statusCode == 201;
-  // }
-  //
-  // static Future<List<UserModel>> fetchAllUsers() async {
-  //   //Tell Which Route the Backend we going to Use
-  //   final response = await http.get(Uri.parse("$apiUrl/display"));
-  //
-  //   if (response.statusCode == 200) {
-  //     final List<dynamic> data = json.decode(response.body)['users'];
-  //     return data.map((userData) => UserModel.fromJson(userData)).toList();
-  //   } else {
-  //     throw Exception('Failed to load users');
-  //   }
-  // }
+  static Future<bool> registerUser(UserModel user) async {
+    //Tell Which Route the Backend we going to Use
+    var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/add"));
+
+    // Add text fields
+    request.fields["first_name"] = user.firstName;
+    request.fields["last_name"] = user.lastName;
+    request.fields["email"] = user.email;
+    request.fields["password"] = user.password;
+
+    //Attach Image (if available)~
+    if (user.image != null && user.imageName != null) {
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'image',
+          user.image!,
+          filename: user.imageName!,
+        ),
+      );
+    }
+    if (user.image != null && user.imageName != null) {
+      final bytes = await File(user.image!.path).readAsBytes();
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'image',
+          bytes,
+          filename: user.imageName!,
+        ),
+      );
+    }
+
+    var response = await request.send();
+    return response.statusCode == 201;
+  }
+
+  static Future<List<UserModel>> fetchAuthenticatedUser(String userId) async {
+    //Tell Which Route the Backend we going to Use
+    final response = await http.get(Uri.parse("$apiUrl/getUserData/$userId"));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body)['users'];
+      return data.map((userData) => UserModel.fromJson(userData)).toList();
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
 
   static Future<Map<String, dynamic>> authUser(String email, String password) async {
     try{
@@ -125,8 +125,6 @@ class ApiService {
         }),
       );
 
-
-
       print('Status Code: ${response.statusCode}');
       print('Response Body: ${response.body}');
 
@@ -143,8 +141,29 @@ class ApiService {
       } else {
         return {"error": data.containsKey('error') ? data['error'] : "OTP Authentication Failed"};
       }
+    }catch(e){
+      print('Error: $e');
+      return {"error": "An error occured: $e"};
+    }
+  }
 
+  static Future<Map<String, dynamic>> logout(int userId) async {
+    try{
+      final response = await http.post(
+        Uri.parse("$apiUrl/logout"),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          "user_id": userId,
+        }),
+      );
 
+      var data = json.decode(response.body);
+
+      if (response.statusCode == 200) {
+        return {"message": data['message']};
+      } else {
+        return {"error": data.containsKey('error') ? data['error'] : "Error while Logging Out"};
+      }
     }catch(e){
       print('Error: $e');
       return {"error": "An error occured: $e"};
