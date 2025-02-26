@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import crypto from 'crypto';
 
 // Supabase Configuration
 dotenv.config();
