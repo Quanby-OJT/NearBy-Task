@@ -9,7 +9,6 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 
 if (environment.production) {
   enableProdMode();
-  //show this warning only on prod mode
   if (window) {
     selfXSSWarning();
   }

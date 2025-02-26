@@ -28,14 +28,27 @@
     <ul class="my-2 mx-4 flex flex-col">
       @for (item of profileMenu; track $index) {
       <li
-        routerLink="{{ item.link }}"
+        *ngIf="item.link; else logoutButton"
+        [routerLink]="item.link"
         :key="$index"
         class="text-muted-foreground hover:bg-card hover:text-primary inline-flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold">
-        <svg-icon src="{{ item.icon }}" [svgClass]="'h-5 w-5 text-muted-foreground/50'"> </svg-icon>
+        <svg-icon src="{{ item.icon }}" [svgClass]="'h-5 w-5 text-muted-foreground/50'"></svg-icon>
         {{ item.title }}
       </li>
       }
     </ul>
+
+    <!-- Logout Button -->
+    <ng-template #logoutButton>
+      <li
+        (click)="logout()"
+        class="text-muted-foreground hover:bg-card hover:text-primary inline-flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold">
+        <svg-icon
+          src="./assets/icons/heroicons/outline/logout.svg"
+          [svgClass]="'h-5 w-5 text-muted-foreground/50'"></svg-icon>
+        Log out
+      </li>
+    </ng-template>
     <hr class="border-border border-dashed" />
     <div class="mx-4 my-2">
       <span class="text-foreground text-xs font-semibold">Color</span>
