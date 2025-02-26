@@ -21,7 +21,7 @@ router.post(
 
 router.post(
     "/reset",
-    AuthenticationController.generateOTP
+    AuthenticationController.resetOTP
 )
 
 /**Application Routes (if the user is authenticated) */
