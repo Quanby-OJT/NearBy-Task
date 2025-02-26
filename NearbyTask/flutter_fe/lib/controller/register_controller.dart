@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/service/api_service.dart';
 import '../model/user_model.dart';
 
 class RegisterController {
@@ -35,7 +36,7 @@ class RegisterController {
 // Store the inputs Start
     UserModel user = UserModel(
       firstName: firstNameController.text,
-      lastName: firstNameController.text,
+      lastName: lastNameController.text,
       email: emailController.text,
       password: passwordController.text,
       image: imageData,
@@ -43,17 +44,17 @@ class RegisterController {
     );
 // Inserting the input End
 
-// Sending to the Services Start
-//     bool success = await ApiService.registerUser(user);
-//     if (success) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text("Registration Successful!")),
-//       );
-//     } else {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text("Registration Failed!")),
-//       );
-//     }
-// Sending to the Services End
+//Sending to the Services Start
+    bool success = await ApiService.registerUser(user);
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Registration Successful!")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Registration Failed!")),
+      );
+    }
+//Sending to the Services End
   }
 }
