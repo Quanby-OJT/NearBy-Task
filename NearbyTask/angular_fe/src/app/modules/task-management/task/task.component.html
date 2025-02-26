@@ -1,35 +1,26 @@
-<div class="mb-4 flex justify-between">
-  <div class="inline-block">
+<div class="mb-4 flex justify-between w-full max-w-[1440px] mx-auto px-4">
+  <div>
     <h3 class="text-foreground font-semibold">Task Management</h3>
-    <div class="text-muted-foreground space-x-1 text-xs font-medium">
-      <a href="" class="hover:text-primary">Dashboards > Task Management</a>
+    <div class="text-muted-foreground text-xs font-medium">
+      <a href="#" class="hover:text-primary">Dashboards > Task Management</a>
     </div>
   </div>
 </div>
 
-<div class="mb-4 flex justify-between">
-  <div class="inline-block"></div>
+<div class="mb-4 flex justify-between w-full max-w-[1440px] mx-auto px-4">
+  <div></div>
   <div class="flex space-x-4">
-    <button class="bg-muted text-muted-foreground hover:text-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">Import CSV</button>
+    <button class="bg-muted text-muted-foreground hover:text-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
+      Import CSV
+    </button>
   </div>
 </div>
 
-<div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
-  <app-task-table-action></app-task-table-action>
-  <div
-    class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
-    <table
-      class="text-muted-foreground table w-full table-auto border-collapse border-0 text-left align-middle leading-5">
-      <thead class="border-muted/20 text-muted-foreground border text-xs">
-        <app-task-table-header></app-task-table-header>
-      </thead>
-      <tbody>
-        <app-task-table-content></app-task-table-content>
-        <tr>
-          <td class="py-4 text-center text-sm" colspan="7">No users found</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <app-task-table-footer></app-task-table-footer>
+<div class="border-muted/20 bg-background flex w-full max-w-[1440px] mx-auto flex-col rounded-xl border p-4" *ngIf="currentTab == 'showTaskList'">
+  <app-task-list  (changeTab)="changeTab($event)"></app-task-list>
+</div>
+
+<div class="border-muted/20 bg-background flex w-full max-w-[1440px] mx-auto flex-col rounded-xl border p-4" *ngIf="currentTab == 'showTaskReportedList'">
+  <app-task-reported-list (tabChange)="changeTab($event)"></app-task-reported-list>
+
 </div>

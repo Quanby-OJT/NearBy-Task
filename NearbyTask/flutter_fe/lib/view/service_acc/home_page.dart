@@ -15,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   final CardSwiperController controller = CardSwiperController();
   List<TaskModel> tasks = [];
   bool _isLoading = true;
+  @override
   void initState() {
     super.initState();
     _fetchTasks();
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
       JobPostService jobPostService = JobPostService();
       List<TaskModel> fetchedTasks = await jobPostService.fetchAllJobs();
 
-      print("Raw API Response: ${fetchedTasks}"); // Print entire response
+      print("Raw API Response: $fetchedTasks"); // Print entire response
       print(
           "Parsed tasks count: ${fetchedTasks.length}"); // Check if tasks are parsed
 
