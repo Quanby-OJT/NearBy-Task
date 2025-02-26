@@ -71,7 +71,7 @@ class _ServiceAccMainState extends State<ServiceAccMain> {
             ),
             GButton(
               icon: Icons.list,
-              text: 'Requests',
+              text: 'Request',
             ),
             GButton(
               icon: Icons.person,

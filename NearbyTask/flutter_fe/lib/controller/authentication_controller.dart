@@ -61,8 +61,6 @@ class AuthenticationController{
     var response = await ApiService.authOTP(userId, otpController.text);
 
     if(response.containsKey('user_id')){
-      //Code for user Session.
-      userId = response['user_id'];
       await storage.write('user_id', userId);
       Navigator.push(context, MaterialPageRoute(builder: (context){
         return ServiceAccMain();
@@ -82,9 +80,9 @@ class AuthenticationController{
 
   Future<void> logout(BuildContext context) async {
     await storage.remove('user_id');
-    await ApiService.logout(userId);
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
         builder: (context) => WelcomePageViewMain()), (route) => false
     );
+    await ApiService.logout(userId);
   }
 }

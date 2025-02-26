@@ -29,3 +29,5 @@ class ClientModel{
         return data
     }
 }
+
+export default ClientModel

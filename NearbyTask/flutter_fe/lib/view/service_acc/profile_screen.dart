@@ -35,6 +35,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         setState(() {
           _user = user;
           _isLoading = false;
+
+          // Populate controllers
+          _userController.firstNameController.text = user?.firstName ?? '';
+          _userController.lastNameController.text = user?.lastName ?? '';
+          _userController.emailController.text = user?.email ?? '';
         });
       } else {
         setState(() => _isLoading = false);
@@ -101,7 +106,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  controller: _userController.firstNameController,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -143,7 +149,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  controller: _userController.specializationController,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -185,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -227,7 +234,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  enabled: true,
+                                  controller: _userController.emailController,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -269,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -311,7 +319,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,

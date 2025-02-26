@@ -119,6 +119,35 @@ class Auth {
     if (error) throw new Error(error.message);
     return data;
   }
+
+  static async login(user_id: number) {
+
+    const d = new Date()
+
+    const { data, error } = await supabase
+      .from("user_logs")
+      .insert({
+        user_id: user_id,
+        login_timestamp: d.setTime(Date.now())
+      });
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  
+  static async logout(user_id: number) {
+    const d = new Date()
+
+    const { data, error } = await supabase
+      .from("user_logs")
+      .update({
+        login_timestamp: d.setTime(Date.now())
+      }).eq('user_id', user_id);
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
 }
 
 export { Auth };

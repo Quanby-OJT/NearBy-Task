@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 35, top: 20),
                 child: SizedBox(
-                  width: 200,
+                  width: 290,
                   child: TextField(
                     cursorColor: Color(0xFF0272B1),
                     decoration: InputDecoration(

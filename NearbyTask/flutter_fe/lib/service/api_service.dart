@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../model/user_model.dart';
+import '../model/tasker_model.dart';
 
 class ApiService {
   static const String apiUrl =
@@ -11,7 +12,7 @@ class ApiService {
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
-    var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/add"));
+    var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/create-new-user"));
 
     // Add text fields
     request.fields["first_name"] = user.firstName;
@@ -43,6 +44,10 @@ class ApiService {
     var response = await request.send();
     return response.statusCode == 201;
   }
+
+  // static Future<bool> createTasker(TaskerModel tasker){
+  //   var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/"))
+  // }
 
   static Future<UserModel?> fetchAuthenticatedUser(String userId) async {
     try {

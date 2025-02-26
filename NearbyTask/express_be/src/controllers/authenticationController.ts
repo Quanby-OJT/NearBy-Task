@@ -101,6 +101,7 @@ class AuthenticationController {
             }
 
             Auth.resetOTP(user_id)
+            Auth.login(user_id)
             req.session.user = user_id
 
             res.status(200).json({ user_id: user_id })
@@ -111,14 +112,21 @@ class AuthenticationController {
     }
 
     static async logout(req: Request, res: Response): Promise<void> {
-        req.session.destroy((error) => {
-            if (error) {
-                res.status(500).json({ error: "An error occurred while logging out. Please try again." })
-                return
-            }
-            res.clearCookie("connect.sid")
-            res.status(200).json({ message: "Successfully logged out." })
-        })
+        console.log("Logging out...")
+        if (req.session.user) {
+            Auth.logout(parseInt(req.session.user))
+            req.session.destroy((error) => {
+                if (error) {
+                    res.status(500).json({ error: "An error occurred while logging out. Please try again." })
+                    return
+                }
+                res.clearCookie("connect.sid")
+                res.status(200).json({ message: "Successfully logged out." })
+            })
+        } else {
+            res.status(400).json({ error: "User is not logged in." })
+            return
+        }
     }
 }
 
