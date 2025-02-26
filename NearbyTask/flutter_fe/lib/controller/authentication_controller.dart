@@ -82,6 +82,7 @@ class AuthenticationController{
 
   Future<void> logout(BuildContext context) async {
     await storage.remove('user_id');
+    await ApiService.logout(userId);
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
         builder: (context) => WelcomePageViewMain()), (route) => false
     );

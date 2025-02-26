@@ -14,7 +14,7 @@ class SignUpBusinessAcc extends StatefulWidget {
 class _SignUpBusinessAccState extends State<SignUpBusinessAcc> {
   int currentStep = 0;
 
-  final RegisterController _controller = RegisterController();
+  final ProfileController _controller = ProfileController();
   File? _selectedImage; // Store the selected image bytes
   String? _imageName; // Store the selected image name
 

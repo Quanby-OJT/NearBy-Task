@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../model/user_model.dart';
 import '../service/api_service.dart';
 
-class RegisterController {
+class ProfileController {
   // Fetched user inputs Start
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -54,8 +54,22 @@ class RegisterController {
       }
   }
 
-  Future<void> getAuthenticatedUser(BuildContext context, int userId){
-    //Edit User Information for Both Client and Tasker
-
+  Future<UserModel?> getAuthenticatedUser(BuildContext context, String userId) async {
+    try {
+      UserModel? user = await ApiService.fetchAuthenticatedUser(userId);
+      if (user != null) {
+        return user;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to retrieve user data!")),
+        );
+        return null;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+      return null;
+    }
   }
 }

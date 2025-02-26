@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/controller/authentication_controller.dart';
+import 'package:flutter_fe/controller/profile_controller.dart';
 import 'package:flutter_fe/model/user_model.dart';
 import 'package:flutter_fe/service/api_service.dart';
 import 'package:flutter_fe/view/sign_in/sign_in.dart';
@@ -14,9 +15,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final AuthenticationController _controller = AuthenticationController();
-  final GetStorage _session = GetStorage();
-  List<UserModel> userData;
+  final ProfileController _userController = ProfileController();
+  final AuthenticationController _authController = AuthenticationController();
+  final GetStorage storage = GetStorage();
+  UserModel? _user;
+  bool _isLoading = true;
 
   @override
   void initState(){
@@ -24,21 +27,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _fetchUserData();
   }
 
-  Future<void> _fetchUserData() async{
-    String? userId = _session.read('user_id');
-
-    if(userId != null){
-      try{
-        var response = await ApiService.fetchAuthenticatedUser(userId);
-
+  Future<void> _fetchUserData() async {
+    try {
+      String? userId = storage.read("user_id"); // Retrieve user_id from storage
+      if (userId != null) {
+        UserModel? user = await _userController.getAuthenticatedUser(context, userId);
         setState(() {
-          userData = response;
+          _user = user;
+          _isLoading = false;
         });
-      }catch(e){
-        print("Error fetching user data: $e");
+      } else {
+        setState(() => _isLoading = false);
       }
-    }else{
-      print("Sorry. User ID not found.");
+    } catch (e) {
+      print("Error fetching user data: $e");
+      setState(() => _isLoading = false);
     }
   }
 
@@ -345,7 +348,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 40),
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    _controller.logout(context);
+                                    _authController.logout(context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: Color(0xFF0272B1),

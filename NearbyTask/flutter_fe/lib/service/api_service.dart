@@ -44,17 +44,28 @@ class ApiService {
     return response.statusCode == 201;
   }
 
-  static Future<List<UserModel>> fetchAuthenticatedUser(String userId) async {
-    //Tell Which Route the Backend we going to Use
-    final response = await http.get(Uri.parse("$apiUrl/getUserData/$userId"));
+  static Future<UserModel?> fetchAuthenticatedUser(String userId) async {
+    try {
+      final response = await http.get(Uri.parse("$apiUrl/getUserData/$userId"));
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body)['users'];
-      return data.map((userData) => UserModel.fromJson(userData)).toList();
-    } else {
-      throw Exception('Failed to load users');
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        // Check if the 'users' key exists and contains data
+        if (data.containsKey('users') && data['users'] is List && data['users'].isNotEmpty) {
+          return UserModel.fromJson(data['users'][0]); // Assuming first user is the authenticated user
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+      return null;
     }
   }
+
 
   static Future<Map<String, dynamic>> authUser(String email, String password) async {
     try{

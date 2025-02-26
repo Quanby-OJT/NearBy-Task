@@ -15,7 +15,7 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final RegisterController _controller = RegisterController();
+  final ProfileController _controller = ProfileController();
   Uint8List? _selectedImage; // Store the selected image bytes
   String? _imageName; // Store the selected image name
   List<UserModel> _users =
