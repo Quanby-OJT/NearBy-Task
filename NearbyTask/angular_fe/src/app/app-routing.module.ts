@@ -9,6 +9,7 @@ const routes: Routes = [
 
     loadChildren: () => import('./modules/layout/layout.module').then((m) => m.LayoutModule),
     canActivate: [authGuard],
+    data: { role: ['admin', 'moderator'] },
   },
   {
     path: 'auth',

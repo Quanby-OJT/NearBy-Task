@@ -12,7 +12,7 @@ export class AuthService {
   login(email: string, password: string): boolean {
     if (email === this.email && password === this.password) {
       localStorage.setItem('token', 'dummy-jwt-token');
-      this.router.navigate(['/dashboard']);
+      localStorage.setItem('role', 'admin');
       return true;
     }
     return false;
@@ -20,6 +20,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     this.router.navigate(['/auth']);
   }
 }
