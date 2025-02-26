@@ -1,6 +1,5 @@
-import { ThemeService } from 'src/app/core/services/theme.service';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { toast } from 'ngx-sonner';
@@ -32,29 +31,106 @@ import { ButtonComponent } from 'src/app/shared/components/button/button.compone
   styleUrls: ['./users.component.css'],
 })
 export class UsersComponent implements OnInit {
-  users: any[] = [];
+  public users: any[] = [];
+  public PaginationUsers: any[] = [];
+  displayedUsers = this.filterService.currentUsers;
 
   constructor(
     private http: HttpClient,
     private filterService: UserTableFilterService,
     private router: Router,
     private useraccount: UserAccountService,
-  ) {}
+  ) {
+    effect(() => {
+      const currentPage = this.filterService.currentPageField();
+      const pageSize = this.filterService.pageSizeField();
+      this.loadUsers(currentPage, pageSize);
+    });
+  }
+
+  loadUsers(page: number, pageSize: number) {
+    this.useraccount.getUsers(page, pageSize).subscribe(
+      (response) => {
+        console.log('Fetched Users:', response.users);
+        this.filterService.setCurrentUsers(response.users || []);
+        this.filterService.userSizeField.set(response.total || 0);
+      },
+      (error) => {
+        console.error('Load Users Error:', error);
+      },
+    );
+  }
 
   ngOnInit(): void {
     this.fetchUsers();
+    this.setUserSize();
+  }
+
+  setUserSize(): void {
+    this.useraccount.getUsers(1, 10).subscribe((users) => {
+      this.filterService.setUsers(this.users);
+    });
+  }
+
+  get UserSize(): number {
+    return this.users.length;
   }
 
   fetchUsers(): void {
     this.useraccount.getAllUsers().subscribe(
       (response: any) => {
         this.users = response.users;
+        this.filterService.setUsers(this.users);
       },
       (error: any) => {
         console.error('Error fetching users:', error);
         this.handleRequestError(error);
       },
     );
+  }
+
+  get filteredUsers(): any[] {
+    const search = this.filterService.searchField().toLowerCase() || '';
+    console.log('Search Value:', search);
+    const status = this.filterService.statusField();
+    const pageSize = this.filterService.pageSizeField();
+    const role = this.filterService.roleField();
+    this.PaginationUsers = this.filterService.currentUsers();
+    console.log('Current Users:', this.PaginationUsers);
+
+    return this.PaginationUsers.filter(
+      (user) =>
+        user.first_name.toLowerCase().includes(search) ||
+        user.last_name.toLowerCase().includes(search) ||
+        user.email.toLowerCase().includes(search),
+    )
+      .filter((user) => {
+        if (!status) return true;
+        switch (status) {
+          case '1':
+            return user.acc_status === 'active';
+          case '2':
+            return user.acc_status === 'blocked';
+          case '3':
+            return user.acc_status === 'review';
+          default:
+            return true;
+        }
+      })
+      .filter((user) => {
+        if (!role) return true;
+        switch (role) {
+          case '1':
+            return user.user_role === 'client';
+          case '2':
+            return user.user_role === 'tasker';
+          case '3':
+            return user.user_role === 'moderator';
+          default:
+            return true;
+        }
+      })
+      .slice(0, pageSize);
   }
 
   toggleUsers(checked: boolean): void {
@@ -64,54 +140,22 @@ export class UsersComponent implements OnInit {
     }));
   }
 
-  private handleRequestError(error: any): void {
-    const msg = 'An error occurred while fetching users. Loading dummy data as fallback.';
-    toast.error(msg, {
-      position: 'bottom-right',
-      description: error.message,
-      action: {
-        label: 'Undo',
-        onClick: () => console.log('Action!'),
-      },
-      actionButtonStyle: 'background-color:#DC2626; color:white;',
-    });
-  }
+  // private handleRequestError(error: any): void {
+  //   const msg = 'An error occurred while fetching users. Loading dummy data as fallback.';
+  //   toast.error(msg, {
+  //     position: 'bottom-right',
+  //     description: error.message,
+  //     action: {
+  //       label: 'Undo',
+  //       onClick: () => console.log('Action!'),
+  //     },
+  //     actionButtonStyle: 'background-color:#DC2626; color:white;',
+  //   });
+  // }
 
-  get filteredUsers(): any[] {
-    const search = this.filterService.searchField().toLowerCase();
-    const status = this.filterService.statusField();
-    const order = this.filterService.orderField();
-
-    return this.users
-      .filter(
-        (user) =>
-          user.name.toLowerCase().includes(search) ||
-          user.username.toLowerCase().includes(search) ||
-          user.email.toLowerCase().includes(search) ||
-          user.phone.includes(search),
-      )
-      .filter((user) => {
-        if (!status) return true;
-        switch (status) {
-          case '1':
-            return user.status === 1;
-          case '2':
-            return user.status === 2;
-          case '3':
-            return user.status === 3;
-          default:
-            return true;
-        }
-      })
-      .sort((a, b) => {
-        const defaultNewest = !order || order === '1';
-        if (defaultNewest) {
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-        } else if (order === '2') {
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-        }
-        return 0;
-      });
+  handleRequestError(error: any): void {
+    console.error('API Request Error:', error);
+    toast.error(error?.message || 'An unknown error occurred');
   }
 
   navigateToAddUser(): void {

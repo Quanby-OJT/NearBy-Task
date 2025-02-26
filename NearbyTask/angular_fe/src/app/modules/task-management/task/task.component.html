@@ -1,1 +1,33 @@
-<p>task works!</p>
+<div class="mt-8 code-example">
+    <div class="w-full p-4 border border-gray-200 bg-gray-50 rounded-t-xl dark:border-gray-600 dark:bg-gray-700">
+      <div class="place-items-center">
+        <div class="flex items-center justify-center col-span-1 space-x-2">
+            <button class="flex items-center justify-center w-9 h-9 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700" (click)="changeSelectedTask('TaskList')">
+              <span class="sr-only">Task Lists</span>
+              <img src="https://img.icons8.com/?size=100&id=Jqe4a1RU4r3F&format=png&color=228BE6" 
+              class="w-5 h-5" 
+              alt="icon">
+            </button>
+
+            <button class="flex items-center justify-center w-9 h-9 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700" (click)="changeSelectedTask('TaskReportedList')">
+              <span class="sr-only">Task Reported Lists</span>
+              <img src="https://img.icons8.com/?size=100&id=aLLIwyHXTTj0&format=png&color=228BE6" 
+              class="w-5 h-5" 
+              alt="icon">
+            </button>
+          </div>
+      </div>
+    </div>
+    <div class="code-preview-wrapper">
+      <div id="table-hover-example" class="flex p-0 bg-white border-gray-200 bg-gradient-to-r code-preview dark:bg-gray-900 dark:border-gray-600">
+        <div class="w-full h-screen code-responsive-wrapper flex justify-center">
+          <div class="bg-white border-gray-200 bg-gradient-to-r code-preview dark:bg-gray-900 dark:border-gray-600 justify-center items-center" *ngIf="currentComponent == 'TaskList'">
+            <app-task-lists></app-task-lists>
+          </div>
+          <div class="bg-white border-gray-200 bg-gradient-to-r code-preview dark:bg-gray-900 dark:border-gray-600 justify-center items-center" *ngIf="currentComponent == 'TaskReportedList'">
+            <app-task-reported-lists></app-task-reported-lists>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>

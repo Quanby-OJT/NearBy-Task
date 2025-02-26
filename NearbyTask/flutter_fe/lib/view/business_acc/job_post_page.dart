@@ -11,6 +11,8 @@ class JobPostPage extends StatefulWidget {
 
 class _JobPostPageState extends State<JobPostPage> {
   final TaskController controller = TaskController();
+  String? _message;
+  bool _isSuccess = false;
 
   String? selectedValue; // Stores selected dropdown value
   String? selectedUrgency; // Stores selected dropdown value
@@ -19,7 +21,7 @@ class _JobPostPageState extends State<JobPostPage> {
   List<String> urgency = ['Non-Urgent', 'Urgent'];
   List<String> specializtion = ['Tech Support', 'Cleaning', 'Plumbing'];
 
-  void _submitJob() {
+  Future<void> _submitJob() async {
     controller.jobTitleController.text = controller.jobTitleController.text;
     controller.jobSpecializationController.text = selectedSpecialization ?? "";
     controller.jobDescriptionController.text =
@@ -29,6 +31,12 @@ class _JobPostPageState extends State<JobPostPage> {
     controller.jobDurationController.text = selectedValue ?? "";
     controller.jobDaysController.text = controller.jobDaysController.text;
     controller.jobUrgencyController.text = selectedUrgency ?? "";
+
+    final result = await controller.postJob();
+    setState(() {
+      _message = result['message'];
+      _isSuccess = result['success'];
+    });
 
     controller.postJob();
   }
@@ -340,6 +348,18 @@ class _JobPostPageState extends State<JobPostPage> {
                             BorderSide(color: Color(0xFF0272B1), width: 2))),
               ),
             ),
+            if (_message != null)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                child: Text(
+                  _message!,
+                  style: TextStyle(
+                    color: _isSuccess ? Colors.green : Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
             Container(
               height: 50,
               width: double.infinity,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -32,5 +32,20 @@ export class UserAccountService {
 
   updateUserAccount(userID: Number, userData: FormData): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/updateUserInfo/${userID}`, userData);
+  }
+
+  // getUsers(page: number, pageSize: number) {
+  //   return this.http.get<{ users: any[]; total: number }>(`${this.apiUrl}/users?page=${page}&pageSize=${pageSize}`);
+  // }
+
+  getUsers(page: number, pageSize: number): Observable<any> {
+    return this.http
+      .get<{ users: any[]; total: number }>(`${this.apiUrl}/users?page=${page}&pageSize=${pageSize}`)
+      .pipe(
+        catchError((error) => {
+          console.error('HTTP Error:', error);
+          return throwError(() => new Error(error?.error?.message || 'Unknown API Error'));
+        }),
+      );
   }
 }

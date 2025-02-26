@@ -3,6 +3,7 @@ import { supabase } from "./../config/configuration";
 import { Request, Response } from "express";
 import { UserAccount } from "../models/userAccountModel";
 import bcrypt from "bcrypt";
+
 class UserAccountController {
   static async registerUser(req: Request, res: Response): Promise<any> {
     try {
@@ -221,6 +222,38 @@ class UserAccountController {
     } catch (error) {
       res.status(500).json({
         error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
+  static async getPaginationUsers(req: Request, res: Response): Promise<any> {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const pageSize = parseInt(req.query.pageSize as string) || 10;
+
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize - 1;
+
+      const { data: users, error } = await supabase
+        .from("user")
+        .select("*")
+        .order("created_at")
+        .range(start, end);
+
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      return res.json({
+        users,
+        total: users,
+        page,
+        pageSize,
+      });
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({
+        error: error instanceof Error ? error.message : "Unknown server error",
       });
     }
   }

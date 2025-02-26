@@ -16,16 +16,22 @@
       </label>
     </div>
     <div class="flex flex-wrap gap-2.5">
-      <select name="status" class="text-muted-foreground w-28! p-2" (change)="onStatusChange($event)">
-        <option value="">All</option>
-        <option value="1">Active</option>
-        <option value="2">Disabled</option>
-        <option value="3">Pending</option>
+      <select name="role" class="text-muted-foreground w-28! p-2" (change)="onRoleChange($event)">
+        <option value="">All Role</option>
+        <option value="1">Client</option>
+        <option value="2">Tasker</option>
+        <option value="3">Moderator</option>
       </select>
-      <select name="order" class="text-muted-foreground w-28! p-2" (change)="onOrderChange($event)">
+      <select name="status" class="text-muted-foreground w-28! p-2" (change)="onStatusChange($event)">
+        <option value="">All Status</option>
+        <option value="1">Active</option>
+        <option value="2">Blocked</option>
+        <option value="3">Review</option>
+      </select>
+      <!-- <select name="order" class="text-muted-foreground w-28! p-2" (change)="onOrderChange($event)">
         <option value="1">Newest</option>
         <option value="2">Oldest</option>
-      </select>
+      </select> -->
     </div>
   </div>
 </div>

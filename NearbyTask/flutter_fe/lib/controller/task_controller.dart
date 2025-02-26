@@ -16,7 +16,7 @@ class TaskController {
   final jobTaskBeginDateController = TextEditingController();
   final contactpriceController = TextEditingController();
 
-  Future<void> postJob() async {
+  Future<Map<String, dynamic>> postJob() async {
     final task = TaskModel(
       title: jobTitleController.text,
       specialization: jobSpecializationController.text,
@@ -30,12 +30,6 @@ class TaskController {
       taskBeginDate: jobTaskBeginDateController.text,
     );
 
-    bool success = await _jobPostService.postJob(task);
-
-    if (success) {
-      debugPrint("Job posted successfully!");
-    } else {
-      debugPrint("Failed to post job.");
-    }
+    return await _jobPostService.postJob(task);
   }
 }

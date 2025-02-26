@@ -15,7 +15,7 @@
       Import CSV
     </button>
 
-    <!-- <app-button full impact="bold" shape="rounded" size="medium" (click)="navigateToAddUser()">Add User</app-button> -->
+    <app-button full impact="bold" shape="rounded" size="medium" (click)="navigateToAddUser()">Add User</app-button>
     <!-- <app-button full impact="bold" shape="rounded" size="medium" (click)="navigateToUpdateUser()"
       >Update User</app-button
     > -->
@@ -32,7 +32,7 @@
         <tr app-table-header (onCheck)="toggleUsers($event)"></tr>
       </thead>
       <tbody>
-        @for (user of users; track $index) {
+        @for (user of filteredUsers; track $index) {
         <tr class="hover:bg-card/50" app-table-row [user]="user"></tr>
         }@empty {
         <tr>

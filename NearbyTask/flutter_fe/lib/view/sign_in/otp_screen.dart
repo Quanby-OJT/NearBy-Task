@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fe/view/service_acc/service_acc_main_page.dart';
+import 'package:flutter_fe/controller/authentication_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  final int userId;
+
+  const OtpScreen({super.key, required this.userId});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> {
+  late final AuthenticationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AuthenticationController(userId: widget.userId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +64,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 padding: const EdgeInsets.only(
                     left: 40, right: 40, top: 20, bottom: 20),
                 child: TextField(
+                  controller: _controller.otpController,
                   cursorColor: Color(0xFF0272B1),
                   decoration: InputDecoration(
                       filled: true,
@@ -79,10 +90,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return ServiceAccMain();
-                      }));
+                      _controller.otpAuth(context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF0272B1),
@@ -105,10 +113,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         )),
                     TextButton(
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return ServiceAccMain();
-                          }));
+                          _controller.resetOTP(context);
                         },
                         child: Text(
                           'Resend',

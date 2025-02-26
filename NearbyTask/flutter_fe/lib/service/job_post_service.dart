@@ -1,10 +1,10 @@
+// In JobPostService
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_fe/model/task_model.dart';
 
 class JobPostService {
-  Future<bool> postJob(TaskModel task) async {
+  Future<Map<String, dynamic>> postJob(TaskModel task) async {
     final url = Uri.parse("http://localhost:5000/connect/addTask");
 
     try {
@@ -14,15 +14,22 @@ class JobPostService {
         body: jsonEncode(task.toJson()),
       );
 
+      var responseBody = jsonDecode(response.body);
       if (response.statusCode == 201) {
-        return true;
+        return {
+          'success': true,
+          'message':
+              responseBody['message'] ?? 'Unable  to Read Backend Response'
+        };
       } else {
-        debugPrint("Error: ${response.body}");
-        return false;
+        return {
+          'success': false,
+          'message':
+              responseBody['message'] ?? 'Unable  to Read Backend Response'
+        };
       }
     } catch (e) {
-      debugPrint("Exception: $e");
-      return false;
+      return {'success': false, 'message': 'Error Occured : $e'};
     }
   }
 
