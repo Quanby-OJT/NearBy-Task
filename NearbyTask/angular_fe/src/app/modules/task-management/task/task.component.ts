@@ -1,12 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TaskListsComponent } from './task-lists/task-lists.component';
-import { TaskReportedListsComponent } from './task-reported-lists/task-reported-lists.component';
-import { TaskActionComponent } from './task-action/task-action.component';
+import { TaskTableContentComponent } from './task-table-content/task-table-content.component';
+import { TaskTableActionComponent } from './task-table-action/task-table-action.component';
+import { TaskTableHeaderComponent } from './task-table-header/task-table-header.component';
+import { TaskTableFooterComponent } from './task-table-footer/task-table-footer.component';
 
 @Component({
   selector: 'app-task',
-  imports: [CommonModule, TaskListsComponent, TaskReportedListsComponent, TaskActionComponent],
+  imports: [
+    CommonModule,
+    TaskTableContentComponent,
+    TaskTableActionComponent,
+    TaskTableHeaderComponent,  
+    TaskTableFooterComponent
+  ],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css'
 })

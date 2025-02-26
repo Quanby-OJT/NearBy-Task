@@ -1,33 +1,35 @@
-<div class="mt-8 code-example">
-    <div class="w-full p-4 border border-gray-200 bg-gray-50 rounded-t-xl dark:border-gray-600 dark:bg-gray-700">
-      <div class="place-items-center">
-        <div class="flex items-center justify-center col-span-1 space-x-2">
-            <button class="flex items-center justify-center w-9 h-9 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700" (click)="changeSelectedTask('TaskList')">
-              <span class="sr-only">Task Lists</span>
-              <img src="https://img.icons8.com/?size=100&id=Jqe4a1RU4r3F&format=png&color=228BE6" 
-              class="w-5 h-5" 
-              alt="icon">
-            </button>
-
-            <button class="flex items-center justify-center w-9 h-9 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700" (click)="changeSelectedTask('TaskReportedList')">
-              <span class="sr-only">Task Reported Lists</span>
-              <img src="https://img.icons8.com/?size=100&id=aLLIwyHXTTj0&format=png&color=228BE6" 
-              class="w-5 h-5" 
-              alt="icon">
-            </button>
-          </div>
-      </div>
-    </div>
-    <div class="code-preview-wrapper">
-      <div id="table-hover-example" class="flex p-0 bg-white border-gray-200 bg-gradient-to-r code-preview dark:bg-gray-900 dark:border-gray-600">
-        <div class="w-full h-screen code-responsive-wrapper flex justify-center">
-          <div class="bg-white border-gray-200 bg-gradient-to-r code-preview dark:bg-gray-900 dark:border-gray-600 justify-center items-center" *ngIf="currentComponent == 'TaskList'">
-            <app-task-lists></app-task-lists>
-          </div>
-          <div class="bg-white border-gray-200 bg-gradient-to-r code-preview dark:bg-gray-900 dark:border-gray-600 justify-center items-center" *ngIf="currentComponent == 'TaskReportedList'">
-            <app-task-reported-lists></app-task-reported-lists>
-            </div>
-        </div>
-      </div>
+<div class="mb-4 flex justify-between">
+  <div class="inline-block">
+    <h3 class="text-foreground font-semibold">Task Management</h3>
+    <div class="text-muted-foreground space-x-1 text-xs font-medium">
+      <a href="" class="hover:text-primary">Dashboards > Task Management</a>
     </div>
   </div>
+</div>
+
+<div class="mb-4 flex justify-between">
+  <div class="inline-block"></div>
+  <div class="flex space-x-4">
+    <button class="bg-muted text-muted-foreground hover:text-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">Import CSV</button>
+  </div>
+</div>
+
+<div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
+  <app-task-table-action></app-task-table-action>
+  <div
+    class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
+    <table
+      class="text-muted-foreground table w-full table-auto border-collapse border-0 text-left align-middle leading-5">
+      <thead class="border-muted/20 text-muted-foreground border text-xs">
+        <app-task-table-header></app-task-table-header>
+      </thead>
+      <tbody>
+        <app-task-table-content></app-task-table-content>
+        <tr>
+          <td class="py-4 text-center text-sm" colspan="7">No users found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <app-task-table-footer></app-task-table-footer>
+</div>
