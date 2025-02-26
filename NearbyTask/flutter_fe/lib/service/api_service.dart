@@ -1,5 +1,6 @@
 // service/api_service.dart
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -64,6 +65,7 @@ class ApiService {
           "email": email,
           "password": password,
         }),
+
       );
 
       var data = json.decode(response.body);
@@ -96,6 +98,14 @@ class ApiService {
 
       var data = json.decode(response.body);
 
+    debugPrint("Request Fields: ${request.fields}");
+    debugPrint(
+        "Request Files: ${request.files.map((file) => file.filename).toList()}");
+    debugPrint("Request URL: ${request.url}");
+
+    var response = await request.send();
+    return response.statusCode == 201;
+
       if (response.statusCode == 200) {
         return {"message": data['message']};
       } else if (response.statusCode == 400 && data.containsKey('errors')) {
@@ -110,6 +120,7 @@ class ApiService {
       print('Error: $e');
       return {"error": "An error occured: $e"};
     }
+
   }
 
   static Future<Map<String, dynamic>> authOTP(int userId, String otp) async {
