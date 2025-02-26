@@ -61,7 +61,7 @@ class AuthenticationController{
     var response = await ApiService.authOTP(userId, otpController.text);
 
     if(response.containsKey('user_id')){
-      //Code for redirection to OTP Page
+      //Code for user Session.
       userId = response['user_id'];
       await storage.write('user_id', userId);
       Navigator.push(context, MaterialPageRoute(builder: (context){

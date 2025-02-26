@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/controller/authentication_controller.dart';
+import 'package:flutter_fe/model/user_model.dart';
+import 'package:flutter_fe/service/api_service.dart';
 import 'package:flutter_fe/view/sign_in/sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,6 +15,33 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final AuthenticationController _controller = AuthenticationController();
+  final GetStorage _session = GetStorage();
+  List<UserModel> userData;
+
+  @override
+  void initState(){
+    super.initState();
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async{
+    String? userId = _session.read('user_id');
+
+    if(userId != null){
+      try{
+        var response = await ApiService.fetchAuthenticatedUser(userId);
+
+        setState(() {
+          userData = response;
+        });
+      }catch(e){
+        print("Error fetching user data: $e");
+      }
+    }else{
+      print("Sorry. User ID not found.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
