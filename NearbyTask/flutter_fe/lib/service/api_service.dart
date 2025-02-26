@@ -98,14 +98,6 @@ class ApiService {
 
       var data = json.decode(response.body);
 
-    debugPrint("Request Fields: ${request.fields}");
-    debugPrint(
-        "Request Files: ${request.files.map((file) => file.filename).toList()}");
-    debugPrint("Request URL: ${request.url}");
-
-    var response = await request.send();
-    return response.statusCode == 201;
-
       if (response.statusCode == 200) {
         return {"message": data['message']};
       } else if (response.statusCode == 400 && data.containsKey('errors')) {

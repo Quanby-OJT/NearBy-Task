@@ -17,27 +17,27 @@ class _HomePageState extends State<HomePage> {
   List<UserModel> _users = [];
   bool _isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchUsers();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _fetchUsers();
+  // }
 
 //For Displaying the record (record functionality)
-  Future<void> _fetchUsers() async {
-    try {
-      List<UserModel> users = await ApiService.fetchAllUsers();
-      setState(() {
-        _users = users;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching users: $e");
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+//   Future<void> _fetchUsers() async {
+//     try {
+//       List<UserModel> users = await ApiService.fetchAllUsers();
+//       setState(() {
+//         _users = users;
+//         _isLoading = false;
+//       });
+//     } catch (e) {
+//       print("Error fetching users: $e");
+//       setState(() {
+//         _isLoading = false;
+//       });
+//     }
+//   }
 
   Future<void> _addToLikesTable(int userId) async {
     try {
