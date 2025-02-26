@@ -7,9 +7,9 @@ class User {
    * @param userData 
    * @returns 
    */
-  static async create(userData: { first_name: string; last_name: string; email: string; password: string; image?: string }) {
+  static async create(userData: { first_name: string; last_name: string; email: string; hashed_password: string; image_link?: string }) {
     const { data, error } = await supabase
-      .from("demo") // Dapat tama ang table name mo sa database
+      .from("user") // Dapat tama ang table name mo sa database
       .insert([userData]);
 
     if (error) throw new Error(error.message);
