@@ -18,8 +18,7 @@ export class SessionLocalStorage {
   }
 
   getSession(): any {
-    const storedSession = sessionStorage.getItem('session');
-    return storedSession ? JSON.parse(storedSession) : this.session();
+    return Object.keys(this.session())[0];
   }
 
   getSessionId(): string | null {
