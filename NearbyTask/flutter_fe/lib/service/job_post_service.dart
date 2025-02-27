@@ -5,7 +5,7 @@ import 'package:flutter_fe/model/task_model.dart';
 
 class JobPostService {
   Future<Map<String, dynamic>> postJob(TaskModel task) async {
-    final url = Uri.parse("http://localhost:5000/connect/addTask");
+    final url = Uri.parse("http://192.168.110.145:5000/connect/addTask");
 
     try {
       final response = await http.post(
@@ -52,8 +52,8 @@ class JobPostService {
   //   }
   // }
   Future<List<TaskModel>> fetchAllJobs() async {
-    final response =
-        await http.get(Uri.parse('http://localhost:5000/connect/displayTask'));
+    final response = await http
+        .get(Uri.parse('http://192.168.254.113:5000/connect/displayTask'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
