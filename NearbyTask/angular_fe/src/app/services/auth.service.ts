@@ -10,7 +10,7 @@ import { SessionLocalStorage } from 'src/services/sessionStorage';
 })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}`;
-  constructor(private router: Router, private http: HttpClient, private SessionLocalStorage: SessionLocalStorage) {}
+  constructor(private router: Router, private http: HttpClient, private session: SessionLocalStorage) {}
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
@@ -22,16 +22,26 @@ export class AuthService {
   }
 
   logout(userID: Number): Observable<any> {
-    // const user_id = this.SessionLocalStorage.getUserId();
-    // console.log(user_id);
-    return this.http.post<any>(`${this.apiUrl}/logout`, { userID }).pipe(
+    const sessionData = this.session.getSession();
+    const sessionID = typeof sessionData === 'string' ? sessionData.trim() : JSON.stringify(sessionData).trim();
+
+    // Clean both values
+    const cleanedSessionID = sessionID.replace(/^"|"$/g, '').trim();
+    // console.log('logout: ' + sessionData);
+    return this.http.post<any>(`${this.apiUrl}/logout`, { userID, cleanedSessionID }).pipe(
       catchError((error) => {
         console.error('HTTP Error:', error);
         return throwError(() => new Error(error?.error?.message || 'Unknown API Error'));
       }),
     );
-    // console.log(user_id);
-    // sessionStorage.removeItem('session');
-    // this.router.navigate(['/auth']);
+  }
+
+  logoutWithoutSession(sessionID: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/logout-without-session`, { sessionID }).pipe(
+      catchError((error) => {
+        console.error('HTTP Error:', error);
+        return throwError(() => new Error(error?.error?.message || 'Unknown API Error'));
+      }),
+    );
   }
 }
