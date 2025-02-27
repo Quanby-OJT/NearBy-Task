@@ -9,7 +9,7 @@ import 'dart:convert';
 
 class ApiService {
   static const String apiUrl =
-      "http://localhost:5000/connect"; // Adjust if needed
+      "http://192.168.254.113:5000/connect"; // Adjust if needed
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
