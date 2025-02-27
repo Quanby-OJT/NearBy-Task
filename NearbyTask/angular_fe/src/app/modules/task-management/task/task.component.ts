@@ -1,20 +1,25 @@
 import { Component } from '@angular/core';
-import { TaskListsComponent } from './task-lists/task-lists.component';
-import { TaskReportedListsComponent } from './task-reported-lists/task-reported-lists.component';
 import { CommonModule } from '@angular/common';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { TaskReportedListComponent } from './task-reported-list/task-reported-list.component';
+import { TaskListComponent } from './task-list/task-list.component';
 
 @Component({
   selector: 'app-task',
-  imports: [TaskListsComponent, TaskReportedListsComponent, CommonModule],
+  standalone: true, 
+  imports: [
+    CommonModule,
+    AngularSvgIconModule,
+    TaskListComponent,
+    TaskReportedListComponent,
+  ],
   templateUrl: './task.component.html',
-  styleUrl: './task.component.css'
+  styleUrls: ['./task.component.css'] // Dapat plural
 })
 export class TaskComponent {
-//Default to TaskList muna to
-  currentComponent: string = "TaskList"; 
-  
-//Base on the Chosen Button from the user
-  changeSelectedTask(tabName: string){
-    this.currentComponent = tabName;
+  currentTab: string = "showTaskList";
+
+  changeTab(tabName: string) {
+    this.currentTab = tabName;
   }
 }

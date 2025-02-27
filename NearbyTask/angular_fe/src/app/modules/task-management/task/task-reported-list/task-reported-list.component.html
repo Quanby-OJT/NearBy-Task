@@ -1,0 +1,46 @@
+<!-- Start Action -->
+<div class="flex flex-wrap items-center justify-between gap-2 py-3 px-5"></div>
+<!-- End Action -->
+
+<!-- Start Form -->
+<div class="overflow-x-auto w-full">
+  <form class="w-full border-collapse border-0 text-left text-sm">
+    <div class="grid grid-cols-6 gap-4 p-4 bg-gray-100">
+      <div>
+        <label for="id" class="block text-sm font-medium">ID</label>
+        <input type="text" id="id" class="w-full border rounded px-3 py-2" value="002" readonly>
+      </div>
+      <div>
+        <label for="profile" class="block text-sm font-medium">Profile</label>
+        <div class="flex items-center gap-2.5">
+          <img alt="user avatar" class="h-9 w-9 rounded-full" src="">
+          <input type="text" id="profile" class="w-full border rounded px-3 py-2" value="Ronnie Estillero">
+        </div>
+      </div>
+      <div>
+        <label for="role" class="block text-sm font-medium">Role</label>
+        <input type="text" id="role" class="w-full border rounded px-3 py-2" value="Moderator">
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium">Email</label>
+        <input type="email" id="email" class="w-full border rounded px-3 py-2" value="Ronnie.gmail.com">
+      </div>
+      <div>
+        <label for="status" class="block text-sm font-medium">Status</label>
+        <select id="status" class="w-full border rounded px-3 py-2">
+          <option value="enabled">Enabled</option>
+          <option value="disabled" selected>Disabled</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="h-7 w-7 flex items-center justify-center rounded-md border hover:bg-gray-100" (click)="changeTab('showTaskList')">
+          📋
+        </button>
+        <button class="h-7 w-7 flex items-center justify-center rounded-md border hover:bg-gray-100" (click)="changeTab('showTaskReportedList')">
+          ⛔
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- End Form -->
