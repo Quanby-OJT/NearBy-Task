@@ -104,26 +104,59 @@ class _SignUpTaskerAccState extends State<SignUpTaskerAcc> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
-                      child: TextFormField(
-                        controller: _controller.lastNameController,
-                        cursorColor: Color(0xFF0272B1),
-                        validator: (value) =>
-                        value!.isEmpty ? "Please Input Your Last Name" : null,
-                        decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Color(0xFFF1F4FF),
-                            hintText: 'Last Name',
-                            hintStyle: TextStyle(color: Colors.grey),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: Colors.transparent, width: 0),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: Color(0xFF0272B1), width: 2))),
+                      child: Row(
+                        children: [
+                          // Middle Name Field
+                          Expanded(
+                            child: TextFormField(
+                              controller: _controller.middleNameController, // Make sure this controller exists
+                              cursorColor: Color(0xFF0272B1),
+                              validator: (value) =>
+                              value!.isEmpty ? "Please Input Your Middle Name" : null,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Color(0xFFF1F4FF),
+                                hintText: 'Middle Name',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.transparent, width: 0),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Color(0xFF0272B1), width: 2),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10), // Spacing between the fields
+                          // Last Name Field
+                          Expanded(
+                            child: TextFormField(
+                              controller: _controller.lastNameController,
+                              cursorColor: Color(0xFF0272B1),
+                              validator: (value) =>
+                              value!.isEmpty ? "Please Input Your Last Name" : null,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Color(0xFFF1F4FF),
+                                hintText: 'Last Name',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.transparent, width: 0),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Color(0xFF0272B1), width: 2),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
                       child: TextFormField(

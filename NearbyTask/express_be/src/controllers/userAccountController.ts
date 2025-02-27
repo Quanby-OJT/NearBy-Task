@@ -1,9 +1,77 @@
-import { supabase } from "./../config/configuration";
+import { supabase, mailer, port, url } from "./../config/configuration";
 // controllers/userController.ts
 import { Request, Response } from "express";
 import { UserAccount } from "../models/userAccountModel";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
+
 class UserAccountController {
+  static async createNewUser(req: Request, res: Response): Promise<any> {
+    try{
+      const {
+        first_name,
+        middle_name,
+        last_name,
+        email,
+        role,
+        password
+      } = req.body
+
+      const hashpuppi = await bcrypt.hash(password, 10);
+      const verificationToken = crypto.randomBytes(32).toString("hex");
+
+      const newUser = await UserAccount.create({
+        first_name,
+        middle_name,
+        last_name,
+        email,
+        user_role: role,
+        hashed_password: hashpuppi,
+        acc_status: "pending",
+        verification_token: verificationToken,
+      });
+
+      const verificationLink = url + ":" + port + "/connect/verify?token=" + verificationToken;
+
+      await mailer.sendMail({
+        to: email,
+        from: "noreply@nearbytask.com",
+        subject: "Welcome to NearByTask",
+        html: `<h1>Welcome to NearByTask</h1>
+        <p>Hi ${first_name},</p>
+        <p>Thank you for signing up with NearByTask. In Order to Verify your account, please click the following link: </p>
+        <a href="${verificationLink}">Verify Account</a>.</p>
+        <p>Right After to clicked the link, you will be redirected to setting up your profile.</p>
+        <p>Best regards,</p>
+        <p>NearByTask Team</p>`,
+      });
+
+      
+    }catch(error){
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
+  static async verifyEmail(req: Request, res: Response): Promise<any> {
+    try{
+      const {token} = req.body
+
+      const { data, error } = await supabase.from("user").select("*").eq("verification_token", token).single();
+
+      if(error) return res.status(400).json({error: "Invalid or Expired Token."})
+
+      const {error: activateError} = await supabase.from("user").update({acc_status: "active"}).eq("verification_token", token);
+
+      if(activateError) throw new Error(activateError.message)
+
+      res.status(200).json({ message: "Email verified successfully. You can now log in." })
+    }catch(error){
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
   static async registerUser(req: Request, res: Response): Promise<any> {
     try {
       const {
@@ -63,7 +131,7 @@ class UserAccountController {
         first_name,
         middle_name,
         last_name,
-        birthdate: birthday,
+        verification_token: "",
         email,
         image_link: imageUrl,
         hashed_password: hashedPassword,

@@ -24,3 +24,5 @@ export const mailer = nodemailer.createTransport({
 export const session_key = crypto.randomUUID()
 
 export const port = process.env.PORT;
+
+export const url = process.env.URL;

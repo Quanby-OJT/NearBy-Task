@@ -13,6 +13,7 @@ class ProfileController {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController roleController = TextEditingController();
+  final TextEditingController middleNameController = TextEditingController();
   // Fetched user inputs End
 
   //Tasker Text Controller
