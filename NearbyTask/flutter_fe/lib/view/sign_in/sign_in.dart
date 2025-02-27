@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fe/view/sign_in/otp_screen.dart';
-import 'package:flutter_fe/view/sign_in/sign_up.dart';
+import 'package:flutter_fe/view/sign_up_acc/pre_sign_up.dart';
 import 'package:flutter_fe/controller/authentication_controller.dart';
 
 class SignIn extends StatefulWidget {
@@ -27,7 +26,7 @@ class _SignInState extends State<SignIn> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Service Account',
+                'Login to NearByTask',
                 style: TextStyle(
                     color: const Color(0xFF0272B1),
                     fontSize: 30,
@@ -122,7 +121,7 @@ class _SignInState extends State<SignIn> {
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return SignUp();
+                        return PreSignUp();
                       }));
                     },
                     child: Text(

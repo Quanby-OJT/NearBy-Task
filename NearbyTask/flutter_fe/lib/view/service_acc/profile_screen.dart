@@ -37,8 +37,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _isLoading = false;
 
           // Populate controllers
-          _userController.firstNameController.text = user?.firstName ?? '';
-          _userController.lastNameController.text = user?.lastName ?? '';
+          // _userController.firstNameController.text = user?.firstName ?? '';
+          // _userController.lastNameController.text = user?.lastName ?? '';
           _userController.emailController.text = user?.email ?? '';
         });
       } else {

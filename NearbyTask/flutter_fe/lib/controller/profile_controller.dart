@@ -7,17 +7,16 @@ import '../model/tasker_model.dart';
 
 class ProfileController {
   // Fetched user inputs Start
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-  File? imageData; // Store image bytes
-  String? imageName; // Store image name
+    final TextEditingController confirmPasswordController = TextEditingController();
   // Fetched user inputs End
 
   //Tasker Text Controller
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
   final TextEditingController specializationController = TextEditingController();
   final TextEditingController skillsController = TextEditingController();
@@ -28,10 +27,10 @@ class ProfileController {
 
 
   // Byte for the image start
-  void setImage(File image, String name) {
-    imageData = image;
-    imageName = name;
-  }
+  // void setImage(File image, String name) {
+  //   imageData = image;
+  //   imageName = name;
+  // }
   // Byte for the image end
 
 // Validation if password not matched start
@@ -46,17 +45,14 @@ class ProfileController {
 
 // Store the inputs Start
     UserModel user = UserModel(
-      firstName: firstNameController.text,
-      lastName: lastNameController.text,
+      userName: usernameController.text,
       email: emailController.text,
       password: passwordController.text,
-      image: imageData,
-      imageName: imageName,
     );
     bool success = await ApiService.registerUser(user);
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registration Successful!")),
+        SnackBar(content: Text("Registration Successful! Please Check your Email to confirm your email.")),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

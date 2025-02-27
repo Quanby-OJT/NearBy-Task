@@ -15,31 +15,30 @@ class ApiService {
     var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/create-new-user"));
 
     // Add text fields
-    request.fields["first_name"] = user.firstName;
-    request.fields["last_name"] = user.lastName;
+    request.fields["username"] = user.userName;
     request.fields["email"] = user.email;
     request.fields["password"] = user.password;
 
     //Attach Image (if available)~
-    if (user.image != null && user.imageName != null) {
-      request.files.add(
-        http.MultipartFile.fromBytes(
-          'image',
-          user.image!,
-          filename: user.imageName!,
-        ),
-      );
-    }
-    if (user.image != null && user.imageName != null) {
-      final bytes = await File(user.image!.path).readAsBytes();
-      request.files.add(
-        http.MultipartFile.fromBytes(
-          'image',
-          bytes,
-          filename: user.imageName!,
-        ),
-      );
-    }
+    // if (user.image != null && user.imageName != null) {
+    //   request.files.add(
+    //     http.MultipartFile.fromBytes(
+    //       'image',
+    //       user.image!,
+    //       filename: user.imageName!,
+    //     ),
+    //   );
+    // }
+    // if (user.image != null && user.imageName != null) {
+    //   final bytes = await File(user.image!.path).readAsBytes();
+    //   request.files.add(
+    //     http.MultipartFile.fromBytes(
+    //       'image',
+    //       bytes,
+    //       filename: user.imageName!,
+    //     ),
+    //   );
+    // }
 
     var response = await request.send();
     return response.statusCode == 201;
