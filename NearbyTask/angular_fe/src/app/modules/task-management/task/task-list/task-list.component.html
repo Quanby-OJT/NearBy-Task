@@ -1,109 +1,111 @@
+<!-- Start Action -->
+<div class="flex flex-wrap items-center justify-between gap-2 py-3 px-5">
+  <h3 class="text-muted-foreground text-sm font-medium">Showing 08 of 100 users</h3>
+  <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+    <!-- Search Input -->
+    <div class="flex-1 min-w-[200px] lg:min-w-[300px] xl:min-w-[400px]">
+      <label class="relative w-full">
+        <input name="search" class="w-full py-2 pl-8 pr-2 border rounded-md" placeholder="Search users" type="text"/>
+      </label>
+    </div>
+    <!-- Role & Status Dropdowns -->
+    <div class="flex gap-2">
+      <select name="role" class="text-muted-foreground px-5 border rounded-md">
+        <option value="">All Role</option>
+        <option value="1">Client</option>
+        <option value="2">Tasker</option>
+        <option value="3">Moderator</option>
+      </select>
+      <select name="status" class="text-muted-foreground px-5 border rounded-md">
+        <option value="">All Status</option>
+        <option value="1">Active</option>
+        <option value="2">Blocked</option>
+        <option value="3">Review</option>
+      </select>
+    </div>
+  </div>
+</div>
+<!-- End Action -->
 
-    <!-- Start Action -->
-    <div class="flex flex-wrap items-center justify-between gap-2 py-3 px-5">
-      <h3 class="text-muted-foreground text-sm font-medium">Showing 08 of 100 users</h3>
-      <div class="flex flex-wrap items-center gap-2">
-        <!-- Search Input - Takes more space -->
-        <div class="flex-1">
-          <label class="text-muted-foreground relative w-full">
-            <input name="search" class="w-full py-2 pl-8 pr-2 border rounded-md" placeholder="Search users" type="text"/>
-          </label>
-        </div>
-        <!-- Role & Status Dropdowns - Side by Side -->
-        <div class="flex gap-2">
-          <select name="role" class="text-muted-foreground px-5 border rounded-md">
-            <option value="">All Role</option>
-            <option value="1">Client</option>
-            <option value="2">Tasker</option>
-            <option value="3">Moderator</option>
-          </select>
-          <select name="status" class="text-muted-foreground px-5 border rounded-md">
-            <option value="">All Status</option>
-            <option value="1">Active</option>
-            <option value="2">Blocked</option>
-            <option value="3">Review</option>
-          </select>
-        </div>
-      </div>
-      
+<!-- Start Table -->
+<div class="overflow-x-auto w-full">
+  <table class="w-full border-collapse border-0 text-left text-sm">
+    <thead class="border-b">
+      <tr class="bg-gray-100">
+        <th class="px-4 py-2 w-[80px] lg:w-[100px]">ID</th>
+        <th class="px-4 py-2 min-w-[200px] lg:min-w-[250px] xl:min-w-[300px] text-center">Client</th>
+        <th class="px-4 py-2 min-w-[150px] lg:min-w-[300px] xl:min-w-[250px]">Client Id</th>
+        <th class="px-4 py-2 min-w-[150px] lg:min-w-[300px] xl:min-w-[250px]">Task Title</th>
+        <th class="px-4 py-2 min-w-[150px] lg:min-w-[200px] xl:min-w-[250px]">Description</th>
+        <th class="px-4 py-2 min-w-[150px] lg:min-w-[200px] xl:min-w-[250px]">Specialization</th>
+        <th class="px-4 py-2 min-w-[150px] lg:min-w-[200px] xl:min-w-[250px]">Urgent</th>
+        <th class="px-4 py-2 min-w-[150px] lg:min-w-[200px] xl:min-w-[250px]">Contact Price</th>
+        <th class="px-4 py-2 min-w-[150px] lg:min-w-[200px] xl:min-w-[250px]">Location</th>
+        <th class="px-4 py-2 min-w-[150px] lg:min-w-[200px] xl:min-w-[250px]">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of tasks; let i = index" class="border-b">
+        <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
+        <td class="px-4 py-3">
+          <p class="px-4 py-3 text-center">Ellenor</p>
+          
+          <div class="flex items-center gap-2.5">
+            <div class="flex flex-col">
+              <a class="font-semibold hover:text-blue-500" href="#">{{ task.name }}</a>
+              <a class="text-xs text-gray-500 hover:text-blue-500" href="#">{{ task.email }}</a>
+            </div>
+          </div>
+        </td>
+        <td class="px-4 py-3">{{ task.job_post_id }}</td>
+        <td class="px-4 py-3">{{ task.task_title }}</td>
+        <td class="px-4 py-3">{{ task.task_description }}</td>
+        <td class="px-4 py-3">{{ task.specialization }}</td>
+        <td class="px-4 py-3">{{ task.urgent }}</td>
+        <td class="px-4 py-3">{{ task.contact_price }}</td>
+        <td class="px-4 py-3">{{ task.location }}</td>
+        <td class="px-4 py-3">Active</td>
+        <td class="px-4 py-3 sticky right-0 bg-white shadow-md">
+          <div class="flex gap-2">
+            <button class="h-7 w-7 flex items-center justify-center rounded-md border hover:bg-gray-100" 
+              (click)="onChangeTab('showTaskList')">
+              📋
+            </button>
+            <button class="h-7 w-7 flex items-center justify-center rounded-md border hover:bg-gray-100" 
+              (click)="onChangeTab('showTaskReportedList')">
+              ⛔
+            </button>
+          </div>
+        </td>
+        
+      </tr>
+    </tbody>        
+  </table>
+</div>
+<!-- End Table -->
+
+<!-- Start Footer -->
+<div class="text-muted-foreground flex flex-wrap items-center justify-between gap-2 py-3 px-5 text-xs">
+  <div class="order-2 flex items-center gap-2 md:order-1">
+    Show
+    <select class="w-16 p-2 border rounded-md">
+      <option value="10" selected>10</option>
+      <option value="20">20</option>
+      <option value="30">30</option>
+      <option value="50">50</option>
+    </select>
+    per page
+  </div>
+  <div class="order-1 flex items-center gap-4 md:order-2">
+    <span class="text-sm text-gray-600">Page 1 of 10</span>
+    <div class="inline-flex items-center gap-2">
+      <button class="h-8 w-8 flex items-center justify-center rounded-md border border-gray-300 hover:bg-gray-100">
+        ◀
+      </button>
+      <button class="h-8 w-8 flex items-center justify-center rounded-md border border-gray-300 hover:bg-gray-100">
+        ▶
+      </button>
     </div>
-    <!-- End Action -->
-  
-    <!-- Start Table -->
-    <div class="overflow-x-auto w-full">
-      <table class="w-full border-collapse border-0 text-left text-sm">
-        <thead class="border-b">
-          <tr class="bg-gray-100">
-            <th class="px-4 py-2 w-[100px]">ID</th>
-            <th class="px-4 py-2 min-w-[250px]">Client</th>
-            <th class="px-4 py-2 min-w-[250px]">Task Title</th>
-            <th class="px-4 py-2 min-w-[150px]">Description</th>
-            <th class="px-4 py-2 min-w-[150px]">Specialization</th>
-            <th class="px-4 py-2 min-w-[250px]">Urgent</th>
-            <th class="px-4 py-2 min-w-[200px]">Description</th>
-            <th class="px-4 py-2 min-w-[150px]">Contact Price</th>
-            <th class="px-4 py-2 min-w-[150px]">Location</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="border-b">
-            <td class="px-4 py-3 text-center">
-              001
-            </td>
-            <td class="px-4 py-3">
-              <div class="flex items-center gap-2.5">
-                <img alt="user avatar" class="h-9 w-9 rounded-full" src="">
-                <div class="flex flex-col">
-                  <a class="font-semibold hover:text-blue-500" href="#">Cesphillip Lorica</a>
-                  <a class="text-xs text-gray-500 hover:text-blue-500" href="#">Cesphillip.gmail.com</a>
-                </div>
-              </div>
-            </td>
-            <td class="px-4 py-3">Moderator</td>
-            <td class="px-4 py-3">Cesphillip.gmail.com</td>
-            <td class="px-4 py-3">
-              <span class="rounded-lg bg-green-100 text-green-800 py-1 px-4">Active</span>
-            </td>
-            <td class="px-4 py-3">
-              <div class="flex gap-2">
-                <button class="h-7 w-7 flex items-center justify-center rounded-md border hover:bg-gray-100" (click)="onChangeTab('showTaskList')">
-                  📋
-                </button>
-                <button class="h-7 w-7 flex items-center justify-center rounded-md border hover:bg-gray-100" (click)="onChangeTab('showTaskReportedList')">
-                  ⛔
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!-- End Table -->
-  
-    <!-- Start Footer -->
-    <div class="text-muted-foreground flex flex-wrap items-center justify-between gap-2 py-3 px-5 text-xs">
-      <div class="order-2 flex items-center gap-2 md:order-1">
-        Show
-        <select class="w-16 p-2 border rounded-md">
-          <option value="10" selected>10</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="50">50</option>
-        </select>
-        per page
-      </div>
-  
-  
-      <div class="order-1 flex items-center gap-4 md:order-2">
-        <span class="text-sm text-gray-600">Page 1 of 10</span>
-        <div class="inline-flex items-center gap-2">
-          <button class="h-8 w-8 flex items-center justify-center rounded-md border border-gray-300 hover:bg-gray-100">
-            ◀
-          </button>
-          <button class="h-8 w-8 flex items-center justify-center rounded-md border border-gray-300 hover:bg-gray-100">
-            ▶
-          </button>
-        </div>
-      </div>
-    </div>
-    <!-- End Footer -->
+  </div>
+</div>
+<!-- End Footer -->

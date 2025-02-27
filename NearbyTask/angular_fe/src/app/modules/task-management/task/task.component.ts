@@ -4,9 +4,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TaskReportedListComponent } from './task-reported-list/task-reported-list.component';
 import { TaskListComponent } from './task-list/task-list.component';
 
-
 @Component({
   selector: 'app-task',
+  standalone: true, 
   imports: [
     CommonModule,
     AngularSvgIconModule,
@@ -14,7 +14,7 @@ import { TaskListComponent } from './task-list/task-list.component';
     TaskReportedListComponent,
   ],
   templateUrl: './task.component.html',
-  styleUrl: './task.component.css'
+  styleUrls: ['./task.component.css'] // Dapat plural
 })
 export class TaskComponent {
   currentTab: string = "showTaskList";

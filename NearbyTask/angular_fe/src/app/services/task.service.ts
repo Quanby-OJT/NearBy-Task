@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TaskService {
-  private apiUrl = 'http://localhost:3000/displayTask'; // Change if needed
+  private apiUrl = 'http://localhost:5000/connect/displayTask'; 
 
   constructor(private http: HttpClient) {}
 
