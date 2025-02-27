@@ -30,4 +30,13 @@ export class TaskListComponent {
   onChangeTab(tabName: string, task: any) {  
     this.changeTab.emit({ tabName, task }); 
   }
+
+  // Add this method to refresh tasks after disabling
+  refreshTasks() {
+  this.taskService.getTasks().subscribe({
+    next: (response) => this.tasks = response.tasks,
+    error: (err) => console.error('Refresh failed:', err)
+  });
+}
+
 }
