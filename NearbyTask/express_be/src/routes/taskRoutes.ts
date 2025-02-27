@@ -9,4 +9,6 @@ router.post("/addTask", TaskController.createTask);
 
 router.get("/displayTask", TaskController.getAllTasks);
 
+router.patch("/displayTask/:id/disable", TaskController.disableTask);
+
 export default router;
