@@ -41,7 +41,7 @@ class _OtpScreenState extends State<OtpScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 100.0),
+                padding: const EdgeInsets.only(top: 0.0),
                 child: Image.asset(
                   'assets/images/verificationImage.jpg',
                   width: 200,
