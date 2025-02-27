@@ -51,7 +51,7 @@ const routes: Routes = [
     loadChildren: () => import('../setting/setting-routing.module').then((m) => m.SettingRoutingModule),
   },
 
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'error/404' },
 ];
 

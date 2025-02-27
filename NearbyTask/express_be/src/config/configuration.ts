@@ -15,13 +15,13 @@ export const supabase = createClient(
 export const mailer = nodemailer.createTransport({
   host: process.env.MAIL_HOST as string,
   port: parseInt(process.env.MAIL_PORT as string, 10),
-  secure: false, // Set to `true` if using SSL (e.g., for port 465)
+  secure: process.env.MAIL_PORT === '465', // Set to `true` if using SSL (e.g., for port 465)
   auth: {
     user: process.env.MAIL_USERNAME as string,
     pass: process.env.MAIL_PASSWORD as string,
   },
 } as SMTPTransport.Options);
 
-export const session_key = crypto.randomUUID()
+export const session_key = crypto.randomUUID();
 
 export const port = process.env.PORT;
