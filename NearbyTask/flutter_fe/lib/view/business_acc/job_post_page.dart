@@ -291,7 +291,7 @@ class _JobPostPageState extends State<JobPostPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                  left: 40, right: 40, top: 20, bottom: 30),
+                  left: 40, right: 40, top: 20, bottom: 0),
               child: DropdownButtonFormField<String>(
                 value: selectedUrgency,
                 decoration: InputDecoration(
