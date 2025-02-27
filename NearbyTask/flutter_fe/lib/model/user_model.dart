@@ -23,10 +23,10 @@ class UserModel {
       firstName: json['first_name'],
       lastName: json['last_name'],
       email: json['email'],
-      password: json['password'],
+      password: json['hashed_password'],
       // Check if the image is a URL (String) or binary data (Uint8List)
-      image: json['image'] is String
-          ? json['image']
+      image: json['image_link'] is String
+          ? json['image_link']
           : null, // Assuming image is a URL (String)
       imageName: json['image_name'],
     );
@@ -38,7 +38,7 @@ class UserModel {
       "first_name": firstName,
       "last_name": lastName,
       "email": email,
-      "password": password,
+      "hashed_password": password,
       // Store the image as a URL (String) or handle binary data (Uint8List) if needed
     };
   }

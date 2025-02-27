@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fe/view/sign_in/otp_screen.dart';
 import 'package:flutter_fe/view/sign_in/sign_up.dart';
+import 'package:flutter_fe/controller/authentication_controller.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -10,6 +10,8 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final AuthenticationController _controller = AuthenticationController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +43,7 @@ class _SignInState extends State<SignIn> {
               Padding(
                 padding: const EdgeInsets.only(left: 40, right: 40, top: 60),
                 child: TextField(
+                  controller: _controller.emailController,
                   cursorColor: Color(0xFF0272B1),
                   decoration: InputDecoration(
                       filled: true,
@@ -60,6 +63,8 @@ class _SignInState extends State<SignIn> {
               Padding(
                 padding: const EdgeInsets.only(left: 40, right: 40, top: 20),
                 child: TextField(
+                  obscureText: true,
+                  controller: _controller.passwordController,
                   cursorColor: Color(0xFF0272B1),
                   decoration: InputDecoration(
                       filled: true,
@@ -98,10 +103,7 @@ class _SignInState extends State<SignIn> {
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return OtpScreen();
-                      }));
+                      _controller.loginAuth(context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF0272B1),

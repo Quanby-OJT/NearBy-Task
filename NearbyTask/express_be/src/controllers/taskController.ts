@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import userModel from "../models/taskModel"; // Import the model
+import { supabase } from "../config/configuration";
 
 class TaskController {
   static async createTask(req: Request, res: Response): Promise<void> {
@@ -24,6 +25,22 @@ class TaskController {
       res.status(201).json({ message: "Task created successfully", task: newTask });
     } catch (error) {
       res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  }
+
+  static async getAllTasks(req: Request, res: Response): Promise<void> {
+    try {
+      const { data, error } = await supabase.from("job_post").select();
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(200).json({ tasks: data });
+      }
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   }
 }

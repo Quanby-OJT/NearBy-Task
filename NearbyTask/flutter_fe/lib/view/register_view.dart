@@ -18,26 +18,26 @@ class _RegisterViewState extends State<RegisterView> {
   final RegisterController _controller = RegisterController();
   Uint8List? _selectedImage; // Store the selected image bytes
   String? _imageName; // Store the selected image name
-  List<UserModel> _users =
+  final List<UserModel> _users =
       []; // Store fetched users, iyo yung sa display record sa baba
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchUsers();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _fetchUsers();
+  // }
 
 //For Displaying the record (record functionality)
-  Future<void> _fetchUsers() async {
-    try {
-      List<UserModel> users = await ApiService.fetchAllUsers();
-      setState(() {
-        _users = users;
-      });
-    } catch (e) {
-      print("Error fetching users: $e");
-    }
-  }
+//   Future<void> _fetchUsers() async {
+//     try {
+//       List<UserModel> users = await ApiService.fetchAllUsers();
+//       setState(() {
+//         _users = users;
+//       });
+//     } catch (e) {
+//       print("Error fetching users: $e");
+//     }
+//   }
 
 //Allow us to pick a File using FilePicker Dependencies
   Future<void> _pickImage() async {

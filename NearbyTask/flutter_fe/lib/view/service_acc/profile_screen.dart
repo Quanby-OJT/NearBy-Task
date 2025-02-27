@@ -9,6 +9,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  //final AuthenticationController _controller = AuthenticationController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
