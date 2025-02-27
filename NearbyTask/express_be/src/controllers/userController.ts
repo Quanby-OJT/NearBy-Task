@@ -7,11 +7,11 @@ class UserController {
   static async registerUser(req: Request, res: Response): Promise<void> {
     try {
       console.log("Received insert data:", req.body);
-      const { first_name, last_name, email, password } = req.body;
+      const { first_name, last_name, email } = req.body;
       const imageFile = req.file;
 
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(last_name, 10);
 
       let imageUrl = "";
       if (imageFile) {
