@@ -7,16 +7,15 @@ import '../model/tasker_model.dart';
 
 class ProfileController {
   // Fetched user inputs Start
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-    final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController roleController = TextEditingController();
   // Fetched user inputs End
 
   //Tasker Text Controller
-
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
   final TextEditingController specializationController = TextEditingController();
   final TextEditingController skillsController = TextEditingController();
@@ -32,8 +31,6 @@ class ProfileController {
   //   imageName = name;
   // }
   // Byte for the image end
-
-// Validation if password not matched start
   Future<void> registerUser(BuildContext context) async {
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -45,7 +42,8 @@ class ProfileController {
 
 // Store the inputs Start
     UserModel user = UserModel(
-      userName: usernameController.text,
+      firstName: firstNameController.text,
+      lastName: lastNameController.text,
       email: emailController.text,
       password: passwordController.text,
     );

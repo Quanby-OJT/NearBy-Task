@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fe/controller/profile_controller.dart';
 
 class SignUpTaskerAcc extends StatefulWidget {
-  const SignUpTaskerAcc({super.key});
+  final String role;
+  const SignUpTaskerAcc({super.key, required this.role});
 
   @override
   State<SignUpTaskerAcc> createState() => _SignUpTaskerAccState();
@@ -14,15 +15,21 @@ class SignUpTaskerAcc extends StatefulWidget {
 class _SignUpTaskerAccState extends State<SignUpTaskerAcc> {
 
   final ProfileController _controller = ProfileController();
-  File? _selectedImage; // Store the selected image bytes
-  String? _imageName; // Store the selected image name
 
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(
-      source:
-          ImageSource.gallery, // Change to ImageSource.camera for camera input
-    );
+  @override
+  void initState(){
+    super.initState();
+    _controller.roleController.text = widget.role;
+  }
+  // File? _selectedImage; // Store the selected image bytes
+  // String? _imageName; // Store the selected image name
+  //
+  // Future<void> _pickImage() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? pickedFile = await picker.pickImage(
+  //     source:
+  //         ImageSource.gallery, // Change to ImageSource.camera for camera input
+  //   );
 
     // if (pickedFile != null) {
     //   setState(() {
@@ -32,7 +39,6 @@ class _SignUpTaskerAccState extends State<SignUpTaskerAcc> {
     //         _selectedImage!, _imageName!); // Pass image to controller
     //   });
     // }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +83,50 @@ class _SignUpTaskerAccState extends State<SignUpTaskerAcc> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
                       child: TextFormField(
+                        controller: _controller.firstNameController,
+                        cursorColor: Color(0xFF0272B1),
+                        validator: (value) =>
+                        value!.isEmpty ? "Please Input Your First Name" : null,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color(0xFFF1F4FF),
+                            hintText: 'First Name',
+                            hintStyle: TextStyle(color: Colors.grey),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.transparent, width: 0),
+                                borderRadius: BorderRadius.circular(10)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Color(0xFF0272B1), width: 2))),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
+                      child: TextFormField(
+                        controller: _controller.lastNameController,
+                        cursorColor: Color(0xFF0272B1),
+                        validator: (value) =>
+                        value!.isEmpty ? "Please Input Your Last Name" : null,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color(0xFFF1F4FF),
+                            hintText: 'Last Name',
+                            hintStyle: TextStyle(color: Colors.grey),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.transparent, width: 0),
+                                borderRadius: BorderRadius.circular(10)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Color(0xFF0272B1), width: 2))),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
+                      child: TextFormField(
                         controller: _controller.emailController,
                         cursorColor: Color(0xFF0272B1),
                         validator: (value) =>
@@ -99,6 +149,7 @@ class _SignUpTaskerAccState extends State<SignUpTaskerAcc> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
                       child: TextFormField(
+                        obscureText: true,
                         cursorColor: Color(0xFF0272B1),
                         validator: (value) =>
                             value!.isEmpty ? "Your Password Must had at least 6 characters long" : null,
@@ -120,6 +171,7 @@ class _SignUpTaskerAccState extends State<SignUpTaskerAcc> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
                       child: TextFormField(
+                        obscureText: true,
                         cursorColor: Color(0xFF0272B1),
                         validator: (value) =>
                             value!.isEmpty ? "Please Confirm Your Password" : null,

@@ -126,7 +126,7 @@ class _SignInState extends State<SignIn> {
                     },
                     child: Text(
                       textAlign: TextAlign.right,
-                      'Create new account',
+                      'New to NearByTask?',
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
                     )),

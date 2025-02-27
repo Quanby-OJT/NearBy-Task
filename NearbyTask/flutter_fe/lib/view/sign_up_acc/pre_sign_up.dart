@@ -36,7 +36,7 @@ class _PreSignUpState extends State<PreSignUp> {
             Padding(
               padding: const EdgeInsets.only(left: 30, right: 30),
               child: Text(
-                'Select the type of account you want to create, provide service with a service account or hire an expert to complete a task with a business account.',
+                'Be PAID for Tasks Done through a TASKER ACCOUNT or Find an expert to have your task completed with a CLIENT ACCOUNT. \n\n To Begin, please select one of the two accounts you want to create:',
                 style: GoogleFonts.openSans(color: Colors.white, fontSize: 18),
                 textAlign: TextAlign.center,
               ),
@@ -49,7 +49,7 @@ class _PreSignUpState extends State<PreSignUp> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return SignUpTaskerAcc();
+                    return SignUpTaskerAcc(role: "Tasker");
                   }));
                 },
                 style: ElevatedButton.styleFrom(
@@ -89,7 +89,7 @@ class _PreSignUpState extends State<PreSignUp> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return SignUpClientAcc();
+                    return SignUpClientAcc(role: "Client");
                   }));
                 },
                 style: ElevatedButton.styleFrom(

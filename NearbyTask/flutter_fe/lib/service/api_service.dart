@@ -15,7 +15,8 @@ class ApiService {
     var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/create-new-user"));
 
     // Add text fields
-    request.fields["username"] = user.userName;
+    request.fields["first_name"] = user.firstName;
+    request.fields["last_name"] = user.lastName;
     request.fields["email"] = user.email;
     request.fields["password"] = user.password;
 
