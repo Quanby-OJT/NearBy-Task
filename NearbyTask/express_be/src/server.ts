@@ -6,6 +6,9 @@ import userRoute from "./routes/userRoutes";
 import userAccountRoute from "./routes/userAccountRoutes";
 import taskRoutes from "./routes/taskRoutes";
 import dotenv from "dotenv";
+
+import authRoutes from "./routes/authRoutes";
+
 import session from "express-session"
 
 dotenv.config();
@@ -22,11 +25,18 @@ app.use(session({
 }))
 
 // Routes
-app.use("/connect", server, userAccountRoute, userRoute, taskRoutes);
+app.use(
+  "/connect",
+  server,
+  userAccountRoute,
+  userRoute,
+  taskRoutes,
+  authRoutes
+);
 
 // Start server
 const PORT = port || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log("Click this to direct: http://localhost:" + PORT +  "/connect");
+  console.log("Click this to direct: http://localhost:" + PORT + "/connect");
 });
