@@ -14,12 +14,20 @@ import { TaskListComponent } from './task-list/task-list.component';
     TaskReportedListComponent,
   ],
   templateUrl: './task.component.html',
-  styleUrls: ['./task.component.css'] // Dapat plural
+  styleUrls: ['./task.component.css']
 })
 export class TaskComponent {
   currentTab: string = "showTaskList";
+  selectedTask: any = null;
 
-  changeTab(tabName: string) {
-    this.currentTab = tabName;
+  changeTab(event: { tabName: string, task: any } | string) {
+    if (typeof event === 'string') {
+      // Handle case where only the tabName is passed (from TaskReportedListComponent)
+      this.currentTab = event;
+    } else {
+      // Handle case where both tabName and task are passed (from TaskListComponent)
+      this.currentTab = event.tabName;
+      this.selectedTask = event.task;
+    }
   }
 }

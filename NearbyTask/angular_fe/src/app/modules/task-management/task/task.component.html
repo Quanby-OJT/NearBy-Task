@@ -16,6 +16,5 @@
 </div>
 
 <div class="border-muted/20 bg-background flex w-full max-w-[1440px] mx-auto flex-col rounded-xl border p-4" *ngIf="currentTab == 'showTaskReportedList'">
-  <app-task-reported-list (tabChange)="changeTab($event)"></app-task-reported-list>
-
+  <app-task-reported-list [task]="selectedTask" (tabChange)="changeTab($event)"></app-task-reported-list>
 </div>

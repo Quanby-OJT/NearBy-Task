@@ -12,7 +12,7 @@ import { TaskService } from 'src/app/services/task.service';
 })
 export class TaskListComponent {
   tasks: any[] = [];
-  @Output() changeTab = new EventEmitter<string>(); 
+  @Output() changeTab = new EventEmitter<{ tabName: string, task: any }>(); 
 
   ngOnInit(): void {
     this.taskService.getTasks().subscribe(
@@ -27,7 +27,7 @@ export class TaskListComponent {
 
   constructor(private taskService: TaskService) {} 
 
-  onChangeTab(tabName: string) {  
-    this.changeTab.emit(tabName); 
+  onChangeTab(tabName: string, task: any) {  
+    this.changeTab.emit({ tabName, task }); 
   }
 }

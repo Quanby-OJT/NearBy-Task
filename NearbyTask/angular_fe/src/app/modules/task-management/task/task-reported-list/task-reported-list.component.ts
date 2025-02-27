@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-task-reported-list',
@@ -8,6 +8,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./task-reported-list.component.css'] 
 })
 export class TaskReportedListComponent {
+  @Input() task: any;
   @Output() tabChange = new EventEmitter<string>();
 
   changeTab(tabName: string) {
