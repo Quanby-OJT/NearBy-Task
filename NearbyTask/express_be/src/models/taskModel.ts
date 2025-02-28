@@ -1,11 +1,12 @@
 import {supabase} from "../config/configuration";
 
-class UserModel {
+class TaskModel {
   
-  async createUser(description: string, duration: string, job_title: string, urgency: string, location: string, num_of_days: number, specialization: string, contact_price: string, remarks: string, task_begin_date: string) {
+  async createNewTask(client_id: number, description: string, duration: string, job_title: string, urgency: string, location: string, num_of_days: number, specialization: string, contact_price: string, remarks: string, task_begin_date: string) {
     let statuses: string = "active";
-    const { data, error } = await supabase.from('job_post').insert([
+    const { data, error } = await supabase.from('tasks').insert([
       {
+        client_id: client_id,
         task_title: job_title,
         task_description: description,
         duration: duration,
@@ -25,5 +26,5 @@ class UserModel {
   }
 }
 
-const userModel = new UserModel();
-export default userModel;
+const taskModel = new TaskModel();
+export default taskModel;

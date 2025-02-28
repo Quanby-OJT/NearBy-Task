@@ -4,14 +4,17 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_fe/model/task_model.dart';
 
 class JobPostService {
-  Future<Map<String, dynamic>> postJob(TaskModel task) async {
-    final url = Uri.parse("http://localhost:5000/connect/addTask");
+  final String url = "http://10.0.2.2:5000/connect";
 
+  Future<Map<String, dynamic>> postJob(TaskModel task, int userId) async {
     try {
+      final Map<String, dynamic> taskInfo = task.toJson();
+      taskInfo['user_id'] = userId;
+
       final response = await http.post(
-        url,
+        Uri.parse("$url/addTask"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode(task.toJson()),
+        body: jsonEncode(taskInfo),
       );
 
       var responseBody = jsonDecode(response.body);
@@ -19,13 +22,13 @@ class JobPostService {
         return {
           'success': true,
           'message':
-              responseBody['message'] ?? 'Unable  to Read Backend Response'
+              responseBody['message'] ?? 'Successfully Posted Your Task. Please Wait for Your Tasker to Accept the Job.'
         };
       } else {
         return {
           'success': false,
           'message':
-              responseBody['message'] ?? 'Unable  to Read Backend Response'
+              responseBody['message'] ?? 'Something Went Wrong while Posting Your Task.'
         };
       }
     } catch (e) {
@@ -53,7 +56,7 @@ class JobPostService {
   // }
   Future<List<TaskModel>> fetchAllJobs() async {
     final response =
-        await http.get(Uri.parse('http://10.0.2.2:5000/connect/displayTask'));
+        await http.get(Uri.parse('$url/displayTask'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -66,6 +69,25 @@ class JobPostService {
       }
     } else {
       print("Error: API request failed with status ${response.statusCode}");
+    }
+
+    return [];
+  }
+
+  Future<List<TaskModel>> fetchJobToAuthenticatedClient(int userId) async{
+    final response = await http.get(Uri.parse('$url/displayTask/$userId'));
+
+    if(response.statusCode == 200){
+      final Map<String, dynamic> data = json.decode(response.body);
+
+      if(data.containsKey('tasks')){
+        final List<dynamic> tasks = data['tasks'];
+        return tasks.map((task) => TaskModel.fromJson(task)).toList();
+      }else{
+        print("Error: " + data['error']);
+      }
+    }else{
+      print("Error: API Request failed with status ${response.statusCode}");
     }
 
     return [];

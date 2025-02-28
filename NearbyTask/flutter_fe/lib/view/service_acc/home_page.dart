@@ -168,6 +168,52 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.swipe(CardSwiperDirection.left);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        fixedSize: Size(60, 60),
+                        padding: EdgeInsets.zero),
+                    child: Center(
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.red,
+                        weight: 4,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.swipe(CardSwiperDirection.right);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      fixedSize: Size(60, 60),
+                      padding: EdgeInsets.zero, // Remove default padding
+                    ),
+                    child: Center(
+                      // Use Center instead of Align
+                      child: Icon(
+                        Icons.favorite,
+                        color: Colors.green,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

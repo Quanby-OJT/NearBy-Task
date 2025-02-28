@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/model/task_model.dart';
 import 'package:flutter_fe/service/job_post_service.dart';
+import 'package:get_storage/get_storage.dart';
 
 class TaskController {
   final JobPostService _jobPostService = JobPostService();
@@ -15,8 +16,10 @@ class TaskController {
   final jobRemarksController = TextEditingController();
   final jobTaskBeginDateController = TextEditingController();
   final contactpriceController = TextEditingController();
+  final storage = GetStorage();
 
   Future<Map<String, dynamic>> postJob() async {
+    final int user_id = storage.read('user_id');
     final task = TaskModel(
       title: jobTitleController.text,
       specialization: jobSpecializationController.text,
@@ -30,6 +33,6 @@ class TaskController {
       taskBeginDate: jobTaskBeginDateController.text,
     );
 
-    return await _jobPostService.postJob(task);
+    return await _jobPostService.postJob(task, user_id);
   }
 }
