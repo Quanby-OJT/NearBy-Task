@@ -186,10 +186,10 @@
                   [ngClass]="{ 'border-red-500': submitted && f['status'].errors }"
                   required>
                   <option value="" disabled selected>Select User status</option>
-                  <option value="active">Active</option>
+                  <option value="verified">Verified</option>
                   <option value="review">Review</option>
                   <option value="blocked">Blocked</option>
-                  <option value="suspended">Suspended</option>
+                  <option value="rejected">Rejected</option>
                 </select>
               </div>
               <div *ngIf="submitted && f['status'].errors" class="pt-1 text-xs text-red-500">
