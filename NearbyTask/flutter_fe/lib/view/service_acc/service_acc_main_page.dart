@@ -70,8 +70,8 @@ class _ServiceAccMainState extends State<ServiceAccMain> {
               text: 'Chat',
             ),
             GButton(
-              icon: Icons.favorite,
-              text: 'Likes',
+              icon: Icons.list,
+              text: 'Request',
             ),
             GButton(
               icon: Icons.person,

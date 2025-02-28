@@ -15,8 +15,17 @@ import likeRoutes from "./routes/likeRoutes";
 dotenv.config();
 const app: Application = express();
 
+declare module 'express-session' {
+  interface SessionData {
+    user: string;
+  }
+}
+
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "http://10.0.2.2:5000", // Replace with your frontend URL
+  credentials: true, // Allow creden
+}));
 app.use(express.json());
 app.use(session({ 
   secret: session_key,
@@ -26,19 +35,11 @@ app.use(session({
 }))
 
 // Routes
-app.use(
-  "/connect",
-  server,
-  userAccountRoute,
-  userRoute,
-  taskRoutes,
-  authRoutes,
-  likeRoutes
-);
+app.use("/connect", server);
 
 // Start server
 const PORT = port || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log("Click this to direct: http://localhost:" + PORT + "/connect");
+  console.log("Click this to direct: http://localhost:" + PORT +  "/connect");
 });

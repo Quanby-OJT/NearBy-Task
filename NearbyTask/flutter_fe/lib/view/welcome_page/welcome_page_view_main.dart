@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fe/view/sign_in/pre_sign_in.dart';
+import 'package:flutter_fe/view/sign_up_acc/pre_sign_up.dart';
+import 'package:flutter_fe/view/sign_in/sign_in.dart';
 import 'package:flutter_fe/view/welcome_page/intro_page_1.dart';
 import 'package:flutter_fe/view/welcome_page/intro_page_2.dart';
 import 'package:flutter_fe/view/welcome_page/intro_page_3.dart';
@@ -41,9 +42,9 @@ class _WelcomePageViewMainState extends State<WelcomePageViewMain> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        _controller.animateToPage(2,
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.easeIn);
+                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                          return SignIn();
+                        }));
                       },
                       child: Text(
                         'skip',
@@ -62,7 +63,7 @@ class _WelcomePageViewMainState extends State<WelcomePageViewMain> {
                           onTap: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return PreSignIn();
+                              return SignIn();
                             }));
                           },
                           child: Text(

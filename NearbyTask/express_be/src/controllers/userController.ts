@@ -1,6 +1,6 @@
 // controllers/userController.ts
 import { Request, Response } from "express";
-import { User } from "../models/userModel";
+import { User } from "../models/authenticationModel";
 import bcrypt from "bcrypt";
 import { supabase } from "../config/configuration";
 class UserController {

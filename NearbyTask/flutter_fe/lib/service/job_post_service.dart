@@ -35,9 +35,27 @@ class JobPostService {
     }
   }
 
+  // Future<List<TaskModel>> fetchAllJobs() async {
+  //   final url = Uri.parse("http://localhost:5000/connect/displayTask");
+
+  //   try {
+  //     final response = await http.get(url);
+
+  //     if (response.statusCode == 200) {
+  //       List<dynamic> body = jsonDecode(response.body);
+  //       return body.map((dynamic item) => TaskModel.fromJson(item)).toList();
+  //     } else {
+  //       debugPrint("Error: ${response.body}");
+  //       return [];
+  //     }
+  //   } catch (e) {
+  //     debugPrint("Exception: $e");
+  //     return [];
+  //   }
+  // }
   Future<List<TaskModel>> fetchAllJobs() async {
-    final response = await http
-        .get(Uri.parse('http://192.168.110.145:5000/connect/displayTask'));
+    final response =
+        await http.get(Uri.parse('http://10.0.2.2:5000/connect/displayTask'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);

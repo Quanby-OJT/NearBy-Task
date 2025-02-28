@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
         title: Center(
             child: Text(
-          'Available Services',
+          'Available Taskers',
           style:
               TextStyle(color: Color(0xFF0272B1), fontWeight: FontWeight.bold),
         )),
