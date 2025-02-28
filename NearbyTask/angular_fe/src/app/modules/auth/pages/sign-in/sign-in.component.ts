@@ -1,10 +1,13 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, CanActivateFn } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { AuthService } from 'src/app/services/auth.service';
+import { SessionLocalStorage } from 'src/services/sessionStorage';
 
+@Injectable({ providedIn: 'root' })
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -15,8 +18,14 @@ export class SignInComponent implements OnInit {
   form!: FormGroup;
   submitted = false;
   passwordTextType!: boolean;
+  errorMessage: string | null = null;
 
-  constructor(private readonly _formBuilder: FormBuilder, private readonly _router: Router) {}
+  constructor(
+    private readonly _formBuilder: FormBuilder,
+    private readonly _router: Router,
+    private authService: AuthService,
+    private sessionStorage: SessionLocalStorage,
+  ) {}
 
   onClick() {
     console.log('Button clicked');
@@ -39,15 +48,46 @@ export class SignInComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+
     const { email, password } = this.form.value;
     console.log('Email:', email, 'password:', password);
-
-    // stop here if form is invalid
     if (this.form.invalid) {
-      console.log('invalid request');
       return;
     }
+    this.login(email, password);
+  }
 
-    this._router.navigate(['/']);
+  login(email: string, password: string) {
+    this.authService.login(email, password).subscribe({
+      next: (response) => {
+        console.log('Login successful', response.userSession);
+        this.sessionStorage.setSessionLocal(response.userSession);
+        const sessionData = this.sessionStorage.session() as Record<string, any>;
+        const session = Object.keys(sessionData)[0];
+        // console.log('Session:', session);
+        const userId = sessionData[session]?.user;
+        this.sessionStorage.setSession(session);
+        this.sessionStorage.setUserId(userId);
+        this._router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        console.log('Login error', error);
+        this.errorMessage = error;
+        this.form.reset();
+      },
+    });
+  }
+
+  logout(userID: Number) {
+    this.authService.logout(userID).subscribe({
+      next: (response) => {
+        console.log('Log successful', response);
+        sessionStorage.removeItem('session');
+        this._router.navigate(['/auth']);
+      },
+      error: (error) => {
+        console.log('Login error', error);
+      },
+    });
   }
 }

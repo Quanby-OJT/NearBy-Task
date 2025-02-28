@@ -1,6 +1,8 @@
 // service/api_service.dart
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_fe/model/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../model/user_model.dart';
@@ -136,7 +138,7 @@ class ApiService {
 
 
   static Future<Map<String, dynamic>> regenerateOTP(int userId) async {
-    try{
+    try {
       final response = await http.post(
         Uri.parse("$apiUrl/reset"),
         headers: {"Content-Type": "application/json"},
@@ -147,18 +149,25 @@ class ApiService {
 
       var data = json.decode(response.body);
 
+      // debugPrint("Request Fields: ${request.fields}");
+      // debugPrint(
+      //     "Request Files: ${request.files.map((file) => file.filename).toList()}");
+      // debugPrint("Request URL: ${request.url}");
+
+      // var response = await request.send();
+      // return response.statusCode == 201;
+
       if (response.statusCode == 200) {
         return {"message": data['message']};
-      }else if (response.statusCode == 400 && data.containsKey('errors')) {
+      } else if (response.statusCode == 400 && data.containsKey('errors')) {
         // Handle validation errors from backend
         List<dynamic> errors = data['errors'];
         String validationMessage = errors.map((e) => e['message']).join("\n");
         return {"validation_error": validationMessage};
-      }
-      else {
+      } else {
         return {"error": data['error'] ?? "OTP Generation Failed"};
       }
-    }catch(e){
+    } catch (e) {
       print('Error: $e');
       return {"error": "An error occurred: $e"};
     }
@@ -181,12 +190,14 @@ class ApiService {
 
 
       var data = json.decode(response.body);
+      print('Decoded Data Type: ${data.runtimeType}');
 
       if (response.statusCode == 200) {
         return {"user_id": data['user_id'], "role": data['user_role']};
       } else if (response.statusCode == 400 && data.containsKey('errors')) {
         List<dynamic> errors = data['errors'];
         String validationMessage = errors.map((e) => e['msg']).join("\n");
+        print(validationMessage);
         return {"validation_error": validationMessage};
       } else {
         return {"error": data['error'] ?? "OTP Authentication Failed"};

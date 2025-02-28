@@ -70,8 +70,8 @@ class _BusinessAccMainState extends State<BusinessAccMain> {
               text: 'Chat',
             ),
             GButton(
-              icon: Icons.list,
-              text: 'Requests',
+              icon: Icons.favorite,
+              text: 'Likes',
             ),
             GButton(
               icon: Icons.person,

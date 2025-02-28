@@ -1,16 +1,18 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ThemeService } from '../../../../../core/services/theme.service';
 import { ClickOutsideDirective } from '../../../../../shared/directives/click-outside.directive';
-
+import { AuthService } from 'src/app/services/auth.service';
+import { SignInComponent } from 'src/app/modules/auth/pages/sign-in/sign-in.component';
+import { SessionLocalStorage } from 'src/services/sessionStorage';
 @Component({
   selector: 'app-profile-menu',
   templateUrl: './profile-menu.component.html',
   styleUrls: ['./profile-menu.component.css'],
-  imports: [ClickOutsideDirective, NgClass, RouterLink, AngularSvgIconModule],
+  imports: [ClickOutsideDirective, NgClass, RouterLink, AngularSvgIconModule, NgIf],
   animations: [
     trigger('openClose', [
       state(
@@ -35,6 +37,12 @@ import { ClickOutsideDirective } from '../../../../../shared/directives/click-ou
   ],
 })
 export class ProfileMenuComponent implements OnInit {
+  constructor(
+    public themeService: ThemeService,
+    private authService: AuthService,
+    private signinService: SignInComponent,
+    private sessionStorage: SessionLocalStorage,
+  ) {}
   public isOpen = false;
   public profileMenu = [
     {
@@ -50,9 +58,14 @@ export class ProfileMenuComponent implements OnInit {
     {
       title: 'Log out',
       icon: './assets/icons/heroicons/outline/logout.svg',
-      link: '/auth',
+      action: () => this.logout(),
     },
   ];
+
+  logout(): void {
+    const user_id = this.sessionStorage.getUserId();
+    this.signinService.logout(user_id);
+  }
 
   public themeColors = [
     {
@@ -86,8 +99,6 @@ export class ProfileMenuComponent implements OnInit {
   ];
 
   public themeMode = ['light', 'dark'];
-
-  constructor(public themeService: ThemeService) {}
 
   ngOnInit(): void {}
 

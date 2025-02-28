@@ -1,0 +1,86 @@
+<!-- Start Action -->
+<div class="flex flex-wrap items-center justify-between gap-2 py-3 px-5"></div>
+<!-- End Action -->
+
+<!-- Start Form -->
+<div class="overflow-x-auto w-full">
+  <form class="w-full border-collapse border-0 text-left text-sm bg-white p-6 rounded-lg shadow-md">
+    
+    <!-- Buttons for task lists -->
+    <div class="flex justify-end mb-4">
+      <button class="flex items-center gap-2 px-4 py-2 rounded-md border hover:bg-gray-100 text-lg" (click)="changeTab('showTaskList')">
+        <svg-icon src="./assets/icons/heroicons/outline/arrow-long-left.svg" [svgClass]="'h-6 w-6'"></svg-icon>
+        <span>Go Back</span>
+      </button>
+    </div>
+
+    <!-- Unified Background for Task Information & Task Details -->
+    <div class="bg-gray-100 p-6 rounded-lg">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Task Information (Left) -->
+        <div>
+          <h2 class="text-lg font-semibold mb-3">Task Information</h2>
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <label class="block text-sm font-medium">Client Id</label>
+              <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.job_post_id" readonly>
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Specialization Needed</label>
+              <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.specialization" readonly>
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Task Title</label>
+              <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.task_title" readonly>
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Task Description</label>
+              <textarea class="w-full border rounded px-3 py-2 h-34" readonly>{{ task?.task_description }}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task Details (Right) -->
+        <div class="flex flex-col justify-between">
+          <div>
+            <h2 class="text-lg font-semibold mb-3">Task Details</h2>
+            <div class="grid grid-cols-1 gap-4">
+              <div>
+                <label class="block text-sm font-medium">Location</label>
+                <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.location" readonly>
+              </div>
+              <div>
+                <label class="block text-sm font-medium">Begin Date</label>
+                <input type="date" class="w-full border rounded px-3 py-2" [value]="task?.task_begin_date" readonly>
+              </div>
+              <div>
+                <label class="block text-sm font-medium">Contact Price</label>
+                <input type="number" class="w-full border rounded px-3 py-2" [value]="task?.contact_price" readonly>
+              </div>
+              <div>
+                <label class="block text-sm font-medium">Status</label>
+                <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.status ?? 'Empty'" readonly>
+              </div>
+            </div>
+          </div>
+
+          <!-- Disable Task Button (Below Status) -->
+          <div class="mt-6">
+            <button type="button" 
+                    class="w-full bg-blue-900 text-white py-3 px-4 rounded"
+                    (click)="disableTask()">
+              Disable Task
+            </button>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+
+  </form>
+</div>
+<!-- End Form -->

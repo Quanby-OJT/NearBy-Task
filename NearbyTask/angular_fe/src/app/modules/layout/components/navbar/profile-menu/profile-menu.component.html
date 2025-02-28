@@ -2,12 +2,7 @@
   <!-- Profile Button -->
   <button (click)="toggleMenu()" class="bg-card relative flex rounded-full text-sm" type="button">
     <span class="sr-only">Open user menu</span>
-    <img
-      clickOutside
-      (clickOutside)="isOpen = false"
-      class="h-9 w-9 rounded-md"
-      src="https://avatars.githubusercontent.com/u/12519008?v=4"
-      alt="" />
+    <img clickOutside (clickOutside)="isOpen = false" class="h-9 w-9 rounded-md" src="assets/icons/logo-2.svg" alt="" />
   </button>
   <!-- Dropdown -->
   <div
@@ -15,7 +10,7 @@
     class="bg-background shadow-custom absolute right-0 z-20 mt-2 w-60 origin-top-right transform rounded-md py-4 ring-1 ring-transparent ring-opacity-5 transition focus:outline-hidden">
     <div class="flext-row flex items-center px-4 pb-4">
       <div class="w-10 shrink-0">
-        <img class="rounded-md" src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" />
+        <img class="rounded-md" src="assets/icons/logo-2.svg" alt="" />
       </div>
       <div class="text-foreground overflow-hidden px-2 text-sm font-semibold">
         Ronnie Estillero
@@ -28,14 +23,27 @@
     <ul class="my-2 mx-4 flex flex-col">
       @for (item of profileMenu; track $index) {
       <li
-        routerLink="{{ item.link }}"
+        *ngIf="item.link; else logoutButton"
+        [routerLink]="item.link"
         :key="$index"
         class="text-muted-foreground hover:bg-card hover:text-primary inline-flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold">
-        <svg-icon src="{{ item.icon }}" [svgClass]="'h-5 w-5 text-muted-foreground/50'"> </svg-icon>
+        <svg-icon src="{{ item.icon }}" [svgClass]="'h-5 w-5 text-muted-foreground/50'"></svg-icon>
         {{ item.title }}
       </li>
       }
     </ul>
+
+    <!-- Logout Button -->
+    <ng-template #logoutButton>
+      <li
+        (click)="logout()"
+        class="text-muted-foreground hover:bg-card hover:text-primary inline-flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold">
+        <svg-icon
+          src="./assets/icons/heroicons/outline/logout.svg"
+          [svgClass]="'h-5 w-5 text-muted-foreground/50'"></svg-icon>
+        Log out
+      </li>
+    </ng-template>
     <hr class="border-border border-dashed" />
     <div class="mx-4 my-2">
       <span class="text-foreground text-xs font-semibold">Color</span>

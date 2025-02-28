@@ -1,1 +1,20 @@
-<p>task works!</p>
+<div class="mb-4 flex justify-between w-full max-w-[1440px] mx-auto px-4">
+  <div>
+    <h3 class="text-foreground font-semibold">Task Management</h3>
+    <div class="text-muted-foreground text-xs font-medium">
+      <a href="#" class="hover:text-primary">Dashboards > Task Management</a>
+    </div>
+  </div>
+</div>
+
+<div class="mb-4 flex justify-between w-full max-w-[1440px] mx-auto px-4">
+  <div></div>   
+</div>
+
+<div class="border-muted/20 bg-background flex w-full max-w-[1440px] mx-auto flex-col rounded-xl border p-4" *ngIf="currentTab == 'showTaskList'">
+  <app-task-list  (changeTab)="changeTab($event)"></app-task-list>
+</div>
+
+<div class="border-muted/20 bg-background flex w-full max-w-[1440px] mx-auto flex-col rounded-xl border p-4" *ngIf="currentTab == 'showTaskReportedList'">
+  <app-task-reported-list [task]="selectedTask" (tabChange)="changeTab($event)"></app-task-reported-list>
+</div>

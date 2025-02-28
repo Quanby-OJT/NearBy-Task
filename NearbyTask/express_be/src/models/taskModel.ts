@@ -3,6 +3,7 @@ import {supabase} from "../config/configuration";
 class UserModel {
   
   async createUser(description: string, duration: string, job_title: string, urgency: string, location: string, num_of_days: number, specialization: string, contact_price: string, remarks: string, task_begin_date: string) {
+    let statuses: string = "active";
     const { data, error } = await supabase.from('job_post').insert([
       {
         task_title: job_title,
@@ -15,6 +16,7 @@ class UserModel {
         period: num_of_days, 
         location: location,
         specialization: specialization,
+        status: statuses,
       },
     ]);
 

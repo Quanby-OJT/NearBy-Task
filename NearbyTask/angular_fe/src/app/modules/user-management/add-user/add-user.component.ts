@@ -18,6 +18,7 @@ export class AddUserComponent {
   imagePreview: File | null = null;
   duplicateEmailError: any = null;
   success_message: any = null;
+
   constructor(
     private _formBuilder: FormBuilder,
     private UserAccountService: UserAccountService,
