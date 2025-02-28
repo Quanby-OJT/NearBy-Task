@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
 import '../controller/register_controller.dart';
-import '../service/api_service.dart';
 import '../model/user_model.dart';
 
 class RegisterView extends StatefulWidget {

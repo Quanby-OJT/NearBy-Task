@@ -10,6 +10,7 @@ export class UserAccountService {
   private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) {}
+
   insertUserAccount(userData: FormData): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/userAdd`, userData);
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fe/view/service_acc/chat_screen.dart';
 import 'package:flutter_fe/view/service_acc/home_page.dart';
 import 'package:flutter_fe/view/service_acc/profile_screen.dart';
-import 'package:flutter_fe/view/service_acc/request_screen.dart';
+import 'package:flutter_fe/view/service_acc/like_screen.dart';
 import 'package:flutter_fe/view/service_acc/schedule_management_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -39,7 +39,7 @@ class _ServiceAccMainState extends State<ServiceAccMain> {
           HomePage(),
           ScheduleManagement(),
           ChatScreen(),
-          RequestScreen(),
+          LikeScreen(),
           ProfileScreen()
         ],
       ),
@@ -70,8 +70,8 @@ class _ServiceAccMainState extends State<ServiceAccMain> {
               text: 'Chat',
             ),
             GButton(
-              icon: Icons.list,
-              text: 'Requests',
+              icon: Icons.favorite,
+              text: 'Likes',
             ),
             GButton(
               icon: Icons.person,

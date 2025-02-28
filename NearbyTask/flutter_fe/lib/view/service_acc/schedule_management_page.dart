@@ -3,28 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ScheduleManagement extends StatefulWidget {
-  const ScheduleManagement({super.key});
-
   @override
   _ScheduleManagementState createState() => _ScheduleManagementState();
 }
 
 class _ScheduleManagementState extends State<ScheduleManagement> {
+  CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  final Map<DateTime, List<TimeSlot>> _availabilitySlots = {};
+  Map<DateTime, List<TimeSlot>> _availabilitySlots = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Center(
-            child: Text(
-          'Set Availability Schedule',
-          style:
-              TextStyle(color: Color(0xFF0272B1), fontWeight: FontWeight.bold),
-        )),
+        title: Text('Set Availability Schedule'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.calendar_view_month),
+            onPressed: () {
+              setState(() {
+                _calendarFormat = _calendarFormat == CalendarFormat.month
+                    ? CalendarFormat.week
+                    : CalendarFormat.month;
+              });
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -33,7 +38,7 @@ class _ScheduleManagementState extends State<ScheduleManagement> {
             lastDay: DateTime.now().add(Duration(days: 365)),
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            calendarFormat: CalendarFormat.month,
+            calendarFormat: _calendarFormat,
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
                 _selectedDay = selectedDay;
@@ -42,7 +47,7 @@ class _ScheduleManagementState extends State<ScheduleManagement> {
             },
             calendarStyle: CalendarStyle(
               markerDecoration: BoxDecoration(
-                color: Color(0xFF0272B1),
+                color: Colors.blue,
                 shape: BoxShape.circle,
               ),
             ),
@@ -62,12 +67,8 @@ class _ScheduleManagementState extends State<ScheduleManagement> {
       floatingActionButton: _selectedDay == null
           ? null
           : FloatingActionButton(
-              backgroundColor: Color(0xFF0272B1),
+              child: Icon(Icons.add),
               onPressed: _addTimeSlot,
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
             ),
     );
   }
@@ -238,8 +239,7 @@ class NumberPickerDialog extends StatefulWidget {
   final Widget title;
   final Widget message;
 
-  const NumberPickerDialog({
-    super.key,
+  NumberPickerDialog({
     required this.minValue,
     required this.maxValue,
     required this.title,

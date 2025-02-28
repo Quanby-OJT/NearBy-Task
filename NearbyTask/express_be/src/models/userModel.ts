@@ -150,6 +150,28 @@ class Auth {
     console.log("OTP reset successfully:", data); // Add logging
     return data;
   }
+  static async getUserById(user_id: string | number): Promise<any> {
+    try {
+      console.log("Getting user by ID:", user_id); // Add logging
+      
+      const { data, error } = await supabase
+        .from('user')  // Changed from 'users' to 'user' to match your other queries
+        .select('email, user_id')
+        .eq('user_id', user_id)
+        .single();
+        
+      if (error) {
+        console.error("Error getting user by ID:", error.message);
+        throw error;
+      }
+      
+      console.log("User retrieved successfully:", data);
+      return data;
+    } catch (error) {
+      console.error("Error getting user by ID:", error);
+      return null;
+    }
+  }
 }
 
 export { User, Auth };

@@ -6,6 +6,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ThemeService } from '../../../../../core/services/theme.service';
 import { ClickOutsideDirective } from '../../../../../shared/directives/click-outside.directive';
 import { AuthService } from 'src/app/services/auth.service';
+import { SignInComponent } from 'src/app/modules/auth/pages/sign-in/sign-in.component';
+import { SessionLocalStorage } from 'src/services/sessionStorage';
 @Component({
   selector: 'app-profile-menu',
   templateUrl: './profile-menu.component.html',
@@ -35,7 +37,12 @@ import { AuthService } from 'src/app/services/auth.service';
   ],
 })
 export class ProfileMenuComponent implements OnInit {
-  constructor(public themeService: ThemeService, private authService: AuthService) {}
+  constructor(
+    public themeService: ThemeService,
+    private authService: AuthService,
+    private signinService: SignInComponent,
+    private sessionStorage: SessionLocalStorage,
+  ) {}
   public isOpen = false;
   public profileMenu = [
     {
@@ -56,7 +63,8 @@ export class ProfileMenuComponent implements OnInit {
   ];
 
   logout(): void {
-    this.authService.logout();
+    const user_id = this.sessionStorage.getUserId();
+    this.signinService.logout(user_id);
   }
 
   public themeColors = [

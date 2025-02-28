@@ -67,7 +67,7 @@ class _SignUpState extends State<SignUp> {
                       colorScheme:
                           ColorScheme.light(primary: Color(0xFF0272B1))),
                   child: Stepper(
-                    type: StepperType.vertical,
+                    type: StepperType.horizontal,
                     steps: getSteps(),
                     currentStep: currentStep,
                     onStepContinue: () {
@@ -152,7 +152,7 @@ class _SignUpState extends State<SignUp> {
         Step(
             state: currentStep > 0 ? StepState.complete : StepState.indexed,
             isActive: currentStep >= 0,
-            title: Text('Basic Information'),
+            title: Text('Basic'),
             content: Column(
               children: [
                 Padding(
@@ -246,7 +246,7 @@ class _SignUpState extends State<SignUp> {
         Step(
             state: currentStep > 1 ? StepState.complete : StepState.indexed,
             isActive: currentStep >= 1,
-            title: Text('Authentication'),
+            title: Text('Auth'),
             content: Column(
               children: [
                 Padding(
