@@ -4,6 +4,7 @@ import 'package:flutter_fe/service/job_post_service.dart';
 
 class TaskController {
   final JobPostService _jobPostService = JobPostService();
+  final jobIdController = TextEditingController();
   final jobTitleController = TextEditingController();
   final jobSpecializationController = TextEditingController();
   final jobDescriptionController = TextEditingController();
@@ -18,6 +19,7 @@ class TaskController {
 
   Future<Map<String, dynamic>> postJob() async {
     final task = TaskModel(
+      id: int.tryParse(jobIdController.text) ?? 0,
       title: jobTitleController.text,
       specialization: jobSpecializationController.text,
       description: jobDescriptionController.text,

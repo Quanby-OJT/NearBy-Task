@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
 
 import session from "express-session"
+import likeRoutes from "./routes/likeRoutes";
 
 dotenv.config();
 const app: Application = express();
@@ -31,7 +32,8 @@ app.use(
   userAccountRoute,
   userRoute,
   taskRoutes,
-  authRoutes
+  authRoutes,
+  likeRoutes
 );
 
 // Start server
