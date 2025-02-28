@@ -6,7 +6,7 @@ class TaskController {
   static async createTask(req: Request, res: Response): Promise<void> {
     try {
       console.log("Received insert data:", req.body);
-      const { job_title, specialization, description, location, duration, num_of_days, urgency, contact_price, remarks, task_begin_date } = req.body;
+      const {client_id, job_title, specialization, description, location, duration, num_of_days, urgency, contact_price, remarks, task_begin_date } = req.body;
 
       // Check for missing fields. This will be relocated to tasker/client validation.
       // if (!job_title || !specialization || !description || !location || 
@@ -17,7 +17,7 @@ class TaskController {
       // }
 
       // Call the model to insert data into Supabase
-      const newTask = await userModel.createUser(
+      const newTask = await userModel.createNewTask(client_id,
         description, duration, job_title, urgency, location, 
         num_of_days, specialization, contact_price, remarks, task_begin_date
       );
@@ -34,13 +34,24 @@ class TaskController {
 
       if (error) {
         res.status(500).json({ error: error.message });
-      } else {
+      } else {  
         res.status(200).json({ tasks: data });
       }
     } catch (error) {
       res.status(500).json({
         error: error instanceof Error ? error.message : "Unknown error",
       });
+    }
+  }
+
+  static async getTask(req: Request, res: Response): Promise<void> {
+    try {
+      const { client_id } = req.body
+      const allTasks = await userModel.showTaskforClient(client_id);
+      res.status(200).json({ tasks: allTasks });
+    }catch(error){
+      console.error(error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
