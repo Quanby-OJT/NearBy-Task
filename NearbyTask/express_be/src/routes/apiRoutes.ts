@@ -49,6 +49,6 @@ router.get("/userDisplay", UserAccountController.getAllUsers);
 router.delete("/deleteUser/:id", UserAccountController.deleteUser);
 router.get("/getUserData/:id", UserAccountController.getUserData);
 router.put("/updateUserInfo/:id/", upload.single("image"),UserAccountController.updateUser)
-router.delete("/logout", AuthenticationController.logout);
+router.post("/logout", AuthenticationController.logout);
 
 export default router;
