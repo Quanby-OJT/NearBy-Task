@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TaskService } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-task-list',
   standalone: true, 
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule,  AngularSvgIconModule],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
   providers: [TaskService] 
@@ -72,5 +74,15 @@ export class TaskListComponent {
   changeTasksPerPage(event: Event) {
     this.tasksPerPage = parseInt((event.target as HTMLSelectElement).value, 10);
     this.updateDisplayedTasks();
+  }
+
+  searchTasks(event: Event) {
+    const searchValue = (event.target as HTMLInputElement).value.toLowerCase();
+
+    this.filteredTasks = this.tasks.filter(task => 
+      task.specialization.toLowerCase().includes(searchValue) 
+    );
+  
+    this.updateDisplayedTasks(); 
   }
 }

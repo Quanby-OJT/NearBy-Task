@@ -16,5 +16,5 @@ export class TaskService {
 
 disableTask(taskId: string): Observable<any> {
   return this.http.patch<any>(`${this.apiUrl}/${taskId}/disable`, {});
-}
+  }
 }
