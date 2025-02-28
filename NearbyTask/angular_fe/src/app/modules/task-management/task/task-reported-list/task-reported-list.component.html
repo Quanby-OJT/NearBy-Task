@@ -8,9 +8,8 @@
     
     <!-- Buttons for task lists -->
     <div class="flex justify-end mb-4">
-      <button class="flex items-center gap-2 px-4 py-2 rounded-md border hover:bg-gray-100 text-lg" (click)="changeTab('showTaskList')">
-        <svg-icon src="./assets/icons/heroicons/outline/arrow-long-left.svg" [svgClass]="'h-6 w-6'"></svg-icon>
-        <span>Go Back</span>
+      <button class="flex items-center gap-2 px-4 py-2 rounded-md border bg-blue-900 text-lg active:bg-blue-950 text-white" (click)="changeTab('showTaskList')">
+        <span class="text-sm">Back</span>
       </button>
     </div>
 
@@ -69,7 +68,7 @@
           <!-- Disable Task Button (Below Status) -->
           <div class="mt-6">
             <button type="button" 
-                    class="w-full bg-blue-900 text-white py-3 px-4 rounded"
+                    class="w-full bg-blue-900 active:bg-blue-950 text-white py-3 px-4 rounded"
                     (click)="disableTask()">
               Disable Task
             </button>
