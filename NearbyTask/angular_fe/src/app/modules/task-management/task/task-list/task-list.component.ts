@@ -12,12 +12,15 @@ import { TaskService } from 'src/app/services/task.service';
 })
 export class TaskListComponent {
   tasks: any[] = [];
+  filteredTasks: any[] = [];
+
   @Output() changeTab = new EventEmitter<{ tabName: string, task: any }>(); 
 
   ngOnInit(): void {
     this.taskService.getTasks().subscribe(
       (response) => {
         this.tasks = response.tasks;
+        this.filteredTasks = response.tasks;
       },
       (error) => {
         console.error('Error fetching tasks:', error);
@@ -39,4 +42,16 @@ export class TaskListComponent {
   });
 }
 
+filterTasks(event: Event) {
+  const selectedValue = (event.target as HTMLSelectElement).value.toLowerCase(); // Convert to lowercase para siguradong tugma
+
+  if (selectedValue === "") {
+    this.filteredTasks = this.tasks; // Ipakita lahat
+  } 
+  else {
+    this.filteredTasks = this.tasks.filter(task => 
+      task.status && task.status.toLowerCase() === selectedValue
+    );
+  }
+}
 }
