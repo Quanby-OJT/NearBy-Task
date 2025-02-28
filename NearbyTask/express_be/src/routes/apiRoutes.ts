@@ -41,6 +41,8 @@ router.post("/create-new-tasker", taskerValidation, ProfileController.TaskerCont
 
 router.post("/create-new-client", clientValidation, ProfileController.ClientController.createClient)
 router.post("/addTask", TaskController.createTask);
+router.get("/displayTask", TaskController.getAllTasks);
+router.patch("/displayTask/:id/disable", TaskController.disableTask);
 
 // Display all records
 router.get("/userDisplay", UserAccountController.getAllUsers);
