@@ -24,6 +24,16 @@ class TaskModel {
     if (error) throw new Error(error.message);
     return data;
   }
+
+  async showTaskforClient(client_id: number) {
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .eq('client_id', client_id);
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
 }
 
 const taskModel = new TaskModel();
