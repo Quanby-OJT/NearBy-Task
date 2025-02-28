@@ -35,7 +35,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let task of filteredTasks; let i = index" class="border-b">
+      <tr *ngFor="let task of displayedTasks; let i = index" class="border-b">
         <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
         <td class="px-4 py-3">
           <p class="px-4 py-3 text-center">{{ task.job_post_id }}</p>
@@ -56,22 +56,20 @@
         <td class="px-4 py-3 sticky right-0 bg-white shadow-md">
           <div class="flex gap-2">
             <button class="h-7 w-7 flex items-center justify-center rounded-md border hover:bg-gray-100" 
-            (click)="onChangeTab('showTaskReportedList', task)">
-      ⛔
-    </button>
+              (click)="onChangeTab('showTaskReportedList', task)">
+              ⛔
+            </button>
           </div>
         </td>
       </tr>
-    </tbody>        
-  </table>
-</div>
+    </tbody>
 <!-- End Table -->
 
 <!-- Start Footer -->
 <div class="text-muted-foreground flex flex-wrap items-center justify-between gap-2 py-3 px-5 text-xs">
   <div class="order-2 flex items-center gap-2 md:order-1">
     Show
-    <select class="w-16 p-2 border rounded-md">
+    <select class="w-23 p-5 border rounded-md" (change)="changeTasksPerPage($event)">
       <option value="10" selected>10</option>
       <option value="20">20</option>
       <option value="30">30</option>
