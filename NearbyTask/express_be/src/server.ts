@@ -16,7 +16,7 @@ declare module 'express-session' {
 
 // Middleware
 app.use(cors({
-  origin: "http://192.168.56.1:5000", // Replace with your frontend URL
+  origin: "http://10.0.2.2:5000", // Replace with your frontend URL
   credentials: true, // Allow creden
 }));
 app.use(express.json());

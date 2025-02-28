@@ -15,28 +15,21 @@ router.get("/", (req, res) => {
     res.send("Hello. Who is this?")
 })
 
-router.use(handleValidationErrors)
-
 const upload = multer({ storage: multer.memoryStorage() });
 // Register user with image upload
-router.post(
-  "/create-new-user",
-  upload.single("image"),
-  userValidation,
-  UserAccountController.registerUser
-);
+router.post("/create-new-user", upload.single("image"), userValidation,UserAccountController.registerUser);
 
 /** Authentication Routes */
-router.post("/login-auth", validateLogin, AuthenticationController.loginAuthentication);
-router.post("/otp-auth",validateOTP,AuthenticationController.otpAuthentication);
+router.post("/login-auth", validateLogin, handleValidationErrors, AuthenticationController.loginAuthentication);
+router.post("/otp-auth",validateOTP, handleValidationErrors, AuthenticationController.otpAuthentication);
 router.post( "/reset", AuthenticationController.generateOTP)
-router.post("/create-new-account", userValidation, UserAccountController.registerUser)
+
+router.post("/create-new-account", userValidation, handleValidationErrors, UserAccountController.registerUser)
 router.post("/verify", UserAccountController.verifyEmail)
 
 router.get("/check-session", (req, res) => {
   res.json({ sessionUser: req.session || "No session found" });
 });
-
 
 router.use(isAuthenticated);
 
@@ -54,6 +47,6 @@ router.get("/userDisplay", UserAccountController.getAllUsers);
 router.delete("/deleteUser/:id", UserAccountController.deleteUser);
 router.get("/getUserData/:id", UserAccountController.getUserData);
 router.put("/updateUserInfo/:id/", upload.single("image"),UserAccountController.updateUser)
-router.post("/logout", AuthenticationController.logout);
+router.delete("/logout", AuthenticationController.logout);
 
 export default router;
