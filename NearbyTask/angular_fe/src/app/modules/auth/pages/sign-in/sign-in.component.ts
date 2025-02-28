@@ -64,7 +64,7 @@ export class SignInComponent implements OnInit {
         this.sessionStorage.setSessionLocal(response.userSession);
         const sessionData = this.sessionStorage.session() as Record<string, any>;
         const session = Object.keys(sessionData)[0];
-        // console.log('Session:', session);
+        console.log('Session:', session);
         const userId = sessionData[session]?.user;
         this.sessionStorage.setSession(session);
         this.sessionStorage.setUserId(userId);

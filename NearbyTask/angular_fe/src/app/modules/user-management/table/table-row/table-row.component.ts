@@ -24,8 +24,8 @@ export class UserTableRowComponent {
     private UserComponent: UsersComponent,
   ) {}
 
-  navigateToUpdateUser(): void {
-    this.route.navigate(['user-management/update-user']);
+  navigateToReviewUser(userID: Number): void {
+    this.UserComponent.changeTabToreview(true, userID);
   }
 
   deleteUser(id: Number): void {
