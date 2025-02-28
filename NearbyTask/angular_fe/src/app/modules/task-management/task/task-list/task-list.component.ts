@@ -43,10 +43,10 @@ export class TaskListComponent {
 }
 
 filterTasks(event: Event) {
-  const selectedValue = (event.target as HTMLSelectElement).value.toLowerCase(); // Convert to lowercase para siguradong tugma
+  const selectedValue = (event.target as HTMLSelectElement).value.toLowerCase(); 
 
   if (selectedValue === "") {
-    this.filteredTasks = this.tasks; // Ipakita lahat
+    this.filteredTasks = this.tasks; 
   } 
   else {
     this.filteredTasks = this.tasks.filter(task => 
