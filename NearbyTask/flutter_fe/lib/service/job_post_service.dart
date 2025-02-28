@@ -53,7 +53,7 @@ class JobPostService {
   // }
   Future<List<TaskModel>> fetchAllJobs() async {
     final response =
-        await http.get(Uri.parse('http://localhost:5000/connect/displayTask'));
+        await http.get(Uri.parse('http://10.0.2.2:5000/connect/displayTask'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
