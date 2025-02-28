@@ -29,22 +29,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _fetchUserData() async {
     try {
-      String? userId = storage.read("user_id"); // Retrieve user_id from storage
-      if (userId != null) {
-        UserModel? user = await _userController.getAuthenticatedUser(context, userId);
-        setState(() {
-          _user = user;
-          _isLoading = false;
+      int userId = storage.read("user_id"); // Retrieve user_id from storage
+      print("Retrieved user_id from storage: $userId");
+      UserModel? user = await _userController.getAuthenticatedUser(context, userId.toString());
+      setState(() {
+        _user = user;
+        _isLoading = false;
 
-          // Populate controllers
-          // _userController.firstNameController.text = user?.firstName ?? '';
-          // _userController.lastNameController.text = user?.lastName ?? '';
-          _userController.emailController.text = user?.email ?? '';
-        });
-      } else {
-        setState(() => _isLoading = false);
-      }
-    } catch (e) {
+        // Populate controllers
+        // _userController.firstNameController.text = user?.firstName ?? '';
+        // _userController.lastNameController.text = user?.lastName ?? '';
+        _userController.emailController.text = user?.email ?? '';
+      });
+        } catch (e) {
       print("Error fetching user data: $e");
       setState(() => _isLoading = false);
     }

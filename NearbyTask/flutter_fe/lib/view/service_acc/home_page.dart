@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:get_storage/get_storage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

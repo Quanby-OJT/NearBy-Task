@@ -44,9 +44,11 @@ class ProfileController {
 // Store the inputs Start
     UserModel user = UserModel(
       firstName: firstNameController.text,
+      middleName: middleNameController.text,
       lastName: lastNameController.text,
       email: emailController.text,
       password: passwordController.text,
+      role: roleController.text
     );
     bool success = await ApiService.registerUser(user);
     if (success) {
@@ -75,16 +77,19 @@ class ProfileController {
 
   Future<UserModel?> getAuthenticatedUser(BuildContext context, String userId) async {
     try {
-      UserModel? user = await ApiService.fetchAuthenticatedUser(userId);
-      if (user != null) {
-        return user;
+      var result = await ApiService.fetchAuthenticatedUser(userId);
+
+      if (result.containsKey("user")) {
+        //print("User Data:" + result["user"].toString());
+        return result["user"] as UserModel;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to retrieve user data!")),
+          SnackBar(content: Text(result["error"])),
         );
         return null;
       }
     } catch (e) {
+      print(e.toString());
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );

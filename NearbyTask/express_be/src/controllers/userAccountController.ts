@@ -19,6 +19,7 @@ class UserAccountController {
 
       const hashpuppi = await bcrypt.hash(password, 10);
       const verificationToken = crypto.randomBytes(32).toString("hex");
+      console.log(verificationToken)
 
       const newUser = await UserAccount.create({
         first_name,
@@ -181,6 +182,8 @@ class UserAccountController {
         .select("*")
         .eq("user_id", userID)
         .single();
+      
+      //console.log({data, error})
 
       if (error) {
         res.status(500).json({ error: error.message });

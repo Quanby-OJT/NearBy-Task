@@ -7,8 +7,35 @@ import '../model/user_model.dart';
 import '../model/tasker_model.dart';
 
 class ApiService {
-  static const String apiUrl =
-      "http://192.168.56.1:5000/connect"; // Adjust if needed
+  static const String apiUrl = "http://192.168.56.1:5000/connect"; // Adjust if needed
+
+  static final http.Client _client = http.Client();
+  static Map<String, String> _cookies = {};
+
+  static void _updateCookies(http.Response response) {
+    String? rawCookie = response.headers['set-cookie'];
+
+    if (rawCookie != null) {
+      List<String> cookieParts = rawCookie.split(',');
+      for (String part in cookieParts) {
+        List<String> keyValue = part.split(';')[0].split('=');
+        if (keyValue.length == 2) {
+          _cookies[keyValue[0].trim()] = keyValue[1].trim();
+        }
+      }
+      print('Updated Cookies: $_cookies'); // Debugging
+    }
+  }
+
+  // Function to add cookies to requests
+  static Map<String, String> _getHeaders() {
+    String cookieHeader = _cookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+    return {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      if (_cookies.isNotEmpty) "Cookie": cookieHeader,
+    };
+  }
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
@@ -16,9 +43,11 @@ class ApiService {
 
     // Add text fields
     request.fields["first_name"] = user.firstName;
+    request.fields["middle_name"] =
     request.fields["last_name"] = user.lastName;
     request.fields["email"] = user.email;
     request.fields["password"] = user.password;
+    request.fields["user_role"] = user.role;
 
     //Attach Image (if available)~
     // if (user.image != null && user.imageName != null) {
@@ -49,32 +78,35 @@ class ApiService {
   //   var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/"))
   // }
 
-  static Future<UserModel?> fetchAuthenticatedUser(String userId) async {
+  static Future<Map<String, dynamic>> fetchAuthenticatedUser(String userId) async {
     try {
       final response = await http.get(Uri.parse("$apiUrl/getUserData/$userId"));
+      var data = json.decode(response.body);
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-
-        // Check if the 'users' key exists and contains data
-        if (data.containsKey('users') && data['users'] is List && data['users'].isNotEmpty) {
-          return UserModel.fromJson(data['users'][0]); // Assuming first user is the authenticated user
-        } else {
-          return null;
+        if (data.containsKey('user')) {
+          print("User Data: " + data['user'].toString());
+          return {"user": UserModel.fromJson(data['user'])};
         }
-      } else {
-        return null;
+        else {
+          return {"error": "User not found"};
+        }
+      } else if(response.statusCode == 401){
+        return {"error": data['errors'] };
+      }
+      else {
+        return {"error": data['error'] ?? "Failed to fetch user data"};
       }
     } catch (e) {
-      print("Error fetching user data: $e");
-      return null;
+      print(e.toString());
+      return {"error": "An error occurred: $e"};
     }
   }
 
 
   static Future<Map<String, dynamic>> authUser(String email, String password) async {
-    try{
-      var response = await http.post(
+    try {
+      final response = await _client.post(
         Uri.parse("$apiUrl/login-auth"),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
@@ -83,23 +115,25 @@ class ApiService {
         }),
       );
 
+      _updateCookies(response);  // 🔥 Store session cookies here
+
       var data = json.decode(response.body);
 
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         return {"user_id": data['user_id']};
       } else if (response.statusCode == 400 && data.containsKey('errors')) {
-        // Extract validation errors and combine them into a single string
         List<dynamic> errors = data['errors'];
         String errorMessage = errors.map((e) => e['msg']).join('\n');
         return {"validation_error": errorMessage};
-      }else{
+      } else {
         return {"error": data['error'] ?? 'Authentication Failed'};
       }
-    }catch(e){
+    } catch (e) {
       print('Error: $e');
-      return {"error": "An error occured: $e"};
+      return {"error": "An error occurred: $e"};
     }
   }
+
 
   static Future<Map<String, dynamic>> regenerateOTP(int userId) async {
     try{
@@ -126,40 +160,40 @@ class ApiService {
       }
     }catch(e){
       print('Error: $e');
-      return {"error": "An error occured: $e"};
+      return {"error": "An error occurred: $e"};
     }
   }
 
-  static Future<Map<String, dynamic>> authOTP(int userId, String otp) async{
-    try{
-      final response = await http.post(
+  static Future<Map<String, dynamic>> authOTP(int userId, String otp) async {
+    try {
+      final response = await _client.post(
         Uri.parse("$apiUrl/otp-auth"),
-        headers: {"Content-Type": "application/json"},
+        headers: _getHeaders(),  // 🔥 Send stored cookies
         body: json.encode({
           "user_id": userId,
           "otp": otp,
         }),
       );
 
-      print('Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+      print('Sent Headers: ${_getHeaders()}'); // Debugging
+      _updateCookies(response); // 🔥 Store session cookies
+
+
 
       var data = json.decode(response.body);
-      print('Decoded Data Type: ${data.runtimeType}');
 
       if (response.statusCode == 200) {
-        return {"user_id": data['user_id']};
+        return {"user_id": data['user_id'], "role": data['user_role']};
       } else if (response.statusCode == 400 && data.containsKey('errors')) {
         List<dynamic> errors = data['errors'];
         String validationMessage = errors.map((e) => e['msg']).join("\n");
-        print(validationMessage);
         return {"validation_error": validationMessage};
       } else {
-        return {"error": data.containsKey('error') ? data['error'] : "OTP Authentication Failed"};
+        return {"error": data['error'] ?? "OTP Authentication Failed"};
       }
-    }catch(e){
+    } catch (e) {
       print('Error: $e');
-      return {"error": "An error occured: $e"};
+      return {"error": "An error occurred: $e"};
     }
   }
 
@@ -173,7 +207,12 @@ class ApiService {
         }),
       );
 
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       var data = json.decode(response.body);
+
+
 
       if (response.statusCode == 200) {
         return {"message": data['message']};

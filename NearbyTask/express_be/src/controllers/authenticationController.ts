@@ -54,7 +54,7 @@ class AuthenticationController {
             res.status(200).json({ user_id: verifyLogin.user_id })
         } catch (error) {
             console.error(error)
-            res.status(500).json({ error: "An error occurred while logging in. If the issue persists, contact the Administrator." })
+            res.status(500).json({ error: "An error occurred while logging in. If the issue persists, contact Us." })
         }
     }
 
@@ -100,11 +100,25 @@ class AuthenticationController {
                 await Auth.resetOTP(user_id)
             }
 
-            Auth.resetOTP(user_id)
-            Auth.login(user_id)
-            req.session.user = user_id
+            await Auth.resetOTP(user_id)
+            const userRole = await Auth.getUserRole(user_id)
+            await Auth.login({user_id, session_key: req.sessionID})
 
-            res.status(200).json({ user_id: user_id })
+            req.session.regenerate((err) => {
+                if (err) {
+                    console.error("Session regeneration error:", err);
+                    return res.status(500).json({ error: "Session error" });
+                }
+                req.session.user = user_id;
+                req.session.save((err) => {
+                    if (err) {
+                        console.error("Session save error:", err);
+                    }
+                    console.log("Session after save:", req.session);
+                    res.status(200).json({ user_id: user_id, user_role: userRole.user_role});
+                });
+            });
+            
         } catch (error) {
             console.error(error)
             res.status(500).json({ error: "An error occurred while verifying OTP. Please try again." })
@@ -112,16 +126,23 @@ class AuthenticationController {
     }
 
     static async logout(req: Request, res: Response): Promise<void> {
+        const {user_id} = req.body
         console.log("Logging out...")
-        if (req.session.user) {
-            Auth.logout(parseInt(req.session.user))
+        if (req.session) {
+            Auth.logout(parseInt(user_id))
             req.session.destroy((error) => {
                 if (error) {
                     res.status(500).json({ error: "An error occurred while logging out. Please try again." })
                     return
                 }
-                res.clearCookie("connect.sid")
+                res.clearCookie("cookie.sid")
                 res.status(200).json({ message: "Successfully logged out." })
+                // req.session.regenerate((error) => {
+                //     if (error) {
+                //         res.status(500).json({ error: "An error occurred while logging out. Please try again." })
+                //         return
+                //     }                  
+                // })
             })
         } else {
             res.status(400).json({ error: "User is not logged in." })

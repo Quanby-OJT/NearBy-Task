@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/service/api_service.dart';
+import 'package:flutter_fe/view/business_acc/business_acc_main_page.dart';
 import 'package:flutter_fe/view/sign_in/otp_screen.dart';
 import 'package:flutter_fe/view/service_acc/service_acc_main_page.dart';
 import 'package:flutter_fe/view/welcome_page/welcome_page_view_main.dart';
@@ -60,11 +61,17 @@ class AuthenticationController{
   Future<void> otpAuth(BuildContext context) async{
     var response = await ApiService.authOTP(userId, otpController.text);
 
-    if(response.containsKey('user_id')){
+    if(response.containsKey('user_id') && response.containsKey('role')){
       await storage.write('user_id', userId);
-      Navigator.push(context, MaterialPageRoute(builder: (context){
-        return ServiceAccMain();
-      }));
+      if(response['role'] == "client"){
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return BusinessAccMain();
+        }));
+      }else if(response['role'] == "tasker"){
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return ServiceAccMain();
+        }));
+      }
     }else if(response.containsKey('validation_error')){
       String error = response['validation_error'] ?? "OTP Authentication Failed.";
       ScaffoldMessenger.of(context).showSnackBar(
@@ -79,10 +86,18 @@ class AuthenticationController{
   }
 
   Future<void> logout(BuildContext context) async {
-    await storage.remove('user_id');
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-        builder: (context) => WelcomePageViewMain()), (route) => false
-    );
-    await ApiService.logout(userId);
+    var response = await ApiService.logout(userId);
+
+    if(response.containsKey('message')){
+      await storage.remove('user_id');
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+          builder: (context) => WelcomePageViewMain()), (route) => false
+      );
+    }else{
+      String error = response['error'] ?? "OTP Authentication Failed.";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error)),
+      );
+    }
   }
 }

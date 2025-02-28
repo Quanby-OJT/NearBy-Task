@@ -27,18 +27,16 @@ router.post(
 );
 
 /** Authentication Routes */
-router.post("/login-auth", validateLogin, AuthenticationController.loginAuthentication
-);
-router.post(
-  "/otp-auth",
-  validateOTP,
-  AuthenticationController.otpAuthentication
-);
+router.post("/login-auth", validateLogin, AuthenticationController.loginAuthentication);
+router.post("/otp-auth",validateOTP,AuthenticationController.otpAuthentication);
+router.post( "/reset", AuthenticationController.generateOTP)
+router.post("/create-new-account", userValidation, UserAccountController.registerUser)
+router.post("/verify", UserAccountController.verifyEmail)
 
-router.post(
-    "/reset",
-    AuthenticationController.generateOTP
-)
+router.get("/check-session", (req, res) => {
+  res.json({ sessionUser: req.session || "No session found" });
+});
+
 
 router.use(isAuthenticated);
 
@@ -56,6 +54,6 @@ router.get("/userDisplay", UserAccountController.getAllUsers);
 router.delete("/deleteUser/:id", UserAccountController.deleteUser);
 router.get("/getUserData/:id", UserAccountController.getUserData);
 router.put("/updateUserInfo/:id/", upload.single("image"),UserAccountController.updateUser)
-router.get("/logout", AuthenticationController.logout);
+router.post("/logout", AuthenticationController.logout);
 
 export default router;

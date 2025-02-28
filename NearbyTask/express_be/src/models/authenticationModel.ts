@@ -1,3 +1,4 @@
+import session from "express-session";
 import {supabase} from "../config/configuration";
 
 // class User {
@@ -108,6 +109,7 @@ class Auth {
   
 
   static async resetOTP(user_id: number) {
+    console.log("Resetting OTP for user_id: ", user_id, "...")
     const { data, error } = await supabase
       .from("two_fa_code")
       .update({
@@ -120,15 +122,27 @@ class Auth {
     return data;
   }
 
-  static async login(user_id: number) {
+  static async getUserRole(user_id: number) {
+    const { data, error } = await supabase
+      .from("user")
+      .select("user_role")
+      .eq("user_id", user_id)
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  static async login(user_session: {user_id: number, session_key: string}) {
 
     const d = new Date()
 
     const { data, error } = await supabase
       .from("user_logs")
       .insert({
-        user_id: user_id,
-        login_timestamp: d.setTime(Date.now())
+        user_id: user_session.user_id,
+        logged_in: d.getTime( ),
+        session: user_session.session_key
       });
 
     if (error) throw new Error(error.message);
@@ -142,7 +156,7 @@ class Auth {
     const { data, error } = await supabase
       .from("user_logs")
       .update({
-        login_timestamp: d.setTime(Date.now())
+        logged_out: d.setTime(Date.now())
       }).eq('user_id', user_id);
 
     if (error) throw new Error(error.message);

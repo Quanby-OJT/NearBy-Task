@@ -8,9 +8,9 @@ class UserAccount {
    */
   static async create(userData: {
     first_name: string;
-    middle_name: string;
+    middle_name?: string;
     last_name: string;
-    birthdate: Date;
+    verification_token: string;
     email: string;
     image_link?: string;
     hashed_password: string;
