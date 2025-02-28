@@ -4,6 +4,8 @@ import { Request, Response } from "express";
 import { UserAccount } from "../models/userAccountModel";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import TaskerModel from "../models/taskerModel";
+import ClientModel from "../models/clientModel";
 
 class UserAccountController {
   static async createNewUser(req: Request, res: Response): Promise<any> {
@@ -47,10 +49,47 @@ class UserAccountController {
         <p>NearByTask Team</p>`,
       });
 
-      
+      res.status(200).json({message: "Account Successfully Created."})
     }catch(error){
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
+  static async createNewTasker(req: Request, res: Response): Promise<void>{
+    try{
+      const {user_id, bio, specialization, skills, availability, wage, tesda_documents_link, social_media_links} = req.body
+
+      await TaskerModel.createTasker({
+        user_id, 
+        bio, 
+        specialization, 
+        skills, 
+        availability: true, 
+        wage_per_hour: wage, 
+        tesda_documents_link, 
+        social_media_links
+      })
+
+      res.status(500).json({message: "Your Profile Information is successfully created. Please Wait for Our Team to Verify Your Information."})
+    }catch(error){
+      console.error(error)
+      res.status(500).json({error: "An Error Occured While We are Processing Your Information. Please Try Again"})
+    }
+  }
+
+  static async createNewClient(req: Request, res: Response): Promise<void>{
+    try{
+      const {user_id, preferences, client_address} = req.body
+
+      await ClientModel.createNewClient({
+        user_id,
+        preferences,
+        client_address,
+      })
+    }catch(error){
+      console.error(error)
+      res.status(500).json({error: "An Error Occured While We are Processing Your Information. Please Try Again"})
     }
   }
 
