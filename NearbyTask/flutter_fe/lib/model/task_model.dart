@@ -1,4 +1,5 @@
 class TaskModel {
+  final int? id;
   final String? title;
   final String? specialization;
   final String? description;
@@ -11,6 +12,7 @@ class TaskModel {
   final String? taskBeginDate;
 
   TaskModel({
+    this.id,
     this.title,
     this.specialization,
     this.description,
@@ -26,6 +28,7 @@ class TaskModel {
   // Convert to JSON (para gamitin sa API)
   Map<String, dynamic> toJson() {
     return {
+      "job_post_id": id,
       "job_title": title,
       "specialization": specialization,
       "description": description,
@@ -36,12 +39,14 @@ class TaskModel {
       "contact_price": contactPrice,
       "remarks": remarks,
       "task_begin_date": taskBeginDate,
+      "id": this.id,
     };
   }
 
   // Convert from JSON (kung may fetch feature later)
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
+      id: json['job_post_id'] as int?,
       title: json['task_title'] as String?,
       specialization: json['specialization'] as String?,
       description: json['task_description'] as String?,
