@@ -8,11 +8,14 @@
     
     <!-- Buttons for task lists -->
     <div class="flex justify-end mb-4">
-      <button class="flex items-center gap-2 px-4 py-2 rounded-md border bg-blue-900 text-lg active:bg-blue-950 text-white" (click)="changeTab('showTaskList')">
-        <span class="text-sm">Back</span>
+      <button class="flex items-center gap-2 px-4 py-2 rounded-md border bg-blue-900 text-lg active:bg-blue-950 text-white" routerLink="task-list">
+       <!-- Change the back button routerLink -->
+      class="flex items-center gap-2 px-4 py-2 rounded-md border bg-blue-900 text-lg active:bg-blue-950 text-white" 
+      routerLink="/task-management">
+      <span class="text-sm">Back</span>
       </button>
     </div>
-
+   
     <!-- Unified Background for Task Information & Task Details -->
     <div class="bg-gray-100 p-6 rounded-lg">
       
@@ -67,19 +70,11 @@
 
           <!-- Disable Task Button (Below Status) -->
           <div class="mt-6">
-            <button type="button" 
-                    class="w-full bg-blue-900 active:bg-blue-950 text-white py-3 px-4 rounded"
-                    (click)="disableTask()">
-              Disable Task
-            </button>
+    
           </div>
-          
         </div>
-        
       </div>
-      
     </div>
-
   </form>
 </div>
 <!-- End Form -->

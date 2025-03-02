@@ -16,15 +16,5 @@ export class TaskReportedListComponent {
     this.tabChange.emit(tabName);
   }
 
-  constructor(private taskService: TaskService) {}
-  disableTask() {
-    if (this.task?.job_post_id) {
-      this.taskService.disableTask(this.task.job_post_id).subscribe({
-        next: () => {
-          this.changeTab('showTaskList'); // Navigate back after success
-        },
-        error: (err) => console.error('Disable failed:', err)
-      });
-    }
+  
   }
-}
