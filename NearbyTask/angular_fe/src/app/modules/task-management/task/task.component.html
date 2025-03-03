@@ -101,26 +101,30 @@
       {{ Math.min(currentPage * tasksPerPage, filteredTasks.length) }} of {{ filteredTasks.length }}
     </span>
 
+    <!-- Pagination Component -->
     <div class="inline-flex items-center gap-2">
+      <!-- Previous Button -->
       <button class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 disabled:opacity-50"
         [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"/>
-        </svg>
+        ◀
       </button>
 
-      <button *ngFor="let page of [].constructor(totalPages); let i = index"
-        class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-sm"
-        [ngClass]="{'bg-primary text-white': currentPage === (i + 1)}"
-        (click)="goToPage(i + 1)">
-        {{ i + 1 }}
-      </button>
+      <!-- Dynamic Pagination Buttons -->
+      <ng-container *ngFor="let page of paginationButtons">
+        <button *ngIf="page !== '...'"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-sm"
+          [ngClass]="{'bg-primary text-white': currentPage === page}"
+          (click)="goToPage(page)">
+          {{ page }}
+        </button>
 
+        <span *ngIf="page === '...'" class="text-gray-500">...</span>
+      </ng-container>
+
+      <!-- Next Button -->
       <button class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-300"
         [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/>
-        </svg>
+        ▶
       </button>
     </div>
   </div>

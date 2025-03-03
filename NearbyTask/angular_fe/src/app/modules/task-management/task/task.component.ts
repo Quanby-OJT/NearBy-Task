@@ -16,13 +16,15 @@ export class TaskComponent {
   tasks: any[] = [];
   filteredTasks: any[] = [];
   displayedTasks: any[] = [];
+  paginationButtons: (number | string)[] = [];
   tasksPerPage: number = 10;
   currentPage: number = 1;
   totalPages: number = 1;
 
   constructor(
     private route: Router,
-    private taskService: TaskService) {}
+    private taskService: TaskService
+  ) {}
 
   ngOnInit(): void {
     this.taskService.getTasks().subscribe(
@@ -59,6 +61,34 @@ export class TaskComponent {
       (this.currentPage - 1) * this.tasksPerPage,
       this.currentPage * this.tasksPerPage
     );
+
+    this.generatePagination();
+  }
+
+  generatePagination() {
+    let maxPagesToShow = 3;
+    let startPage = Math.max(1, this.currentPage - 1);
+    let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+
+    this.paginationButtons = [];
+
+    if (startPage > 1) {
+      this.paginationButtons.push(1);
+      if (startPage > 2) {
+        this.paginationButtons.push('...');
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      this.paginationButtons.push(i);
+    }
+
+    if (endPage < this.totalPages) {
+      if (endPage < this.totalPages - 1) {
+        this.paginationButtons.push('...');
+      }
+      this.paginationButtons.push(this.totalPages);
+    }
   }
 
   changeTasksPerPage(event: Event) {
@@ -67,13 +97,14 @@ export class TaskComponent {
     this.updatePagination();
   }
 
-  goToPage(page: number) {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
+  goToPage(page: number | string) {
+    const pageNumber = typeof page === 'string' ? parseInt(page, 10) : page;
+    if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+      this.currentPage = pageNumber;
       this.updatePagination();
     }
   }
-
+  
   disableTask(taskId: string) {
     this.route.navigate(['tasks-management/task-disable', taskId]);
   }
