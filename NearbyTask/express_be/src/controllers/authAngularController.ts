@@ -5,6 +5,28 @@ import { randomUUID } from "crypto";
 
 class auth {
   constructor(public session: any) {}
+
+  static async userInformation(req: Request, res: Response): Promise<any> {
+    try {
+      const { user_id } = req.body;
+
+      const { data, error } = await supabase
+        .from("user")
+        .select("*")
+        .eq("user_id", user_id)
+        .single();
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else if (!data) {
+        res.status(404).json({ error: "User not found" });
+      } else {
+        res.status(200).json({ user: data });
+      }
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
   static async login(req: Request, res: Response): Promise<any> {
     try {
       const { email, password } = req.body;
