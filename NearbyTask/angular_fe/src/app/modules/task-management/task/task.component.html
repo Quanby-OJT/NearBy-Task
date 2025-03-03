@@ -62,7 +62,7 @@
           <td class="px-4 py-3">
             <span [style.backgroundColor]="task?.status === 'active' ? 'oklch(0.792 0.209 151.711)' : 'oklch(0.712 0.194 13.428)'" 
                   class="px-4 py-1 rounded text-white inline-block text-center w-[100px]">
-              {{ task.status }}
+              {{ task.status ?  task.status : 'null'}}
             </span> 
           </td>
           <td class="px-4 py-3">  

@@ -35,8 +35,8 @@
               <input type="text" [value]="task?.task_title" readonly>
             </div>
             <div>
-              <label class="block text-sm font-medium">Task Description</label>
-              <textarea readonly>{{ task?.task_description }}</textarea>
+              <label class="block text-sm font-medium ">Task Description</label>
+              <textarea class="h-37" readonly>{{ task?.task_description }}</textarea>
             </div>
           </div>
         </div>
@@ -60,7 +60,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium">Status</label>
-                <input type="text" [value]="task?.status" readonly>
+                <input type="text" [value]="task?.status ? task?.status : null" readonly>
               </div>
             </div>
           </div>
