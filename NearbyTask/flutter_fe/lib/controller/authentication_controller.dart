@@ -8,17 +8,17 @@ import 'package:flutter_fe/view/service_acc/service_acc_main_page.dart';
 import 'package:flutter_fe/view/welcome_page/welcome_page_view_main.dart';
 import 'package:get_storage/get_storage.dart';
 
-class AuthenticationController{
+class AuthenticationController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController otpController = TextEditingController();
   int userId;
   final storage = GetStorage();
-
   AuthenticationController({this.userId = 0});
 
   Future<void> loginAuth(BuildContext context) async {
-    var response = await ApiService.authUser(emailController.text, passwordController.text);
+    var response = await ApiService.authUser(
+        emailController.text, passwordController.text);
 
     if (response.containsKey('user_id')) {
       int userId = response['user_id'];
@@ -28,29 +28,14 @@ class AuthenticationController{
           builder: (context) => OtpScreen(userId: userId),
         ),
       );
-    } else if(response.containsKey('validation_error')){
-      String errorMessage = response['validation_error'] ?? "Unknown error occurred";
+    } else if (response.containsKey('validation_error')) {
+      String errorMessage =
+          response['validation_error'] ?? "Unknown error occurred";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );
-    }else {
-        // Display the error message using SnackBar
-        String errorMessage = response['error'] ?? "Unknown error occurred";
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
-        );
-      }
-  }
-
-  Future<void> resetOTP(BuildContext context) async{
-    var response = await ApiService.regenerateOTP(userId);
-
-    if(response.containsKey('message')){
-      String messageReset = response['message'];
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(messageReset)),
-      );
-    }else{
+    } else {
+      // Display the error message using SnackBar
       String errorMessage = response['error'] ?? "Unknown error occurred";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
@@ -58,26 +43,38 @@ class AuthenticationController{
     }
   }
 
-  Future<void> otpAuth(BuildContext context) async{
+  Future<void> resetOTP(BuildContext context) async {
+    var response = await ApiService.regenerateOTP(userId);
+
+    if (response.containsKey('message')) {
+      String messageReset = response['message'];
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(messageReset)),
+      );
+    } else {
+      String errorMessage = response['error'] ?? "Unknown error occurred";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
+  }
+
+  Future<void> otpAuth(BuildContext context) async {
     var response = await ApiService.authOTP(userId, otpController.text);
 
-    if(response.containsKey('user_id') && response.containsKey('role')){
-      await storage.write('user_id', userId);
-      if(response['role'] == "client"){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return BusinessAccMain();
-        }));
-      }else if(response['role'] == "tasker"){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return ServiceAccMain();
-        }));
-      }
-    }else if(response.containsKey('validation_error')){
-      String error = response['validation_error'] ?? "OTP Authentication Failed.";
+    if (response.containsKey('user_id')) {
+      //Code for redirection to OTP Page
+      userId = response['user_id'];
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ServiceAccMain();
+      }));
+    } else if (response.containsKey('validation_error')) {
+      String error =
+          response['validation_error'] ?? "OTP Authentication Failed.";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
       );
-    }else{
+    } else {
       String error = response['error'] ?? "OTP Authentication Failed.";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
@@ -88,12 +85,13 @@ class AuthenticationController{
   Future<void> logout(BuildContext context) async {
     var response = await ApiService.logout(userId);
 
-    if(response.containsKey('message')){
+    if (response.containsKey('message')) {
       await storage.remove('user_id');
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-          builder: (context) => WelcomePageViewMain()), (route) => false
-      );
-    }else{
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => WelcomePageViewMain()),
+          (route) => false);
+    } else {
       String error = response['error'] ?? "OTP Authentication Failed.";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
