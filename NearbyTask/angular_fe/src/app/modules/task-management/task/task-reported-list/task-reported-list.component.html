@@ -8,7 +8,7 @@
     
     <!-- Buttons for task lists -->
     <div class="flex justify-end mb-4">
-      <button class="flex items-center gap-2 px-4 py-2 rounded-md border bg-blue-900 text-lg active:bg-blue-950 text-white" (click)="taskList()">
+      <button class="flex items-center gap-2 px-4 py-2 rounded-md border bg-blue-900 text-sm active:bg-blue-950 text-white" (click)="taskList()">
       <span class="text-sm">Back</span>
       </button>
     </div>
@@ -65,9 +65,12 @@
             </div>
           </div>
 
-          <!-- Disable Task Button (Below Status) -->
+
+         <!-- Disable Task Button (Below Status) -->
           <div class="mt-6">
-    
+            <button class="w-full px-4 py-2.5 rounded-md bg-blue-900 text-white text-sm active:bg-blue-950 shadow-md hover:bg-blue-800">
+              Disable Task
+            </button>
           </div>
         </div>
       </div>
