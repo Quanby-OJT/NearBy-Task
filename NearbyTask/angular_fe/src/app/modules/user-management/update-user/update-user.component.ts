@@ -1,7 +1,7 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component, numberAttribute } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserAccountService } from 'src/app/services/userAccount';
 import { ButtonComponent } from 'src/app/shared/components/button/button.component';
 import { DataService } from 'src/services/dataStorage';
@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-update-user',
-  imports: [RouterOutlet, ReactiveFormsModule, NgIf, ButtonComponent, NgClass],
+  imports: [ ReactiveFormsModule, NgIf, ButtonComponent, NgClass],
   templateUrl: './update-user.component.html',
   styleUrl: './update-user.component.css',
 })

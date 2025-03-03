@@ -1,33 +1,63 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { TaskReportedListComponent } from './task-reported-list/task-reported-list.component';
-import { TaskListComponent } from './task-list/task-list.component';
+import { FormsModule } from '@angular/forms';
+import { TaskService } from 'src/app/services/task.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task',
-  standalone: true, 
-  imports: [
-    CommonModule,
-    AngularSvgIconModule,
-    TaskListComponent,
-    TaskReportedListComponent,
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css']
 })
 export class TaskComponent {
-  currentTab: string = "showTaskList";
-  selectedTask: any = null;
+  tasks: any[] = [];
+  filteredTasks: any[] = [];
+  displayedTasks: any[] = [];
+  tasksPerPage: number = 10;
 
-  changeTab(event: { tabName: string, task: any } | string) {
-    if (typeof event === 'string') {
-      // Handle case where only the tabName is passed (from TaskReportedListComponent)
-      this.currentTab = event;
-    } else {
-      // Handle case where both tabName and task are passed (from TaskListComponent)
-      this.currentTab = event.tabName;
-      this.selectedTask = event.task;
-    }
+  constructor(
+    private route: Router,
+    private taskService: TaskService) {}
+
+  ngOnInit(): void {
+    this.taskService.getTasks().subscribe(
+      (response) => {
+        this.tasks = response.tasks;
+        this.filteredTasks = response.tasks;
+        this.updateDisplayedTasks();
+      },
+      (error) => console.error('Error fetching tasks:', error)
+    );
+  }
+
+  filterTasks(event: Event) {
+    const selectedValue = (event.target as HTMLSelectElement).value.toLowerCase();
+    this.filteredTasks = selectedValue === "" 
+      ? this.tasks 
+      : this.tasks.filter(task => task.status?.toLowerCase() === selectedValue);
+    this.updateDisplayedTasks();
+  }
+
+  updateDisplayedTasks() {
+    this.displayedTasks = this.filteredTasks.slice(0, this.tasksPerPage);
+  }
+
+  changeTasksPerPage(event: Event) {
+    this.tasksPerPage = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.updateDisplayedTasks();
+  }
+
+  searchTasks(event: Event) {
+    const searchValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredTasks = this.tasks.filter(task => 
+      task.specialization.toLowerCase().includes(searchValue)
+    );
+    this.updateDisplayedTasks();
+  }
+
+  disableTask(taskId: string) {
+    this.route.navigate(['tasks-management/task-disable', taskId]);
   }
 }
