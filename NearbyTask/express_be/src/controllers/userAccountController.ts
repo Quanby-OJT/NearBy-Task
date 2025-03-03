@@ -7,19 +7,13 @@ import crypto from "crypto";
 
 class UserAccountController {
   static async createNewUser(req: Request, res: Response): Promise<any> {
-    try{
-      const {
-        first_name,
-        middle_name,
-        last_name,
-        email,
-        role,
-        password
-      } = req.body
+    try {
+      const { first_name, middle_name, last_name, email, role, password } =
+        req.body;
 
       const hashpuppi = await bcrypt.hash(password, 10);
       const verificationToken = crypto.randomBytes(32).toString("hex");
-      console.log(verificationToken)
+      console.log(verificationToken);
 
       const newUser = await UserAccount.create({
         first_name,
@@ -32,7 +26,8 @@ class UserAccountController {
         verification_token: verificationToken,
       });
 
-      const verificationLink = url + ":" + port + "/connect/verify?token=" + verificationToken;
+      const verificationLink =
+        url + ":" + port + "/connect/verify?token=" + verificationToken;
 
       await mailer.sendMail({
         to: email,
@@ -46,28 +41,36 @@ class UserAccountController {
         <p>Best regards,</p>
         <p>NearByTask Team</p>`,
       });
-
-      
-    }catch(error){
+    } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
 
   static async verifyEmail(req: Request, res: Response): Promise<any> {
-    try{
-      const {token} = req.body
+    try {
+      const { token } = req.body;
 
-      const { data, error } = await supabase.from("user").select("*").eq("verification_token", token).single();
+      const { data, error } = await supabase
+        .from("user")
+        .select("*")
+        .eq("verification_token", token)
+        .single();
 
-      if(error) return res.status(400).json({error: "Invalid or Expired Token."})
+      if (error)
+        return res.status(400).json({ error: "Invalid or Expired Token." });
 
-      const {error: activateError} = await supabase.from("user").update({acc_status: "active"}).eq("verification_token", token);
+      const { error: activateError } = await supabase
+        .from("user")
+        .update({ acc_status: "active" })
+        .eq("verification_token", token);
 
-      if(activateError) throw new Error(activateError.message)
+      if (activateError) throw new Error(activateError.message);
 
-      res.status(200).json({ message: "Email verified successfully. You can now log in." })
-    }catch(error){
+      res
+        .status(200)
+        .json({ message: "Email verified successfully. You can now log in." });
+    } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
     }
@@ -182,7 +185,7 @@ class UserAccountController {
         .select("*")
         .eq("user_id", userID)
         .single();
-      
+
       //console.log({data, error})
 
       if (error) {

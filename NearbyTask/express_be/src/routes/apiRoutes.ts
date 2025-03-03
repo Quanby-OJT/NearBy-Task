@@ -5,7 +5,11 @@ import { handleValidationErrors } from "../middleware/validationMiddleware";
 const router = Router();
 
 /** Authentication Routes */
-router.post("/login-auth",validateLogin,handleValidationErrors,AuthenticationController.loginAuthentication
+router.post(
+  "/login-auth",
+  validateLogin,
+  handleValidationErrors,
+  AuthenticationController.loginAuthentication
 );
 router.post(
   "/otp-auth",
