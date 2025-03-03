@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskService } from 'src/app/services/task.service';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css']
 })
@@ -17,7 +17,9 @@ export class TaskComponent {
   displayedTasks: any[] = [];
   tasksPerPage: number = 10;
 
-  constructor(private taskService: TaskService) {}
+  constructor(
+    private route: Router,
+    private taskService: TaskService) {}
 
   ngOnInit(): void {
     this.taskService.getTasks().subscribe(
@@ -53,5 +55,9 @@ export class TaskComponent {
       task.specialization.toLowerCase().includes(searchValue)
     );
     this.updateDisplayedTasks();
+  }
+
+  disableTask(taskId: string) {
+    this.route.navigate(['tasks-management/task-disable', taskId]);
   }
 }

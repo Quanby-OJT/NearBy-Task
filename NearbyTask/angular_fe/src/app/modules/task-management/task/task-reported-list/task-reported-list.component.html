@@ -8,10 +8,7 @@
     
     <!-- Buttons for task lists -->
     <div class="flex justify-end mb-4">
-      <button class="flex items-center gap-2 px-4 py-2 rounded-md border bg-blue-900 text-lg active:bg-blue-950 text-white" routerLink="task-list">
-       <!-- Change the back button routerLink -->
-      class="flex items-center gap-2 px-4 py-2 rounded-md border bg-blue-900 text-lg active:bg-blue-950 text-white" 
-      routerLink="/task-management">
+      <button class="flex items-center gap-2 px-4 py-2 rounded-md border bg-blue-900 text-lg active:bg-blue-950 text-white" (click)="taskList()">
       <span class="text-sm">Back</span>
       </button>
     </div>
@@ -27,19 +24,19 @@
           <div class="grid grid-cols-1 gap-4">
             <div>
               <label class="block text-sm font-medium">Client Id</label>
-              <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.job_post_id" readonly>
+              <input type="text" [value]="task?.job_post_id" readonly>
             </div>
             <div>
               <label class="block text-sm font-medium">Specialization Needed</label>
-              <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.specialization" readonly>
+              <input type="text" [value]="task?.specialization" readonly>
             </div>
             <div>
               <label class="block text-sm font-medium">Task Title</label>
-              <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.task_title" readonly>
+              <input type="text" [value]="task?.task_title" readonly>
             </div>
             <div>
               <label class="block text-sm font-medium">Task Description</label>
-              <textarea class="w-full border rounded px-3 py-2 h-34" readonly>{{ task?.task_description }}</textarea>
+              <textarea readonly>{{ task?.task_description }}</textarea>
             </div>
           </div>
         </div>
@@ -51,19 +48,19 @@
             <div class="grid grid-cols-1 gap-4">
               <div>
                 <label class="block text-sm font-medium">Location</label>
-                <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.location" readonly>
+                <input type="text" [value]="task?.location" readonly>
               </div>
               <div>
                 <label class="block text-sm font-medium">Begin Date</label>
-                <input type="date" class="w-full border rounded px-3 py-2" [value]="task?.task_begin_date" readonly>
+                <input type="date" [value]="task?.task_begin_date" readonly>
               </div>
               <div>
                 <label class="block text-sm font-medium">Contact Price</label>
-                <input type="number" class="w-full border rounded px-3 py-2" [value]="task?.contact_price" readonly>
+                <input type="number" [value]="task?.contact_price" readonly>
               </div>
               <div>
                 <label class="block text-sm font-medium">Status</label>
-                <input type="text" class="w-full border rounded px-3 py-2" [value]="task?.status ?? 'Empty'" readonly>
+                <input type="text" [value]="task?.status" readonly>
               </div>
             </div>
           </div>
