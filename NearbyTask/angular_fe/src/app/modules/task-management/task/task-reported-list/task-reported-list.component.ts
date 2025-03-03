@@ -1,30 +1,54 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from 'src/app/services/task.service';
+import { CommonModule } from '@angular/common';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
 @Component({
   selector: 'app-task-reported-list',
-  standalone: true, 
-  imports: [AngularSvgIconModule],
+  standalone: true,
+  imports: [CommonModule, AngularSvgIconModule],
   templateUrl: './task-reported-list.component.html',
-  styleUrls: ['./task-reported-list.component.css'] 
+  styleUrls: ['./task-reported-list.component.css']
 })
-export class TaskReportedListComponent {
-  @Input() task: any;
-  @Output() tabChange = new EventEmitter<string>();
+export class TaskReportedListComponent implements OnInit {
+  task: any;
 
-  changeTab(tabName: string) {
-    this.tabChange.emit(tabName);
-  }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private taskService: TaskService,
+    private cdr: ChangeDetectorRef 
+  ) {}
 
-  constructor(private taskService: TaskService) {}
-  disableTask() {
-    if (this.task?.job_post_id) {
-      this.taskService.disableTask(this.task.job_post_id).subscribe({
-        next: () => {
-          this.changeTab('showTaskList'); // Navigate back after success
-        },
-        error: (err) => console.error('Disable failed:', err)
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.taskService.getTaskById(id).subscribe({
+        next: (task) => this.task = task,
+        error: (err) => {
+          console.error('Error fetching task:', err);
+          this.router.navigate(['/error']);
+        }
       });
     }
   }
+
+  taskList() {
+    this.router.navigate(['tasks-management']);
+  }
+
+  disableTask() {
+    if (!this.task?.job_post_id) return;
+  
+    this.taskService.disableTask(this.task.job_post_id).subscribe({
+      next: () => {
+        alert('Task disabled successfully');
+        this.task.status = 'disabled';
+        this.cdr.detectChanges(); // Force UI update
+      },
+      error: (err) => console.error('Error disabling task:', err)
+    });
+  }
+  
 }
