@@ -35,7 +35,7 @@ router.post("/create-new-tasker", taskerValidation, ProfileController.TaskerCont
 router.post("/create-new-client", clientValidation, ProfileController.ClientController.createClient)
 router.post("/addTask", validateTask, handleValidationErrors, TaskController.createTask);
 router.get("/displayTask", TaskController.getAllTasks);
-router.get("/displayTask/:id", TaskController.getTask);
+// router.get("/displayTask/:id", TaskController.getTask);
 router.patch("/displayTask/:id/disable", TaskController.disableTask);
 
 // Display all records
@@ -43,7 +43,7 @@ router.get("/userDisplay", UserAccountController.getAllUsers);
 router.get("/specializations", TaskController.getAllSpecializations)
 router.delete("/deleteUser/:id", UserAccountController.deleteUser);
 router.get("/getUserData/:id", UserAccountController.getUserData);
-router.put("/updateUserInfo/:id/", upload.single("image"),UserAccountController.updateUser)
+// router.put("/updateUserInfo/:id/", upload.single("image"),UserAccountController.updateUser)
 router.post("/logout", AuthenticationController.logout);
 
 export default router;
