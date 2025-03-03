@@ -12,10 +12,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./task.component.css']
 })
 export class TaskComponent {
+  Math = Math;
   tasks: any[] = [];
   filteredTasks: any[] = [];
   displayedTasks: any[] = [];
   tasksPerPage: number = 10;
+  currentPage: number = 1;
+  totalPages: number = 1;
 
   constructor(
     private route: Router,
@@ -26,7 +29,7 @@ export class TaskComponent {
       (response) => {
         this.tasks = response.tasks;
         this.filteredTasks = response.tasks;
-        this.updateDisplayedTasks();
+        this.updatePagination();
       },
       (error) => console.error('Error fetching tasks:', error)
     );
@@ -37,16 +40,8 @@ export class TaskComponent {
     this.filteredTasks = selectedValue === "" 
       ? this.tasks 
       : this.tasks.filter(task => task.status?.toLowerCase() === selectedValue);
-    this.updateDisplayedTasks();
-  }
-
-  updateDisplayedTasks() {
-    this.displayedTasks = this.filteredTasks.slice(0, this.tasksPerPage);
-  }
-
-  changeTasksPerPage(event: Event) {
-    this.tasksPerPage = parseInt((event.target as HTMLSelectElement).value, 10);
-    this.updateDisplayedTasks();
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   searchTasks(event: Event) {
@@ -54,7 +49,29 @@ export class TaskComponent {
     this.filteredTasks = this.tasks.filter(task => 
       task.specialization.toLowerCase().includes(searchValue)
     );
-    this.updateDisplayedTasks();
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredTasks.length / this.tasksPerPage);
+    this.displayedTasks = this.filteredTasks.slice(
+      (this.currentPage - 1) * this.tasksPerPage,
+      this.currentPage * this.tasksPerPage
+    );
+  }
+
+  changeTasksPerPage(event: Event) {
+    this.tasksPerPage = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   disableTask(taskId: string) {
