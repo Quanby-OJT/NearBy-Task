@@ -22,23 +22,47 @@ class _JobPostPageState extends State<JobPostPage> {
   List<String> specializtion = ['Tech Support', 'Cleaning', 'Plumbing'];
 
   Future<void> _submitJob() async {
-    controller.jobTitleController.text = controller.jobTitleController.text;
-    controller.jobSpecializationController.text = selectedSpecialization ?? "";
-    controller.jobDescriptionController.text =
-        controller.jobDescriptionController.text;
-    controller.jobLocationController.text =
-        controller.jobLocationController.text;
+    // Validate required fields
+    if (controller.jobTitleController.text.isEmpty ||
+        selectedSpecialization == null ||
+        controller.jobDescriptionController.text.isEmpty ||
+        controller.jobLocationController.text.isEmpty ||
+        selectedValue == null || // duration
+        controller.jobDaysController.text.isEmpty ||
+        selectedUrgency == null ||
+        controller.contactPriceController.text.isEmpty ||
+        controller.jobRemarksController.text.isEmpty ||
+        controller.jobTaskBeginDateController.text.isEmpty) {
+      setState(() {
+        _message = "Please fill in all required fields";
+        _isSuccess = false;
+      });
+      return;
+    }
+
+    // Update controllers with selected dropdown values
     controller.jobDurationController.text = selectedValue ?? "";
-    controller.jobDaysController.text = controller.jobDaysController.text;
     controller.jobUrgencyController.text = selectedUrgency ?? "";
+    controller.jobSpecializationController.text = selectedSpecialization ?? "";
+
+    // Debug prints
+    print('Submitting job with values:');
+    print('Title: ${controller.jobTitleController.text}');
+    print('Specialization: ${controller.jobSpecializationController.text}');
+    print('Description: ${controller.jobDescriptionController.text}');
+    print('Location: ${controller.jobLocationController.text}');
+    print('Duration: ${controller.jobDurationController.text}');
+    print('Days: ${controller.jobDaysController.text}');
+    print('Urgency: ${controller.jobUrgencyController.text}');
+    print('Contact Price: ${controller.contactPriceController.text}');
+    print('Begin Date: ${controller.jobTaskBeginDateController.text}');
+    print('Remarks: ${controller.jobRemarksController.text}');
 
     final result = await controller.postJob();
     setState(() {
       _message = result['message'];
       _isSuccess = result['success'];
     });
-
-    controller.postJob();
   }
 
   @override

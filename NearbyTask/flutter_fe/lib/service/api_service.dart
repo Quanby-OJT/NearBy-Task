@@ -9,7 +9,7 @@ import 'dart:convert';
 
 class ApiService {
   static const String apiUrl =
-      "http://192.168.110.145:5000/connect"; // Adjust if needed
+      "http://192.168.254.114:5000/connect"; // Adjust if needed
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
@@ -63,6 +63,13 @@ class ApiService {
       var data = json.decode(response.body);
 
       if (response.statusCode == 200) {
+        // Save the user_id to SharedPreferences
+        if (data.containsKey('user_id')) {
+          await _saveUserData(data['user_id'].toString());
+          debugPrint("User authenticated and ID saved: ${data['user_id']}");
+        } else {
+          debugPrint("Warning: user_id not found in successful auth response");
+        }
         return {"user_id": data['user_id']};
       } else if (response.statusCode == 400 && data.containsKey('errors')) {
         // Extract validation errors and combine them into a single string
@@ -75,6 +82,17 @@ class ApiService {
     } catch (e) {
       print('Error: $e');
       return {"error": "An error occured: $e"};
+    }
+  }
+
+  // Save user data to SharedPreferences
+  static Future<void> _saveUserData(String userId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_id', userId);
+      debugPrint("User ID saved to SharedPreferences: $userId");
+    } catch (e) {
+      debugPrint("Error saving user ID to SharedPreferences: $e");
     }
   }
 
@@ -132,6 +150,11 @@ class ApiService {
       print('Decoded Data Type: ${data.runtimeType}');
 
       if (response.statusCode == 200) {
+        // Also save user_id after OTP authentication
+        if (data.containsKey('user_id')) {
+          await _saveUserData(data['user_id'].toString());
+          debugPrint("User ID saved after OTP auth: ${data['user_id']}");
+        }
         return {"user_id": data['user_id']};
       } else if (response.statusCode == 400 && data.containsKey('errors')) {
         List<dynamic> errors = data['errors'];

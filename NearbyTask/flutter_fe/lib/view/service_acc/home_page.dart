@@ -199,140 +199,187 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : tasks.isEmpty
-                      ? Center(child: Text("No available services"))
-                      : Expanded(
-                          // height: 450,
-                          // width: 350,
-                          child: CardSwiper(
-                            allowedSwipeDirection: AllowedSwipeDirection.only(
-                              left: true,
-                              right: true,
-                            ),
-                            controller: controller,
-                            cardsCount: tasks.length,
-                            onSwipe:
-                                (previousIndex, targetIndex, swipeDirection) {
-                              if (swipeDirection == CardSwiperDirection.left) {
-                                print("Swiped Left (Disliked)");
-                              } else if (swipeDirection ==
-                                  CardSwiperDirection.right) {
-                                print("Swiped Right (Liked)");
-                                _saveLikedJob(tasks[previousIndex]);
-                              }
-                              return true;
-                            },
-                            cardBuilder: (context, index, percentThresholdX,
-                                percentThresholdY) {
-                              final task = tasks[index];
-                              return Center(
-                                child: Card(
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16.0, right: 16.0, bottom: 60),
-                                    child: Column(
-                                      spacing: 10,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '₱${task.contactPrice ?? "--"}',
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          task.title ?? 'No Title',
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          task.description ?? 'No Description',
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Row(
-                                          spacing: 5,
-                                          children: [
-                                            Icon(
-                                              Icons.location_pin,
-                                              size: 20,
-                                            ),
-                                            Text(
-                                              task.location ?? "Location",
-                                              style: GoogleFonts.openSans(),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+              if (_isLoading)
+                const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              else if (tasks.isEmpty)
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search_off_rounded,
+                          size: 64,
+                          color: Colors.white70,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          "No Jobs Available",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
+                        SizedBox(height: 8),
+                        Text(
+                          "Check back later for new opportunities",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(height: 24),
+                        ElevatedButton.icon(
+                          onPressed: _fetchTasks,
+                          icon: Icon(Icons.refresh),
+                          label: Text("Refresh"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Color(0xFF0272B1),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                Expanded(
+                  child: CardSwiper(
+                    allowedSwipeDirection: AllowedSwipeDirection.only(
+                      left: true,
+                      right: true,
+                    ),
+                    controller: controller,
+                    cardsCount: tasks.length,
+                    onSwipe: (previousIndex, targetIndex, swipeDirection) {
+                      if (swipeDirection == CardSwiperDirection.left) {
+                        print("Swiped Left (Disliked)");
+                      } else if (swipeDirection == CardSwiperDirection.right) {
+                        print("Swiped Right (Liked)");
+                        _saveLikedJob(tasks[previousIndex]);
+                      }
+                      return true;
+                    },
+                    cardBuilder:
+                        (context, index, percentThresholdX, percentThresholdY) {
+                      final task = tasks[index];
+                      return Center(
+                        child: Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16.0, right: 16.0, bottom: 60),
+                            child: Column(
+                              spacing: 10,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '₱${task.contactPrice ?? "--"}',
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  task.title ?? 'No Title',
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  task.description ?? 'No Description',
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Row(
+                                  spacing: 5,
+                                  children: [
+                                    Icon(
+                                      Icons.location_pin,
+                                      size: 20,
+                                    ),
+                                    Text(
+                                      task.location ?? "Location",
+                                      style: GoogleFonts.openSans(),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
             ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      controller.swipe(CardSwiperDirection.left);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+          if (!_isLoading && tasks.isNotEmpty)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        controller.swipe(CardSwiperDirection.left);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: CircleBorder(),
+                          fixedSize: Size(60, 60),
+                          padding: EdgeInsets.zero),
+                      child: Center(
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          weight: 4,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        controller.swipe(CardSwiperDirection.right);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
                         shape: CircleBorder(),
                         fixedSize: Size(60, 60),
-                        padding: EdgeInsets.zero),
-                    child: Center(
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        weight: 4,
-                        size: 30,
+                        padding: EdgeInsets.zero, // Remove default padding
+                      ),
+                      child: Center(
+                        // Use Center instead of Align
+                        child: Icon(
+                          Icons.favorite,
+                          color: Colors.white,
+                          size: 30,
+                        ),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      controller.swipe(CardSwiperDirection.right);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: CircleBorder(),
-                      fixedSize: Size(60, 60),
-                      padding: EdgeInsets.zero, // Remove default padding
-                    ),
-                    child: Center(
-                      // Use Center instead of Align
-                      child: Icon(
-                        Icons.favorite,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

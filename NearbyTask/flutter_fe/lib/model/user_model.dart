@@ -35,11 +35,11 @@ class UserModel {
 // Returns whith these datas
   Map<String, dynamic> toJson() {
     return {
-      "first_name": firstName,
-      "last_name": lastName,
-      "email": email,
-      "hashed_password": password,
-      // Store the image as a URL (String) or handle binary data (Uint8List) if needed
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'password': password,
+      'imageName': imageName,
     };
   }
 }

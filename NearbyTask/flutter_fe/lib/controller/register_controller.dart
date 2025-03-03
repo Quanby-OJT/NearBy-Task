@@ -31,6 +31,13 @@ class RegisterController {
       );
       return;
     }
+
+    if (imageData == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please select a certificate image!")),
+      );
+      return;
+    }
 // Validation if password not matched end
 
 // Store the inputs Start
@@ -39,20 +46,27 @@ class RegisterController {
       lastName: lastNameController.text,
       email: emailController.text,
       password: passwordController.text,
-      image: imageData,
+      image: imageData?.readAsBytesSync(),
       imageName: imageName,
     );
 // Inserting the input End
 
 //Sending to the Services Start
-    bool success = await ApiService.registerUser(user);
-    if (success) {
+    try {
+      bool success = await ApiService.registerUser(user);
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registration Successful!")),
+        );
+        // Navigate to next screen or clear form
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registration Failed!")),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registration Successful!")),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registration Failed!")),
+        SnackBar(content: Text("Error: $e")),
       );
     }
 //Sending to the Services End

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/view/sign_in/pre_sign_in.dart';
 import 'package:flutter_fe/view/sign_in/sign_up.dart';
 import 'package:flutter_fe/controller/authentication_controller.dart';
 
@@ -26,7 +27,7 @@ class _SignInState extends State<SignIn> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Service Account',
+                'Sign in to NearByTask',
                 style: TextStyle(
                     color: const Color(0xFF0272B1),
                     fontSize: 30,
@@ -121,12 +122,12 @@ class _SignInState extends State<SignIn> {
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return SignUp();
+                        return PreSignIn();
                       }));
                     },
                     child: Text(
                       textAlign: TextAlign.right,
-                      'Create new account',
+                      'New to NearByTask?',
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
                     )),

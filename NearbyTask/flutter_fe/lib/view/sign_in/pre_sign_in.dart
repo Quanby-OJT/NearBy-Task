@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/view/sign_in/sign_in.dart';
+import 'package:flutter_fe/view/sign_in/sign_up.dart';
 import 'package:flutter_fe/view/sign_in_business_acc/sign_in_business_acc.dart';
+import 'package:flutter_fe/view/sign_in_business_acc/sign_up_business_acc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PreSignIn extends StatefulWidget {
@@ -50,7 +52,7 @@ class _PreSignInState extends State<PreSignIn> {
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return SignIn();
+                      return SignUp();
                     }));
                   },
                   style: ElevatedButton.styleFrom(
@@ -72,7 +74,7 @@ class _PreSignInState extends State<PreSignIn> {
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return SignInBusinessAcc();
+                      return SignUpBusinessAcc();
                     }));
                   },
                   style: ElevatedButton.styleFrom(

@@ -17,6 +17,8 @@ class _SignUpState extends State<SignUp> {
   final RegisterController _controller = RegisterController();
   File? _selectedImage; // Store the selected image bytes
   String? _imageName; // Store the selected image name
+  String? selectedGender;
+  List<String> genderOptions = ["Male", "Female"];
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -75,7 +77,11 @@ class _SignUpState extends State<SignUp> {
 
                       if (isLastStep) {
                         print('completed');
-                        _controller.registerUser(context);
+                        try {
+                          _controller.registerUser(context);
+                        } catch (error) {
+                          print('Registration error: $error');
+                        }
                       } else {
                         setState(() {
                           currentStep += 1;
@@ -197,6 +203,31 @@ class _SignUpState extends State<SignUp> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
                                 color: Color(0xFF0272B1), width: 2))),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10.0),
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color(0xFFF1F4FF),
+                      hintText: 'Gender...',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent)),
+                    ),
+                    value: selectedGender,
+                    items: genderOptions.map((String gender) {
+                      return DropdownMenuItem<String>(
+                        value: gender,
+                        child: Text(gender),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedGender = newValue;
+                      });
+                    },
                   ),
                 ),
                 Padding(
