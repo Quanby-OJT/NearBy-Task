@@ -17,7 +17,7 @@ class TaskController {
       }
 
       // Call the model to insert data into Supabase
-      const newTask = await taskModel.createUser(
+      const newTask = await taskModel.createTask(
         description, duration, job_title, urgency, location, 
         num_of_days, specialization, contact_price, remarks, task_begin_date
       );
