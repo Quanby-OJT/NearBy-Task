@@ -6,7 +6,7 @@ import 'package:flutter_fe/model/task_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class JobPostService {
-  final String url = "http://10.0.2.2:5000/connect";
+  final String url = "http://192.168.254.114:5000/connect";
 
   Future<Map<String, dynamic>> postJob(TaskModel task, int userId) async {
     try {
@@ -23,14 +23,14 @@ class JobPostService {
       if (response.statusCode == 201) {
         return {
           'success': true,
-          'message':
-              responseBody['message'] ?? 'Successfully Posted Your Task. Please Wait for Your Tasker to Accept the Job.'
+          'message': responseBody['message'] ??
+              'Successfully Posted Your Task. Please Wait for Your Tasker to Accept the Job.'
         };
       } else {
         return {
           'success': false,
-          'message':
-              responseBody['message'] ?? 'Something Went Wrong while Posting Your Task.'
+          'message': responseBody['message'] ??
+              'Something Went Wrong while Posting Your Task.'
         };
       }
     } catch (e) {
@@ -57,8 +57,7 @@ class JobPostService {
   //   }
   // }
   Future<List<TaskModel>> fetchAllJobs() async {
-    final response =
-        await http.get(Uri.parse('$url/displayTask'));
+    final response = await http.get(Uri.parse('$url/displayTask'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -76,19 +75,19 @@ class JobPostService {
     return [];
   }
 
-  Future<List<TaskModel>> fetchJobToAuthenticatedClient(int userId) async{
+  Future<List<TaskModel>> fetchJobToAuthenticatedClient(int userId) async {
     final response = await http.get(Uri.parse('$url/displayTask/$userId'));
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
 
-      if(data.containsKey('tasks')){
+      if (data.containsKey('tasks')) {
         final List<dynamic> tasks = data['tasks'];
         return tasks.map((task) => TaskModel.fromJson(task)).toList();
-      }else{
+      } else {
         print("Error: " + data['error']);
       }
-    }else{
+    } else {
       print("Error: API Request failed with status ${response.statusCode}");
     }
 
