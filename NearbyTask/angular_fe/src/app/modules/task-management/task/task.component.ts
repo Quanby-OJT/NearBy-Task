@@ -66,30 +66,28 @@ export class TaskComponent {
   }
 
   generatePagination() {
-    let maxPagesToShow = 3;
+    let maxPagesToShow = 3; // Always show 3 page numbers in the middle
     let startPage = Math.max(1, this.currentPage - 1);
     let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
-
+  
     this.paginationButtons = [];
-
-    if (startPage > 1) {
-      this.paginationButtons.push(1);
-      if (startPage > 2) {
-        this.paginationButtons.push('...');
-      }
+  
+    // Show "..." before the middle pages if we're past page 2
+    if (startPage > 2) {
+      this.paginationButtons.push('...');
     }
-
+  
+    // Add the 3 middle page numbers
     for (let i = startPage; i <= endPage; i++) {
       this.paginationButtons.push(i);
     }
-
-    if (endPage < this.totalPages) {
-      if (endPage < this.totalPages - 1) {
-        this.paginationButtons.push('...');
-      }
-      this.paginationButtons.push(this.totalPages);
+  
+    // Show "..." after the middle pages if there are more pages after
+    if (endPage < this.totalPages - 1) {
+      this.paginationButtons.push('...');
     }
   }
+  
 
   changeTasksPerPage(event: Event) {
     this.tasksPerPage = parseInt((event.target as HTMLSelectElement).value, 10);
