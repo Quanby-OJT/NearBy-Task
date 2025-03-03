@@ -36,14 +36,14 @@ class UserController {
   //       imageUrl = publicUrlData.publicUrl;
   //     }
 
-  //     // Insert user into Supabase database
-  //     const newUser = await User.create({
-  //       first_name,
-  //       last_name,
-  //       email,
-  //       hashed_password: hashedPassword,
-  //       image_link: imageUrl,
-  //     });
+  //    // Insert user into Supabase database
+  //     // const newUser = await User.create({
+  //     //   first_name,
+  //     //   last_name,
+  //     //   email,
+  //     //   hashed_password: hashedPassword,
+  //     //   image_link: imageUrl,
+  //     // });
 
   //     res
   //       .status(201)
