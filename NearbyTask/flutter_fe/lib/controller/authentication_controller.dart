@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/service/api_service.dart';
 import 'package:flutter_fe/view/business_acc/business_acc_main_page.dart';
@@ -63,6 +61,7 @@ class AuthenticationController{
 
     if(response.containsKey('user_id') && response.containsKey('role')){
       await storage.write('user_id', userId);
+      await storage.write('role', response['role']); //If the user is logged in to the app, this will be the determinant if where they will be assigned.
       if(response['role'] == "client"){
         Navigator.push(context, MaterialPageRoute(builder: (context){
           return BusinessAccMain();

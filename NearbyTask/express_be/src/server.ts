@@ -16,7 +16,15 @@ declare module 'express-session' {
 
 // Middleware
 app.use(cors({
-  origin: "http://10.0.2.2:5000", // Replace with your frontend URL
+  origin: function(origin, callback){
+    const allowedOrigins = ['http://localhost:3000', 'http://localhost:5000']
+
+    if(!origin || allowedOrigins.includes(origin)){
+      callback(null, true)
+    }else{
+      callback(new Error('Not allowed by CORS'))
+    }
+  }, // Replace with your frontend URL
   credentials: true, // Allow creden
 }));
 app.use(express.json());
