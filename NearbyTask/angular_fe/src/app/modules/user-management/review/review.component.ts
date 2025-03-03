@@ -1,11 +1,11 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, Input, numberAttribute } from '@angular/core';
+import { Component, numberAttribute } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { UserAccountService } from 'src/app/services/userAccount';
 import { ButtonComponent } from 'src/app/shared/components/button/button.component';
+import { DataService } from 'src/services/dataStorage';
 import Swal from 'sweetalert2';
-import { UsersComponent } from '../users/users.component';
 
 @Component({
   selector: 'app-review',
@@ -14,33 +14,34 @@ import { UsersComponent } from '../users/users.component';
   styleUrl: './review.component.css',
 })
 export class ReviewComponent {
-  @Input() userId: Number | null = null;
   form!: FormGroup;
   submitted = false;
   imagePreview: File | null = null;
   duplicateEmailError: any = null;
   success_message: any = null;
+  userId: Number | null = null;
   imageUrl: string | null = null;
   userData: any = null;
   first_name: string = '';
   profileImage: string | null = null;
-  isDisabled: boolean = true;
 
   constructor(
     private _formBuilder: FormBuilder,
     private userAccountService: UserAccountService,
     private router: Router,
     private route: ActivatedRoute,
-    private usersComponent: UsersComponent,
+    private dataService: DataService,
   ) {}
 
   ngOnInit(): void {
     this.formValidation();
-    if (this.userId) {
+    this.userId = this.dataService.getUserID();
+    if (this.userId === 0) {
+      this.router.navigate(['user-management']);
+    } else if (this.userId) {
       this.loadUserData();
+      console.log(this.userId);
     }
-
-    console.log('Loading');
   }
 
   formValidation(): void {
@@ -55,10 +56,9 @@ export class ReviewComponent {
     });
   }
   loadUserData(): void {
-    // const userId = Number(this.userId);
-    if (!this.userId) return;
+    const userId = Number(this.userId);
 
-    this.userAccountService.getUserById(this.userId).subscribe({
+    this.userAccountService.getUserById(userId).subscribe({
       next: (response: any) => {
         this.userData = response.user;
         this.form.patchValue({
@@ -127,10 +127,6 @@ export class ReviewComponent {
       formData.append('image', this.imagePreview, this.imagePreview.name);
     }
 
-    // for (const [key, value] of (formData as any).entries()) {
-    //   console.log(`${key}:`, value);
-    // }
-
     this.userAccountService.updateUserAccount(userId, formData).subscribe(
       (response) => {
         Swal.fire({
@@ -138,9 +134,7 @@ export class ReviewComponent {
           title: 'Success',
           text: 'User updated successfully!',
         }).then(() => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 100);
+          this.router.navigate(['user-management']);
         });
       },
 
@@ -155,6 +149,6 @@ export class ReviewComponent {
   }
 
   navigateToUsermanagement(): void {
-    this.usersComponent.changeTabToreview(false, 123);
+    this.router.navigate(['user-management']);
   }
 }

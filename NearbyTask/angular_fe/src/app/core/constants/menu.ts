@@ -11,42 +11,56 @@ export class Menu {
           icon: 'assets/icons/heroicons/outline/chart-pie.svg',
           label: 'Dashboard',
           route: '/dashboard',
+          role: ['admin', 'moderator'],
         },
 
         {
           icon: 'assets/icons/heroicons/outline/lock-closed.svg',
           label: 'User Management',
           route: '/user-management',
+          role: ['admin', 'moderator'],
         },
         {
           icon: 'assets/icons/heroicons/outline/lock-closed.svg',
           label: 'User Communication',
           route: '/user-communication',
+          role: ['moderator'],
         },
         {
           icon: 'assets/icons/heroicons/outline/lock-closed.svg',
           label: 'Tasks Management',
           route: '/tasks-management',
+          role: ['moderator'],
         },
         {
           icon: 'assets/icons/heroicons/outline/lock-closed.svg',
           label: 'Payment Reviews',
           route: '/payment-reviews',
+          role: ['moderator'],
         },
         {
           icon: 'assets/icons/heroicons/outline/lock-closed.svg',
           label: 'User Complaints',
           route: '/complaints',
+          role: ['moderator'],
         },
         {
           icon: 'assets/icons/heroicons/outline/lock-closed.svg',
           label: 'Feedback Management',
           route: '/feedback-management',
+          role: ['moderator'],
+        },
+        {
+          icon: 'assets/icons/heroicons/outline/lock-closed.svg',
+          label: 'User Logs',
+          route: '/user-logs',
+          role: ['moderator', 'admin'],
         },
         {
           icon: 'assets/icons/heroicons/outline/lock-closed.svg',
           label: 'Reports & Analytics',
           route: '/reports',
+          role: ['moderator', 'admin'],
         },
 
         // {
@@ -108,22 +122,8 @@ export class Menu {
           icon: 'assets/icons/heroicons/outline/cog.svg',
           label: 'Settings',
           route: '/settings',
+          role: ['admin', 'moderator'],
         },
-        // {
-        //   icon: 'assets/icons/heroicons/outline/bell.svg',
-        //   label: 'Notifications',
-        //   route: '/gift',
-        // },
-        // {
-        //   icon: 'assets/icons/heroicons/outline/folder.svg',
-        //   label: 'Folders',
-        //   route: '/folders',
-        //   children: [
-        //     { label: 'Current Files', route: '/folders/current-files' },
-        //     { label: 'Downloads', route: '/folders/download' },
-        //     { label: 'Trash', route: '/folders/trash' },
-        //   ],
-        // },
       ],
     },
   ];

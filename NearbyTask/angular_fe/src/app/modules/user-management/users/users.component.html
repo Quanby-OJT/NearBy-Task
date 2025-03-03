@@ -1,4 +1,4 @@
-<div *ngIf="!showReviewUser">
+<div>
   <div class="mb-4 flex justify-between">
     <div class="inline-block">
       <h3 class="text-foreground font-semibold">User Management</h3>
@@ -42,8 +42,4 @@
     </div>
     <app-table-footer></app-table-footer>
   </div>
-</div>
-
-<div *ngIf="showReviewUser">
-  <app-review [userId]="selectedUserId"></app-review>
 </div>

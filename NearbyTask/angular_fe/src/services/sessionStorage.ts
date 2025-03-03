@@ -15,12 +15,14 @@ export class SessionLocalStorage {
 
   setSession(value: any): void {
     sessionStorage.setItem('session', JSON.stringify(value));
+    localStorage.setItem('session', JSON.stringify(value));
   }
 
   getSession(): any {
     // return Object.keys(this.session())[0];
-    const storedSession = sessionStorage.getItem('session');
-    return storedSession ? JSON.parse(storedSession) : this.session();
+    // const storedSession = sessionStorage.getItem('session');
+    // return storedSession ? JSON.parse(storedSession) : this.session();
+    return localStorage.getItem('session');
   }
 
   getSessionId(): string | null {
@@ -30,6 +32,7 @@ export class SessionLocalStorage {
 
   setUserId(value: any): void {
     this.user_id.set(value);
+    localStorage.setItem('user_id', value);
   }
 
   getUserId(): any {

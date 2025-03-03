@@ -41,7 +41,6 @@ export class UsersComponent implements OnInit {
   public users: any[] = [];
   public PaginationUsers: any[] = [];
   displayedUsers = this.filterService.currentUsers;
-  showReviewUser: boolean = false;
   selectedUserId: Number | null = null;
 
   constructor(
@@ -204,11 +203,6 @@ export class UsersComponent implements OnInit {
       ...user,
       selected: checked,
     }));
-  }
-
-  changeTabToreview(value: boolean, user: Number): void {
-    this.selectedUserId = user;
-    this.showReviewUser = value;
   }
 
   handleRequestError(error: any): void {
