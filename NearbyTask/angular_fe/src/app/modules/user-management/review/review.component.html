@@ -42,12 +42,8 @@
                 [ngClass]="{ 'is__invalid-input': submitted && f['firstName'].errors }"
                 class="peer block"
                 placeholder=" "
-                formControlName="firstName"
-                [disabled]="isDisabled" />
+                formControlName="firstName" />
             </div>
-            <!-- <div *ngIf="submitted && f['firstName'].errors" class="px-1 pt-1 text-xs text-red-500">
-              <div *ngIf="f['firstName'].errors['required']" class="px-1 pt-1 text-xs text-red-500">Required field</div>
-            </div> -->
           </div>
 
           <div class="form__group mb-5">
@@ -73,9 +69,6 @@
                 placeholder=" "
                 formControlName="lastName" />
             </div>
-            <div *ngIf="submitted && f['lastName'].errors" class="px-1 pt-1 text-xs text-red-500">
-              <div *ngIf="f['lastName'].errors['required']" class="px-1 pt-1 text-xs text-red-500">Required field</div>
-            </div>
           </div>
 
           <div class="form__group mb-5">
@@ -89,9 +82,6 @@
                 placeholder=" "
                 formControlName="bday" />
             </div>
-            <div *ngIf="submitted && f['bday'].errors" class="px-1 pt-1 text-xs text-red-500">
-              <div *ngIf="f['bday'].errors['required']" class="px-1 pt-1 text-xs text-red-500">Required field</div>
-            </div>
           </div>
 
           <div class="form__group mb-5">
@@ -104,12 +94,6 @@
                 class="peer block"
                 placeholder=" "
                 formControlName="email" />
-            </div>
-            <div *ngIf="submitted && f['email'].errors" class="px-1 pt-1 text-xs text-red-500">
-              <div *ngIf="f['email'].errors['required']" class="px-1 pt-1 text-xs text-red-500">Required field</div>
-            </div>
-            <div *ngIf="duplicateEmailError" class="px-1 pt-1 text-xs text-red-500">
-              <!-- {{ duplicateEmailError }} -->
             </div>
           </div>
 
@@ -127,9 +111,6 @@
                   <option value="moderator">Moderator</option>
                   <option value="tasker">Tasker</option>
                 </select>
-              </div>
-              <div *ngIf="submitted && f['userRole'].errors" class="pt-1 text-xs text-red-500">
-                <div *ngIf="f['userRole'].errors['required']">Required field</div>
               </div>
             </div>
 
@@ -153,8 +134,18 @@
               </div>
             </div>
           </div>
+
           <!-- Submit Button -->
           <div class="">
+            <div class="mb-5">
+              <a href="" target="_blank">
+                <button
+                  class="bg-main-color block w-full rounded-lg px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  type="button">
+                  Click To Review Document
+                </button></a
+              >
+            </div>
             <app-button full impact="bold" shape="rounded" size="medium">Update User</app-button>
           </div>
         </div>

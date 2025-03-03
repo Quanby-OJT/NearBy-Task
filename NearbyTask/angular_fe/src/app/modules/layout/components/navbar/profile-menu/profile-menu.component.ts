@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { NgClass, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ThemeService } from '../../../../../core/services/theme.service';
@@ -8,6 +8,8 @@ import { ClickOutsideDirective } from '../../../../../shared/directives/click-ou
 import { AuthService } from 'src/app/services/auth.service';
 import { SignInComponent } from 'src/app/modules/auth/pages/sign-in/sign-in.component';
 import { SessionLocalStorage } from 'src/services/sessionStorage';
+import { toast } from 'ngx-sonner';
+import { Users } from 'src/model/user-management';
 @Component({
   selector: 'app-profile-menu',
   templateUrl: './profile-menu.component.html',
@@ -44,6 +46,8 @@ export class ProfileMenuComponent implements OnInit {
     private sessionStorage: SessionLocalStorage,
   ) {}
   public isOpen = false;
+  user: Users = {} as Users;
+
   public profileMenu = [
     {
       title: 'Your Profile',
@@ -100,8 +104,23 @@ export class ProfileMenuComponent implements OnInit {
 
   public themeMode = ['light', 'dark'];
 
-  ngOnInit(): void {}
-
+  ngOnInit(): void {
+    this.authService.userInformation().subscribe(
+      (response: any) => {
+        console.log('User Information:', response.user);
+        this.user = response.user;
+        console.log('This is user role' + response.user_role);
+      },
+      (error: any) => {
+        console.error('Error fetching users:', error);
+        this.handleRequestError(error);
+      },
+    );
+  }
+  handleRequestError(error: any): void {
+    console.error('API Request Error:', error);
+    toast.error(error?.message || 'An unknown error occurred');
+  }
   public toggleMenu(): void {
     this.isOpen = !this.isOpen;
   }

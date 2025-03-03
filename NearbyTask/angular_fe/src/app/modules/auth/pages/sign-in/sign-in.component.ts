@@ -83,6 +83,8 @@ export class SignInComponent implements OnInit {
       next: (response) => {
         console.log('Log successful', response);
         sessionStorage.removeItem('session');
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('session');
         this._router.navigate(['/auth']);
       },
       error: (error) => {

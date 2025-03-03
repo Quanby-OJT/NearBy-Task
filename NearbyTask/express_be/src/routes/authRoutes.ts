@@ -10,5 +10,6 @@ const router = Router();
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 router.post("/logout-without-session", auth.logoutWithoutSession);
+router.post("/userInformation", auth.userInformation);
 
 export default router;
