@@ -12,10 +12,7 @@ dotenv.config();
 const app: Application = express();
 
 // Middleware
-app.use(cors({
-  origin: "http://10.0.2.2:5000", // Replace with your frontend URL
-  credentials: true, // Allow creden
-}));
+app.use(cors());
 app.use(express.json());
 
 // Routes

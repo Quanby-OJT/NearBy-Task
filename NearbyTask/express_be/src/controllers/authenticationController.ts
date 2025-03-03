@@ -33,6 +33,7 @@ class AuthenticationController {
         return;
       }
 
+<<<<<<< HEAD
             const otp = generateOTP.generate(6, {
                 digits: true,
                 upperCaseAlphabets: false,
@@ -66,6 +67,34 @@ class AuthenticationController {
             //     subject: "Your OTP Code for NearByTask",
             //     html: otpHtml
             // })
+=======
+      const otp = generateOTP.generate(6, {
+        digits: true,
+        upperCaseAlphabets: false,
+        lowerCaseAlphabets: false,
+        specialChars: false,
+      });
+
+      await Auth.createOTP({ user_id: verifyLogin.user_id, two_fa_code: otp });
+
+      const otpHtml = `
+            <div class="bg-gray-100 p-6 rounded-lg shadow-lg">
+              <h2 class="text-xl font-bold text-gray-800">🔒 Your OTP Code</h2>
+              <p class="text-gray-700 mt-4">In order to use the application, enter the following OTP:</p>
+              <div class="mt-4 text-center">
+                <span class="text-3xl font-bold text-blue-600">${otp}</span>
+              </div>
+              <p class="text-red-500 mt-4">Note: This OTP will expire 5 minutes from now.</p>
+              <p class="text-gray-500 mt-6 text-sm">If you didn't request this code, please ignore this email.</p>
+            </div>`;
+
+      await mailer.sendMail({
+        from: "noreply@nearbytask.com",
+        to: email,
+        subject: "Your OTP Code for NearByTask",
+        html: otpHtml,
+      });
+>>>>>>> 1020a67effc066e27db760d4da7cb4d9787f9e4e
 
       res.status(200).json({ user_id: verifyLogin.user_id });
     } catch (error) {
@@ -123,11 +152,14 @@ class AuthenticationController {
         return;
       }
 
-            if(Date.parse(verifyOtp.two_fa_code_expires_at) <= Date.now()) {
-                res.status(401).json({ error: "Your OTP has been expired. Please Sign In again."})
-                await Auth.resetOTP(user_id)
-            }
+      if (Date.parse(verifyOtp.two_fa_code_expires_at) <= Date.now()) {
+        res
+          .status(401)
+          .json({ error: "Your OTP has been expired. Please Sign In again." });
+        await Auth.resetOTP(user_id);
+      }
 
+<<<<<<< HEAD
             const session_id = req.sessionID
 
             await Auth.resetOTP(user_id)
@@ -147,13 +179,36 @@ class AuthenticationController {
                     console.log("Session after save:", req.session);
                     res.status(200).json({ user_id: user_id, user_role: userRole.user_role, session_id: session_id});
                 });
-            });
-            
-        } catch (error) {
-            console.error(error)
-            res.status(500).json({ error: "An error occurred while verifying OTP. Please try again." })
+=======
+      await Auth.resetOTP(user_id);
+      const userRole = await Auth.getUserRole(user_id);
+      await Auth.login({ user_id, session_key: req.sessionID });
+
+      req.session.regenerate((err) => {
+        if (err) {
+          console.error("Session regeneration error:", err);
+          return res.status(500).json({ error: "Session error" });
         }
+        // req.session.user = user_id;
+        req.session.save((err) => {
+          if (err) {
+            console.error("Session save error:", err);
+          }
+          console.log("Session after save:", req.session);
+          res
+            .status(200)
+            .json({ user_id: user_id, user_role: userRole.user_role });
+        });
+      });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({
+          error: "An error occurred while verifying OTP. Please try again.",
+        });
     }
+  }
 
   static async logout(req: Request, res: Response): Promise<void> {
     const { user_id } = req.body;
@@ -166,6 +221,7 @@ class AuthenticationController {
             .status(500)
             .json({
               error: "An error occurred while logging out. Please try again.",
+>>>>>>> 1020a67effc066e27db760d4da7cb4d9787f9e4e
             });
           return;
         }

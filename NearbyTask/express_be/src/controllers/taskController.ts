@@ -21,8 +21,8 @@ class TaskController {
       else if(urgency == "Non-Urgent") urgent = false
 
       // Call the model to insert data into Supabase
-      const newTask = await userModel.createNewTask(user_id,
-        description, duration, job_title, urgent, location, 
+      const newTask = await taskModel.createNewTask(user_id,
+        description, duration, job_title, urgency, location, 
         num_of_days, specialization, contact_price, remarks, task_begin_date
       );
 

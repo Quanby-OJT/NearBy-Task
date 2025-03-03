@@ -6,7 +6,6 @@ import 'package:get_storage/get_storage.dart';
 
 class TaskController extends GetxController {
   final JobPostService _jobPostService = JobPostService();
-  final jobIdController = TextEditingController();
   final jobTitleController = TextEditingController();
   final jobSpecializationController = TextEditingController();
   final jobDescriptionController = TextEditingController();
