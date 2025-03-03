@@ -41,6 +41,12 @@ const routes: Routes = [
   },
 
   {
+    path: 'user-logs',
+    component: LayoutComponent,
+    loadChildren: () => import('../log/log-routing.module').then((m) => m.LogRoutingModule),
+  },
+
+  {
     path: 'reports',
     component: LayoutComponent,
     loadChildren: () => import('../report/report-routing.module').then((m) => m.ReportRoutingModule),

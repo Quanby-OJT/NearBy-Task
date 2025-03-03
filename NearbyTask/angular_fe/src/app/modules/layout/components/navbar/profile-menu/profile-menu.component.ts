@@ -10,6 +10,7 @@ import { SignInComponent } from 'src/app/modules/auth/pages/sign-in/sign-in.comp
 import { SessionLocalStorage } from 'src/services/sessionStorage';
 import { toast } from 'ngx-sonner';
 import { Users } from 'src/model/user-management';
+import { DataService } from 'src/services/dataStorage';
 @Component({
   selector: 'app-profile-menu',
   templateUrl: './profile-menu.component.html',
@@ -44,6 +45,7 @@ export class ProfileMenuComponent implements OnInit {
     private authService: AuthService,
     private signinService: SignInComponent,
     private sessionStorage: SessionLocalStorage,
+    private dataservicec: DataService,
   ) {}
   public isOpen = false;
   user: Users = {} as Users;
@@ -109,7 +111,9 @@ export class ProfileMenuComponent implements OnInit {
       (response: any) => {
         console.log('User Information:', response.user);
         this.user = response.user;
-        console.log('This is user role' + response.user_role);
+        // this.user_role = response.user_role;
+        console.log('This is user role' + response.user.user_role);
+        this.dataservicec.setUserRole(response.user.user_role);
       },
       (error: any) => {
         console.error('Error fetching users:', error);
