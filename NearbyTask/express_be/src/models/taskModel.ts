@@ -1,4 +1,4 @@
-import {supabase} from "../config/configuration";
+import { supabase } from "../config/configuration";
 
 class TaskModel  {
   
@@ -6,7 +6,6 @@ class TaskModel  {
     let statuses: string = "Pending";
     const { data, error } = await supabase.from('tasks').insert([
       {
-        client_id: client_id,
         task_title: job_title,
         task_description: description,
         period: duration,
@@ -27,14 +26,14 @@ class TaskModel  {
 
   async showTaskforClient(client_id: number) {
     const { data, error } = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('client_id', client_id);
+      .from("tasks")
+      .select("*")
+      .eq("client_id", client_id);
 
     if (error) throw new Error(error.message);
     return data;
   }
 }
 
-const taskModel = new TaskModel ();
+const taskModel = new TaskModel();
 export default taskModel;
