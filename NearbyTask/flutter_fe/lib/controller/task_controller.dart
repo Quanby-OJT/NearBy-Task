@@ -16,26 +16,41 @@ class TaskController extends GetxController {
   final contactPriceController = TextEditingController();
   final jobRemarksController = TextEditingController();
   final jobTaskBeginDateController = TextEditingController();
-  final contactpriceController = TextEditingController();
   final storage = GetStorage();
   var specializations = <String>[].obs;
   var isLoading = false.obs;
 
   Future<Map<String, dynamic>> postJob() async {
-    final int user_id = storage.read('user_id');
-    final task = TaskModel(
-      title: jobTitleController.text,
-      specialization: jobSpecializationController.text,
-      description: jobDescriptionController.text,
-      location: jobLocationController.text,
-      duration: jobDurationController.text,
-      numberOfDays: int.tryParse(jobDaysController.text) ?? 0,
-      urgency: jobUrgencyController.text,
-      contactPrice: int.tryParse(contactPriceController.text) ?? 0,
-      remarks: jobRemarksController.text,
-      taskBeginDate: jobTaskBeginDateController.text,
-    );
+    try {
+      isLoading.value = true;
 
-    return await _jobPostService.postJob(task, user_id);
+      // Fetch user session token and ID
+      String? sessionToken = storage.read('session');
+      int? userId = storage.read('user_id');
+
+      if (sessionToken == null || userId == null) {
+        return {'success': false, 'message': 'User session expired. Please log in again.'};
+      }
+
+      final task = TaskModel(
+        title: jobTitleController.text,
+        specialization: jobSpecializationController.text,
+        description: jobDescriptionController.text,
+        location: jobLocationController.text,
+        duration: jobDurationController.text,
+        numberOfDays: int.tryParse(jobDaysController.text) ?? 0,
+        urgency: jobUrgencyController.text,
+        contactPrice: int.tryParse(contactPriceController.text) ?? 0,
+        remarks: jobRemarksController.text,
+        taskBeginDate: jobTaskBeginDateController.text,
+      );
+
+      final response = await _jobPostService.postJob(task, userId);
+      return response;
+    } catch (e) {
+      return {'success': false, 'message': 'An error occurred: $e'};
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

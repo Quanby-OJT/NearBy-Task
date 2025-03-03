@@ -31,25 +31,31 @@ class AuthenticationController {
             })
     
             await Auth.createOTP({ user_id: verifyLogin.user_id, two_fa_code: otp })
+            
+            /**
+             * Beyond this point, to reduce the mail being sent, I will temporarily comment out the mailer.sendMail function.
+             * 
+             * -Ces
+             */
 
-            const otpHtml = `
-            <div class="bg-gray-100 p-6 rounded-lg shadow-lg">
-              <h2 class="text-xl font-bold text-gray-800">🔒 Your OTP Code</h2>
-              <p class="text-gray-700 mt-4">In order to use the application, enter the following OTP:</p>
-              <div class="mt-4 text-center">
-                <span class="text-3xl font-bold text-blue-600">${otp}</span>
-              </div>
-              <p class="text-red-500 mt-4">Note: This OTP will expire 5 minutes from now.</p>
-              <p class="text-gray-500 mt-6 text-sm">If you didn't request this code, please ignore this email.</p>
-            </div>`
+            // const otpHtml = `
+            // <div class="bg-gray-100 p-6 rounded-lg shadow-lg">
+            //   <h2 class="text-xl font-bold text-gray-800">🔒 Your OTP Code</h2>
+            //   <p class="text-gray-700 mt-4">In order to use the application, enter the following OTP:</p>
+            //   <div class="mt-4 text-center">
+            //     <span class="text-3xl font-bold text-blue-600">${otp}</span>
+            //   </div>
+            //   <p class="text-red-500 mt-4">Note: This OTP will expire 5 minutes from now.</p>
+            //   <p class="text-gray-500 mt-6 text-sm">If you didn't request this code, please ignore this email.</p>
+            // </div>`
           
 
-            await mailer.sendMail({
-                from: "noreply@nearbytask.com",
-                to: email,
-                subject: "Your OTP Code for NearByTask",
-                html: otpHtml
-            })
+            // await mailer.sendMail({
+            //     from: "noreply@nearbytask.com",
+            //     to: email,
+            //     subject: "Your OTP Code for NearByTask",
+            //     html: otpHtml
+            // })
 
             res.status(200).json({ user_id: verifyLogin.user_id })
         } catch (error) {
@@ -100,9 +106,11 @@ class AuthenticationController {
                 await Auth.resetOTP(user_id)
             }
 
+            const session_id = req.sessionID
+
             await Auth.resetOTP(user_id)
             const userRole = await Auth.getUserRole(user_id)
-            await Auth.login({user_id, session_key: req.sessionID})
+            await Auth.login({user_id, session_key: session_id})
 
             req.session.regenerate((err) => {
                 if (err) {
@@ -115,7 +123,7 @@ class AuthenticationController {
                         console.error("Session save error:", err);
                     }
                     console.log("Session after save:", req.session);
-                    res.status(200).json({ user_id: user_id, user_role: userRole.user_role});
+                    res.status(200).json({ user_id: user_id, user_role: userRole.user_role, session_id: session_id});
                 });
             });
             

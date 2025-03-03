@@ -52,12 +52,41 @@ class _JobPostPageState extends State<JobPostPage> {
     controller.jobUrgencyController.text = selectedUrgency ?? "";
 
     final result = await controller.postJob();
+
     setState(() {
       _message = result['message'];
       _isSuccess = result['success'];
     });
 
-    controller.postJob();
+    if (!_isSuccess) {
+      if (_message is List) {
+        // If validation errors are a list, join them into a single string
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text((_message as List).join("\n")),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      } else {
+        // Otherwise, show the message normally
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_message ?? 'An error occurred.'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Job posted successfully!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -384,6 +413,7 @@ class _JobPostPageState extends State<JobPostPage> {
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: ElevatedButton(
                   onPressed: () {
+                    _message = "";
                     _submitJob();
                   },
                   style: ElevatedButton.styleFrom(

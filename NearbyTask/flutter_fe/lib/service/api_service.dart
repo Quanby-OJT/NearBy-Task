@@ -12,7 +12,7 @@ class ApiService {
   static const String apiUrl = "http://10.0.2.2:5000/connect"; // Adjust if needed
 
   static final http.Client _client = http.Client();
-  static Map<String, String> _cookies = {};
+  static final Map<String, String> _cookies = {};
 
   static void _updateCookies(http.Response response) {
     String? rawCookie = response.headers['set-cookie'];
@@ -87,7 +87,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         if (data.containsKey('user')) {
-          print("User Data: " + data['user'].toString());
+          //print("User Data: " + data['user'].toString());
           return {"user": UserModel.fromJson(data['user'])};
         }
         else {
@@ -104,7 +104,6 @@ class ApiService {
       return {"error": "An error occurred: $e"};
     }
   }
-
 
   static Future<Map<String, dynamic>> authUser(String email, String password) async {
     try {
@@ -135,7 +134,6 @@ class ApiService {
       return {"error": "An error occurred: $e"};
     }
   }
-
 
   static Future<Map<String, dynamic>> regenerateOTP(int userId) async {
     try {
@@ -184,7 +182,7 @@ class ApiService {
         }),
       );
 
-      print('Sent Headers: ${_getHeaders()}'); // Debugging
+      //print('Sent Headers: ${_getHeaders()}'); // Debugging
       _updateCookies(response); // 🔥 Store session cookies
 
 
@@ -193,7 +191,7 @@ class ApiService {
       print('Decoded Data Type: ${data.runtimeType}');
 
       if (response.statusCode == 200) {
-        return {"user_id": data['user_id'], "role": data['user_role']};
+        return {"user_id": data['user_id'], "role": data['user_role'], "session": data['session_id']};
       } else if (response.statusCode == 400 && data.containsKey('errors')) {
         List<dynamic> errors = data['errors'];
         String validationMessage = errors.map((e) => e['msg']).join("\n");
@@ -208,13 +206,18 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> logout(int userId) async {
+  static Future<Map<String, dynamic>> logout(int userId, String session) async {
     try{
       final response = await http.post(
         Uri.parse("$apiUrl/logout"),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": session,
+          "Access-Control-Allow-Credentials": "true"
+        },
         body: json.encode({
           "user_id": userId,
+          "session": session
         }),
       );
 
