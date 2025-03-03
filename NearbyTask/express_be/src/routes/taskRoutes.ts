@@ -11,4 +11,7 @@ router.get("/displayTask", TaskController.getAllTasks);
 
 router.get("/displayTask/:id", TaskController.getTaskById);
 
+router.put("/disableTask/:id", TaskController.disableTask);
+
+
 export default router;

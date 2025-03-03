@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from 'src/app/services/task.service';
 import { CommonModule } from '@angular/common';
@@ -17,7 +17,8 @@ export class TaskReportedListComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit() {
@@ -36,4 +37,18 @@ export class TaskReportedListComponent implements OnInit {
   taskList() {
     this.router.navigate(['tasks-management']);
   }
+
+  disableTask() {
+    if (!this.task?.job_post_id) return;
+  
+    this.taskService.disableTask(this.task.job_post_id).subscribe({
+      next: () => {
+        alert('Task disabled successfully');
+        this.task.status = 'disabled';
+        this.cdr.detectChanges(); // Force UI update
+      },
+      error: (err) => console.error('Error disabling task:', err)
+    });
+  }
+  
 }

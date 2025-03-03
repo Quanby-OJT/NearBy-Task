@@ -17,4 +17,11 @@ export class TaskService {
   getTaskById(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
+
+  disableTask(id: string) {
+    return this.http.put(`http://localhost:5000/connect/disableTask/${id}`, {}); 
+  }
+  
+  
+  
 }

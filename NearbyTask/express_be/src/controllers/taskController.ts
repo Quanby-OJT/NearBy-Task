@@ -68,6 +68,25 @@ class TaskController {
     }
   }
 
+  static async disableTask(req: Request, res: Response): Promise<void> {
+    try {
+      const taskId = req.params.id;
+      const { error } = await supabase
+        .from("job_post")
+        .update({ status: "disabled" })
+        .eq("job_post_id", taskId);
+  
+      if (error) {
+        throw error;
+      }
+  
+      res.status(200).json({ message: "Task disabled successfully" });
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
 }
 
 export default TaskController;
