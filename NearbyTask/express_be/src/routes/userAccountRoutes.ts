@@ -20,7 +20,7 @@ router.delete("/deleteUser/:id", UserAccountController.deleteUser);
 
 router.get("/getUserData/:id", UserAccountController.getUserData);
 
-// router.get("/users", UserAccountController.getPaginationUsers);
+router.get("/users", UserAccountController.getPaginationUsers);
 
 router.put(
   "/updateUserInfo/:id/",
