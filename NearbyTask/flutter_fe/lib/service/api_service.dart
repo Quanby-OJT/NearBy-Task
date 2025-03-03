@@ -200,7 +200,7 @@ class ApiService {
         Uri.parse("$apiUrl/logout"),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": session,
+          "Authorization": "Bearer $session",
           "Access-Control-Allow-Credentials": "true"
         },
         body: json.encode({

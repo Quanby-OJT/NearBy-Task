@@ -134,6 +134,8 @@ class Auth {
   static async login(user_session: { user_id: number; session_key: string }) {
     const d = new Date();
 
+    console.log(user_session)
+
     const { data, error } = await supabase.from("user_logs").insert({
       user_id: user_session.user_id,
       logged_in: d.getTime(),

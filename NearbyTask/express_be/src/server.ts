@@ -1,12 +1,13 @@
 import express, { Application } from "express";
 import cors from "cors";
-import { port } from "./config/configuration";
+import { port, session_key } from "./config/configuration";
 import server from "./routes/apiRoutes";
 import userRoute from "./routes/userRoutes";
 import userAccountRoute from "./routes/userAccountRoutes";
 import taskRoutes from "./routes/taskRoutes";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
+import session from "express-session";
 
 dotenv.config();
 const app: Application = express();
@@ -14,7 +15,13 @@ const app: Application = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: session_key,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
 // Routes
 app.use(
   "/connect",

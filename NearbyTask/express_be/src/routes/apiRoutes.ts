@@ -24,6 +24,8 @@ router.get("/check-session", (req, res) => {
   res.json({ sessionUser: req.session || "No session found" });
 });
 
+router.post("/logout", AuthenticationController.logout);
+
 router.use(isAuthenticated);
 
 /**
@@ -44,6 +46,5 @@ router.get("/specializations", TaskController.getAllSpecializations)
 router.delete("/deleteUser/:id", UserAccountController.deleteUser);
 router.get("/getUserData/:id", UserAccountController.getUserData);
 // router.put("/updateUserInfo/:id/", upload.single("image"),UserAccountController.updateUser)
-router.post("/logout", AuthenticationController.logout);
 
 export default router;

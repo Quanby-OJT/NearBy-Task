@@ -4,6 +4,7 @@ import { supabase } from "../config/configuration";
 export async function isAuthenticated(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const sessionToken = req.headers.authorization || req.cookies?.session;
+        //console.log(sessionToken)
         let session_id = ""
         if(sessionToken.startsWith("Bearer ")){
             session_id = sessionToken.replace("Bearer ", "").trim()
@@ -27,7 +28,7 @@ export async function isAuthenticated(req: Request, res: Response, next: NextFun
             return;
         }
 
-        (req as any).user_id = userLog.user_id;
+        //(req as any).user_id = userLog.user_id;
         next();
     } catch (error) {
         console.error("Authentication error:", error);

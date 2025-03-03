@@ -53,7 +53,7 @@ class JobPostService {
   // Fetch specializations
   Future<List<SpecializationModel>> getSpecializations() async {
     print("Fetching SPecializations...");
-    final response = await makeRequest(endpoint: "get-all-specializations");
+    final response = await makeRequest(endpoint: "specializations");
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);

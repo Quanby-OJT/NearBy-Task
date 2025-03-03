@@ -96,7 +96,7 @@ class AuthenticationController{
           builder: (context) => WelcomePageViewMain()), (route) => false
       );
     }else{
-      String error = response['error'] ?? "OTP Authentication Failed.";
+      String error = response['error'] ?? "Failed to Log Out the User.";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
       );
