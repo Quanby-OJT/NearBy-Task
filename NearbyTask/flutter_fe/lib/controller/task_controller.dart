@@ -17,24 +17,29 @@ class TaskController {
   final jobRemarksController = TextEditingController();
   final jobTaskBeginDateController = TextEditingController();
   final contactpriceController = TextEditingController();
-  final storage = GetStorage();
 
   Future<Map<String, dynamic>> postJob() async {
-    final int user_id = storage.read('user_id');
-    final task = TaskModel(
-      id: int.tryParse(jobIdController.text) ?? 0,
-      title: jobTitleController.text,
-      specialization: jobSpecializationController.text,
-      description: jobDescriptionController.text,
-      location: jobLocationController.text,
-      duration: jobDurationController.text,
-      numberOfDays: int.tryParse(jobDaysController.text) ?? 0,
-      urgency: jobUrgencyController.text,
-      contactPrice: int.tryParse(contactPriceController.text) ?? 0,
-      remarks: jobRemarksController.text,
-      taskBeginDate: jobTaskBeginDateController.text,
-    );
+    try {
+      print('Submitting data:'); // Debug print
+      final task = TaskModel(
+        id: 0, // Set to 0 for new posts
+        title: jobTitleController.text.trim(),
+        specialization: jobSpecializationController.text.trim(),
+        description: jobDescriptionController.text.trim(),
+        location: jobLocationController.text.trim(),
+        duration: jobDurationController.text.trim(),
+        numberOfDays: int.tryParse(jobDaysController.text.trim()) ?? 0,
+        urgency: jobUrgencyController.text.trim(),
+        contactPrice: int.tryParse(contactPriceController.text.trim()) ?? 0,
+        remarks: jobRemarksController.text.trim(),
+        taskBeginDate: jobTaskBeginDateController.text.trim(),
+      );
 
-    return await _jobPostService.postJob(task, user_id);
+      print('Task data: ${task.toJson()}'); // Debug print
+      return await _jobPostService.postJob(task);
+    } catch (e) {
+      print('Error in postJob: $e'); // Debug print
+      return {'success': false, 'message': 'Error: $e'};
+    }
   }
 }
