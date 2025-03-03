@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-task',
+  selector: 'app-log',
   imports: [RouterOutlet],
-  templateUrl: './task.component.html',
-  styleUrl: './task.component.css',
+  templateUrl: './log.component.html',
+  styleUrl: './log.component.css',
 })
-export class TaskComponent {}
+export class LogsComponent {}

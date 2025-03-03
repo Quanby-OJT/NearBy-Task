@@ -1,14 +1,15 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component, numberAttribute } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserAccountService } from 'src/app/services/userAccount';
 import { ButtonComponent } from 'src/app/shared/components/button/button.component';
+import { DataService } from 'src/services/dataStorage';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-update-user',
-  imports: [RouterOutlet, ReactiveFormsModule, NgIf, ButtonComponent, NgClass],
+  imports: [ ReactiveFormsModule, NgIf, ButtonComponent, NgClass],
   templateUrl: './update-user.component.html',
   styleUrl: './update-user.component.css',
 })
@@ -18,7 +19,7 @@ export class UpdateUserComponent {
   imagePreview: File | null = null;
   duplicateEmailError: any = null;
   success_message: any = null;
-  userId: string | null = null;
+  userId: Number | null = null;
   imageUrl: string | null = null;
   userData: any = null;
   first_name: string = '';
@@ -29,13 +30,17 @@ export class UpdateUserComponent {
     private userAccountService: UserAccountService,
     private router: Router,
     private route: ActivatedRoute,
+    private dataService: DataService,
   ) {}
 
   ngOnInit(): void {
     this.formValidation();
-    this.userId = this.route.snapshot.paramMap.get('id');
-    if (this.userId) {
+    this.userId = this.dataService.getUserID();
+    if (this.userId === 0) {
+      this.router.navigate(['user-management']);
+    } else if (this.userId) {
       this.loadUserData();
+      console.log(this.userId);
     }
   }
 
@@ -121,10 +126,6 @@ export class UpdateUserComponent {
     if (this.imagePreview) {
       formData.append('image', this.imagePreview, this.imagePreview.name);
     }
-
-    // for (const [key, value] of (formData as any).entries()) {
-    //   console.log(`${key}:`, value);
-    // }
 
     this.userAccountService.updateUserAccount(userId, formData).subscribe(
       (response) => {

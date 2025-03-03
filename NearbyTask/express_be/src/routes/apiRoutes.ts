@@ -12,14 +12,6 @@ import { validateTask } from "../validator/taskValidator";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    res.send("Hello. Who is this?")
-})
-
-const upload = multer({ storage: multer.memoryStorage() });
-// Register user with image upload
-router.post("/create-new-user", upload.single("image"), userValidation,UserAccountController.registerUser);
-
 /** Authentication Routes */
 router.post("/login-auth", validateLogin, handleValidationErrors, AuthenticationController.loginAuthentication);
 router.post("/otp-auth",validateOTP, handleValidationErrors, AuthenticationController.otpAuthentication);

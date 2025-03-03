@@ -1,7 +1,5 @@
 // service/api_service.dart
-import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_fe/model/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -52,25 +50,15 @@ class ApiService {
     request.fields["user_role"] = user.role;
 
     //Attach Image (if available)~
-    // if (user.image != null && user.imageName != null) {
-    //   request.files.add(
-    //     http.MultipartFile.fromBytes(
-    //       'image',
-    //       user.image!,
-    //       filename: user.imageName!,
-    //     ),
-    //   );
-    // }
-    // if (user.image != null && user.imageName != null) {
-    //   final bytes = await File(user.image!.path).readAsBytes();
-    //   request.files.add(
-    //     http.MultipartFile.fromBytes(
-    //       'image',
-    //       bytes,
-    //       filename: user.imageName!,
-    //     ),
-    //   );
-    // }
+    if (user.image != null && user.imageName != null) {
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'image_link',
+          user.image!,
+          filename: user.imageName!,
+        ),
+      );
+    }
 
     var response = await request.send();
     return response.statusCode == 201;

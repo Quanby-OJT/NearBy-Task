@@ -1,4 +1,4 @@
-export interface Users {
+export interface Tasks {
     id: number;
     task_id: number;
     task_title: string;

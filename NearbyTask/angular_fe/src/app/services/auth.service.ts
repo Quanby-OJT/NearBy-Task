@@ -12,6 +12,16 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}`;
   constructor(private router: Router, private http: HttpClient, private session: SessionLocalStorage) {}
 
+  userInformation(): Observable<any> {
+    const user_id = localStorage.getItem('user_id');
+    return this.http.post<any>(`${this.apiUrl}/userInformation`, { user_id }).pipe(
+      catchError((error) => {
+        console.error('HTTP Error:', error);
+        return throwError(() => new Error(error?.error?.message || 'Unknown API Error'));
+      }),
+    );
+  }
+
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
       catchError((error) => {

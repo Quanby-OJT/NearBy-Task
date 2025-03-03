@@ -7,6 +7,7 @@ import { Users } from 'src/model/user-management';
 import { UserAccountService } from 'src/app/services/userAccount';
 import Swal from 'sweetalert2';
 import { UsersComponent } from '../../users/users.component';
+import { DataService } from 'src/services/dataStorage';
 
 @Component({
   selector: '[app-table-row]',
@@ -22,11 +23,8 @@ export class UserTableRowComponent {
     private route: Router,
     private UserAccountService: UserAccountService,
     private UserComponent: UsersComponent,
+    private dataService: DataService,
   ) {}
-
-  navigateToUpdateUser(): void {
-    this.route.navigate(['user-management/update-user']);
-  }
 
   deleteUser(id: Number): void {
     Swal.fire({
@@ -48,6 +46,12 @@ export class UserTableRowComponent {
     });
   }
   updateUser(id: Number) {
-    this.route.navigate(['user-management/update-user', id]);
+    this.dataService.setUserID(id);
+    this.route.navigate(['user-management/update-user']);
+  }
+
+  navigateToReviewUser(id: Number) {
+    this.dataService.setUserID(id);
+    this.route.navigate(['user-management/review-user']);
   }
 }

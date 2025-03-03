@@ -5,6 +5,7 @@ import 'package:flutter_fe/model/task_model.dart';
 import 'package:flutter_fe/service/job_post_service.dart';
 import 'package:flutter_fe/view/business_acc/job_post_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +17,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final CardSwiperController controller = CardSwiperController();
   List<TaskModel> tasks = [];
+  List<String> searchCategories = [
+    'All',
+    'Cleaning',
+    'Delivery',
+    'Repair',
+    'Moving'
+  ];
+  List<String> selectedCategories = [];
   bool _isLoading = true;
   @override
   void initState() {
@@ -45,18 +54,70 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _saveLikedJob(TaskModel task) async {
+    try {
+      // Check if task ID is null
+      if (task.id == null) {
+        print("Cannot like job: Task ID is null for task: ${task.title}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Cannot like job: Invalid job ID"),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return;
+      }
+
+      JobPostService jobPostService = JobPostService();
+
+      // Call the service method to save the liked job - now passing an int
+      final result = await jobPostService.saveLikedJob(task.id!);
+
+      if (result['success']) {
+        // Show success indicator
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message']),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } else {
+        // Show error indicator
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message']),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error saving liked job: $e");
+
+      // Show error indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to save like. Please try again."),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF0272B1),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Center(
             child: Text(
-              'Job Posts',
-              style:
-              TextStyle(color: Color(0xFF0272B1), fontWeight: FontWeight.bold),
-            )),
+          'Job Posts',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        )),
         backgroundColor: Colors.transparent,
       ),
       body: Column(

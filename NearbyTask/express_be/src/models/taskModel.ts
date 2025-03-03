@@ -1,6 +1,6 @@
 import {supabase} from "../config/configuration";
 
-class TaskModel {
+class TaskModel  {
   
   async createNewTask(client_id: number, description: string, duration: string, job_title: string, urgency: boolean, location: string, num_of_days: number, specialization: string, contact_price: string, remarks: string, task_begin_date: string) {
     let statuses: string = "Pending";
@@ -36,5 +36,5 @@ class TaskModel {
   }
 }
 
-const taskModel = new TaskModel();
+const taskModel = new TaskModel ();
 export default taskModel;
