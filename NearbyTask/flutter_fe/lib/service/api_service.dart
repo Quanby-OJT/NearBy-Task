@@ -1,17 +1,18 @@
 // service/api_service.dart
 
 import 'package:flutter_fe/model/user_model.dart';
+import 'package:flutter_fe/service/auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../model/user_model.dart';
 import '../model/tasker_model.dart';
 
 class ApiService {
-  static const String apiUrl =
-      "http://192.168.110.145:5000/connect"; // Adjust if needed
+  static const String apiUrl = "http://10.0.2.2:5000/connect"; // Adjust if needed
+
 
   static final http.Client _client = http.Client();
-  static Map<String, String> _cookies = {};
+  static final Map<String, String> _cookies = {};
 
   static void _updateCookies(http.Response response) {
     String? rawCookie = response.headers['set-cookie'];
@@ -31,7 +32,7 @@ class ApiService {
   // Function to add cookies to requests
   static Map<String, String> _getHeaders() {
     String cookieHeader =
-        _cookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+    _cookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
     return {
       "Content-Type": "application/json",
       "Accept": "application/json",
@@ -42,13 +43,13 @@ class ApiService {
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
     var request =
-        http.MultipartRequest("POST", Uri.parse("$apiUrl/create-new-user"));
+    http.MultipartRequest("POST", Uri.parse("$apiUrl/create-new-user"));
 
     // Add text fields
     request.fields["first_name"] = user.firstName;
     request.fields["middle_name"] = request.fields["last_name"] = user.lastName;
     request.fields["email"] = user.email;
-    request.fields["password"] = user.password;
+    request.fields["password"] = user.password ?? "";
     request.fields["user_role"] = user.role;
 
     //Attach Image (if available)~
@@ -70,21 +71,26 @@ class ApiService {
   //   var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/"))
   // }
 
-  static Future<Map<String, dynamic>> fetchAuthenticatedUser(
-      String userId) async {
+  static Future<Map<String, dynamic>> fetchAuthenticatedUser(String userId) async {
     try {
-      final response = await http.get(Uri.parse("$apiUrl/getUserData/$userId"));
+      final String token = await AuthService.getSessionToken();
+      final response = await http.get(
+          Uri.parse("$apiUrl/getUserData/$userId"),
+          headers: {
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/json"
+          }
+      );
       var data = json.decode(response.body);
+      print("Retrieved Data: " + data.toString());
 
       if (response.statusCode == 200) {
         if (data.containsKey('user')) {
-          print("User Data: " + data['user'].toString());
+          print(UserModel.fromJson(data['user']));
           return {"user": UserModel.fromJson(data['user'])};
         } else {
           return {"error": "User not found"};
         }
-      } else if (response.statusCode == 401) {
-        return {"error": data['errors']};
       } else {
         return {"error": data['error'] ?? "Failed to fetch user data"};
       }
@@ -94,8 +100,7 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> authUser(
-      String email, String password) async {
+  static Future<Map<String, dynamic>> authUser(String email, String password) async {
     try {
       final response = await _client.post(
         Uri.parse("$apiUrl/login-auth"),
@@ -172,14 +177,14 @@ class ApiService {
         }),
       );
 
-      print('Sent Headers: ${_getHeaders()}'); // Debugging
+      //print('Sent Headers: ${_getHeaders()}'); // Debugging
       _updateCookies(response); // 🔥 Store session cookies
 
       var data = json.decode(response.body);
       print('Decoded Data Type: ${data.runtimeType}');
 
       if (response.statusCode == 200) {
-        return {"user_id": data['user_id'], "role": data['user_role']};
+        return {"user_id": data['user_id'], "role": data['user_role'], "session": data['session_id']};
       } else if (response.statusCode == 400 && data.containsKey('errors')) {
         List<dynamic> errors = data['errors'];
         String validationMessage = errors.map((e) => e['msg']).join("\n");
@@ -194,13 +199,18 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> logout(int userId) async {
-    try {
+  static Future<Map<String, dynamic>> logout(int userId, String session) async {
+    try{
       final response = await http.post(
         Uri.parse("$apiUrl/logout"),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $session",
+          "Access-Control-Allow-Credentials": "true"
+        },
         body: json.encode({
           "user_id": userId,
+          "session": session
         }),
       );
 

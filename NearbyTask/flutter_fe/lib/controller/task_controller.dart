@@ -17,9 +17,11 @@ class TaskController {
   final jobRemarksController = TextEditingController();
   final jobTaskBeginDateController = TextEditingController();
   final contactpriceController = TextEditingController();
+  final storage = GetStorage();
 
   Future<Map<String, dynamic>> postJob() async {
     try {
+      int userId = storage.read('user_id');
       print('Submitting data:'); // Debug print
       final task = TaskModel(
         id: 0, // Set to 0 for new posts
@@ -36,7 +38,7 @@ class TaskController {
       );
 
       print('Task data: ${task.toJson()}'); // Debug print
-      return await _jobPostService.postJob(task);
+      return await _jobPostService.postJob(task, userId);
     } catch (e) {
       print('Error in postJob: $e'); // Debug print
       return {'success': false, 'message': 'Error: $e'};

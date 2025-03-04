@@ -12,15 +12,16 @@ class ProfileController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController roleController = TextEditingController();
   final TextEditingController middleNameController = TextEditingController();
+  final TextEditingController birthdateController = TextEditingController();
   // Fetched user inputs End
 
   //Tasker Text Controller
   final TextEditingController bioController = TextEditingController();
   final TextEditingController specializationController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController skillsController = TextEditingController();
   final TextEditingController availabilityController = TextEditingController();
   final TextEditingController wageController = TextEditingController();
@@ -49,7 +50,9 @@ class ProfileController {
         lastName: lastNameController.text,
         email: emailController.text,
         password: passwordController.text,
-        role: roleController.text);
+        role: roleController.text,
+        accStatus: 'Pending'
+    );
     bool success = await ApiService.registerUser(user);
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -79,6 +82,7 @@ class ProfileController {
   Future<UserModel?> getAuthenticatedUser(
       BuildContext context, String userId) async {
     try {
+
       var result = await ApiService.fetchAuthenticatedUser(userId);
 
       if (result.containsKey("user")) {
