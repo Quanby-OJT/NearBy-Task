@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/service/api_service.dart';
 import 'package:flutter_fe/view/business_acc/business_acc_main_page.dart';
@@ -61,21 +63,15 @@ class AuthenticationController {
   Future<void> otpAuth(BuildContext context) async {
     var response = await ApiService.authOTP(userId, otpController.text);
 
-    if(response.containsKey('user_id') && response.containsKey('role') && response.containsKey('session')){
-      await storage.write('user_id', response['user_id']);
-      await storage.write('role', response['role']); //If the user is logged in to the app, this will be the determinant if where they will be assigned.
-      await storage.write('session', response['session']);
-      if(response['role'] == "client"){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return BusinessAccMain();
-        }));
-      }else if(response['role'] == "tasker"){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return ServiceAccMain();
-        }));
-      }
-    }else if(response.containsKey('validation_error')){
-      String error = response['validation_error'] ?? "OTP Authentication Failed.";
+    if (response.containsKey('user_id')) {
+      //Code for redirection to OTP Page
+      userId = response['user_id'];
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ServiceAccMain();
+      }));
+    } else if (response.containsKey('validation_error')) {
+      String error =
+          response['validation_error'] ?? "OTP Authentication Failed.";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
       );
@@ -88,17 +84,16 @@ class AuthenticationController {
   }
 
   Future<void> logout(BuildContext context) async {
-    var response = await ApiService.logout(await storage.read('user_id'), storage.read('session'));
+    var response = await ApiService.logout(userId);
 
     if (response.containsKey('message')) {
       await storage.remove('user_id');
-      await storage.remove('role');
-      await storage.remove('session');
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-          builder: (context) => WelcomePageViewMain()), (route) => false
-      );
-    }else{
-      String error = response['error'] ?? "Failed to Log Out the User.";
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => WelcomePageViewMain()),
+          (route) => false);
+    } else {
+      String error = response['error'] ?? "OTP Authentication Failed.";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
       );

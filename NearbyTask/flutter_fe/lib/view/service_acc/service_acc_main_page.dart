@@ -43,42 +43,41 @@ class _ServiceAccMainState extends State<ServiceAccMain> {
           ProfileScreen()
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10), // Adjust as needed
-        child: SizedBox(
-          height: 70,
-          child: GNav(
-            selectedIndex: _currentIndex,
-            onTabChange: _onItemTapped,
-            backgroundColor: Color(0xFF0272B1),
-            color: Colors.white,
-            activeColor: Colors.white,
-            gap: 8,
-            iconSize: 20,
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10), // Reduce padding
-            tabs: const [
-              GButton(
-                icon: Icons.home,
-                text: 'Home',
-              ),
-              GButton(
-                icon: Icons.schedule,
-                text: 'Schedule',
-              ),
-              GButton(
-                icon: Icons.message,
-                text: 'Chat',
-              ),
-              GButton(
-                icon: Icons.list,
-                text: 'Request',
-              ),
-              GButton(
-                icon: Icons.person,
-                text: 'Profile',
-              )
-            ],
-          ),
+      bottomNavigationBar: SizedBox(
+        height: 70,
+        child: GNav(
+          selectedIndex: _currentIndex,
+          onTabChange: _onItemTapped,
+          backgroundColor: Color(0xFF0272B1),
+          color: Colors.white,
+          activeColor: Colors.white,
+          gap: 8,
+          iconSize: 20,
+
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          //type: BottomNavigationBarType.fixed,
+          tabs: const [
+            GButton(
+              icon: Icons.home,
+              text: 'Home',
+            ),
+            GButton(
+              icon: Icons.schedule,
+              text: 'Schedule',
+            ),
+            GButton(
+              icon: Icons.message,
+              text: 'Chat',
+            ),
+            GButton(
+              icon: Icons.list,
+              text: 'Request',
+            ),
+            GButton(
+              icon: Icons.person,
+              text: 'Profile',
+            )
+          ],
         ),
       ),
     );
