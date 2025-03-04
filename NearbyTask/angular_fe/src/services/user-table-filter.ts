@@ -8,7 +8,8 @@ export class UserTableFilterService {
   statusField = signal<string>('');
   orderField = signal<string>('');
   roleField = signal<string>('');
-  pageSizeField = signal<number>(10);
+  onlineField = signal<string>('');
+  pageSizeField = signal<number>(5);
   currentPageField = signal<number>(1);
   userSizeField = signal(0);
 

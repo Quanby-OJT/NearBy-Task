@@ -25,12 +25,23 @@
       class="rounded-lg py-1 px-4"
       [ngClass]="{
         'bg-blue-500': user.acc_status === 'review',
-        'bg-green-500': user.acc_status === 'active',
-        'bg-red-500': user.acc_status === 'blocked'
+        'bg-green-500': user.acc_status === 'verified',
+        'bg-red-500': user.acc_status === 'blocked',
+        'bg-yellow-500': user.acc_status === 'rejected'
       }"
       [class.cursor-pointer]="user.acc_status === 'review'"
-      (click)="user.acc_status === 'review' ? navigateToUpdateUser() : null">
+      (click)="user.acc_status === 'review' ? navigateToReviewUser(user.user_id) : null">
       {{ user.acc_status }}
+    </span>
+  </td>
+  <td class="border-muted/20 rounded-md border-b px-4 py-3 text-[0.85rem] font-semibold text-white">
+    <span
+      class="rounded-lg py-1 px-4"
+      [ngClass]="{
+        'bg-green-500': user.status == true,
+        'bg-red-500': user.status == false
+      }">
+      {{ user.status ? 'Online' : 'Offline' }}
     </span>
   </td>
   <td class="border-muted/20 border-b px-4 py-3 text-[0.85rem]">

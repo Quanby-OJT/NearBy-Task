@@ -83,6 +83,28 @@ class UserAccountController {
     }
   }
 
+  static async verifyEmail(req: Request, res: Response): Promise<any> {
+    try {
+      const { verificationToken } = req.body;
+
+      const { data, error } = await supabase
+        .from("user")
+        .select("email")
+        .eq("verification_token", verificationToken)
+        .maybeSingle();
+
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+      
+      return res.status(200).json({ message: "Email Successfully Verified. You may now proceed to creating Your New Profile." });
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
   static async deleteUser(req: Request, res: Response): Promise<void> {
     try {
       const userID = req.params.id;

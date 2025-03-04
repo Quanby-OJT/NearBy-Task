@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Menu } from 'src/app/core/constants/menu';
 import { MenuItem, SubMenuItem } from 'src/app/core/models/menu.model';
+import { DataService } from 'src/services/dataStorage';
 
 @Injectable({
   providedIn: 'root',
@@ -13,9 +14,10 @@ export class MenuService implements OnDestroy {
   private _pagesMenu = signal<MenuItem[]>([]);
   private _subscription = new Subscription();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private dataService: DataService) {
     /** Set dynamic menu */
-    this._pagesMenu.set(Menu.pages);
+    // this._pagesMenu.set(Menu.pages);
+    this.filterMenuByRole();
 
     let sub = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -81,6 +83,19 @@ export class MenuService implements OnDestroy {
       queryParams: 'subset',
       fragment: 'ignored',
       matrixParams: 'ignored',
+    });
+  }
+
+  private filterMenuByRole() {
+    this.dataService.getUserRole().subscribe((userRole) => {
+      console.log('This is from ' + userRole);
+
+      const filteredMenu = Menu.pages.map((menu) => ({
+        ...menu,
+        items: menu.items.filter((item) => item.role?.includes(userRole)),
+      }));
+
+      this._pagesMenu.set(filteredMenu);
     });
   }
 

@@ -26,6 +26,11 @@ export class UserTableActionComponent {
     this.filterService.roleField.set(selectElement.value);
   }
 
+  onOnlineChange(value: Event) {
+    const selectElement = value.target as HTMLSelectElement;
+    this.filterService.onlineField.set(selectElement.value);
+  }
+
   // onOrderChange(value: Event) {
   //   const selectElement = value.target as HTMLSelectElement;
   //   this.filterService.orderField.set(selectElement.value);

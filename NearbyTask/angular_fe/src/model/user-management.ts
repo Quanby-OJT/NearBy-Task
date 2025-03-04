@@ -5,11 +5,11 @@ export interface Users {
   middle_name: number;
   acc_status: string;
   email: string;
+  status: boolean;
   user_role: string;
   last_name: string;
   occupation: string;
   image_link: string[];
   selected: boolean;
-  status: number;
   created_at: string;
 }

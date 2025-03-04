@@ -22,11 +22,18 @@
         <option value="2">Tasker</option>
         <option value="3">Moderator</option>
       </select>
-      <select name="status" class="text-muted-foreground w-28! p-2" (change)="onStatusChange($event)">
+      <select name="account" class="text-muted-foreground w-28! p-2" (change)="onStatusChange($event)">
+        <option value="">All Account</option>
+        <option value="1">Verified</option>
+        <option value="2">Review</option>
+        <option value="3">Rejected</option>
+        <option value="4">Blocked</option>
+      </select>
+
+      <select name="status" class="text-muted-foreground w-28! p-2" (change)="onOnlineChange($event)">
         <option value="">All Status</option>
-        <option value="1">Active</option>
-        <option value="2">Blocked</option>
-        <option value="3">Review</option>
+        <option value="1">Online</option>
+        <option value="2">Offline</option>
       </select>
       <!-- <select name="order" class="text-muted-foreground w-28! p-2" (change)="onOrderChange($event)">
         <option value="1">Newest</option>

@@ -28,7 +28,8 @@
     "prettier": "prettier --config ./.prettierrc --write \"src/{app,environments}/**/*{.ts,.html,.scss,.json}\"",
     "prettier:verify": "prettier --config ./.prettierrc --check \"src/{app,environments}/**/*{.ts,.html,.scss,.json}\"",
     "prettier:staged": "pretty-quick --staged",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "nuke:cache": "rm -rf ./node_modules/.cache"
   },
   "private": true,
   "dependencies": {
@@ -47,16 +48,19 @@
     "@tailwindcss/typography": "^0.5.16",
     "angular-svg-icon": "^13.0.0",
     "apexcharts": "^3.35.3",
+    "jspdf": "^3.0.0",
+    "jspdf-autotable": "^5.0.2",
     "ng-apexcharts": "^1.7.1",
     "ng2-search-filter": "^0.5.1",
+    "ngx-cookie-service": "^19.1.2",
     "ngx-sonner": "^2.0.1",
     "rxjs": "~7.4.0",
-    "sweetalert2": "^11.17.2",
+    "sweetalert2": "^11.6.13",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.1.5",
+    "@angular-devkit/build-angular": "^19.1.8",
     "@angular/cli": "^19.1.5",
     "@angular/compiler-cli": "^19.1.4",
     "@playwright/test": "^1.50.1",

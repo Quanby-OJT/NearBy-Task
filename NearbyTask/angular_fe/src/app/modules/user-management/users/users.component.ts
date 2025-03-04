@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, effect, OnInit } from '@angular/core';
+import { Component, effect, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { toast } from 'ngx-sonner';
@@ -12,6 +12,10 @@ import { Router, RouterOutlet } from '@angular/router';
 import { UserAccountService } from 'src/app/services/userAccount';
 import { UserTableFilterService } from 'src/services/user-table-filter';
 import { ButtonComponent } from 'src/app/shared/components/button/button.component';
+import { ReviewComponent } from '../review/review.component';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-users',
@@ -26,14 +30,18 @@ import { ButtonComponent } from 'src/app/shared/components/button/button.compone
     AddUserComponent,
     RouterOutlet,
     ButtonComponent,
+    ReviewComponent,
+    NgIf,
   ],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
 })
 export class UsersComponent implements OnInit {
+  @ViewChild('table', { static: false }) table!: ElementRef;
   public users: any[] = [];
   public PaginationUsers: any[] = [];
   displayedUsers = this.filterService.currentUsers;
+  selectedUserId: Number | null = null;
 
   constructor(
     private http: HttpClient,
@@ -66,6 +74,51 @@ export class UsersComponent implements OnInit {
     this.setUserSize();
   }
 
+  exportPDF() {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'px',
+      format: 'a4',
+    });
+
+    const title = 'Users Report';
+
+    const img = new Image();
+    img.src = 'assets/image/sample.png'; // Replace with your image source
+    doc.addImage(img, 'png', 10, 10, 50, 50); // x, y, width, height
+    doc.line(10, 70, 200, 70); // x1, y1, x2, y2
+    img.onload = () => {
+      doc.addImage(img, 'PNG', 30, 20, 100, 100);
+    };
+
+    // Add Title
+    doc.setFontSize(20);
+    doc.text(title, 170, 45); //w and h
+
+    // Define Table Columns & Rows
+    const columns = ['Fullname', 'Role', 'Email', 'Account', 'Status'];
+    const rows = this.filteredUsers.map((item) => [
+      item.first_name + ' ' + (item.middle_name === null ? '' : item.middle_name) + ' ' + item.last_name,
+      item.user_role,
+      item.email,
+      item.acc_status,
+      item.status,
+    ]);
+
+    // Generate Table
+    autoTable(doc, {
+      startY: 100, // Start table below the title
+      head: [columns],
+      body: rows,
+      theme: 'grid',
+      styles: { fontSize: 8, cellPadding: 5, textColor: 'black' },
+      headStyles: { fillColor: [60, 33, 146], textColor: 'white' },
+    });
+
+    // Save PDF
+    doc.save('User_table.pdf');
+  }
+
   setUserSize(): void {
     this.useraccount.getUsers(1, 10).subscribe((users) => {
       this.filterService.setUsers(this.users);
@@ -92,8 +145,8 @@ export class UsersComponent implements OnInit {
   get filteredUsers(): any[] {
     const search = this.filterService.searchField().toLowerCase() || '';
     console.log('Search Value:', search);
-    const status = this.filterService.statusField();
-    const pageSize = this.filterService.pageSizeField();
+    const account = this.filterService.statusField();
+    const status = this.filterService.onlineField();
     const role = this.filterService.roleField();
     this.PaginationUsers = this.filterService.currentUsers();
     console.log('Current Users:', this.PaginationUsers);
@@ -105,14 +158,16 @@ export class UsersComponent implements OnInit {
         user.email.toLowerCase().includes(search),
     )
       .filter((user) => {
-        if (!status) return true;
-        switch (status) {
+        if (!account) return true;
+        switch (account) {
           case '1':
-            return user.acc_status === 'active';
+            return user.acc_status === 'verified';
           case '2':
-            return user.acc_status === 'blocked';
-          case '3':
             return user.acc_status === 'review';
+          case '3':
+            return user.acc_status === 'rejected';
+          case '4':
+            return user.acc_status === 'blocked';
           default:
             return true;
         }
@@ -130,7 +185,17 @@ export class UsersComponent implements OnInit {
             return true;
         }
       })
-      .slice(0, pageSize);
+      .filter((user) => {
+        if (!status) return true;
+        switch (status) {
+          case '1':
+            return user.status === true;
+          case '2':
+            return user.status === false;
+          default:
+            return true;
+        }
+      });
   }
 
   toggleUsers(checked: boolean): void {
@@ -139,19 +204,6 @@ export class UsersComponent implements OnInit {
       selected: checked,
     }));
   }
-
-  // private handleRequestError(error: any): void {
-  //   const msg = 'An error occurred while fetching users. Loading dummy data as fallback.';
-  //   toast.error(msg, {
-  //     position: 'bottom-right',
-  //     description: error.message,
-  //     action: {
-  //       label: 'Undo',
-  //       onClick: () => console.log('Action!'),
-  //     },
-  //     actionButtonStyle: 'background-color:#DC2626; color:white;',
-  //   });
-  // }
 
   handleRequestError(error: any): void {
     console.error('API Request Error:', error);

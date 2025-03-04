@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fe/controller/authentication_controller.dart';
+import 'package:flutter_fe/controller/profile_controller.dart';
+import 'package:flutter_fe/model/user_model.dart';
+import 'package:flutter_fe/service/api_service.dart';
+import 'package:flutter_fe/view/sign_in/sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -9,7 +15,38 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  //final AuthenticationController _controller = AuthenticationController();
+  final ProfileController _userController = ProfileController();
+  final AuthenticationController _authController = AuthenticationController();
+  final GetStorage storage = GetStorage();
+  UserModel? _user;
+  bool _isLoading = true;
+
+  @override
+  void initState(){
+    super.initState();
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    try {
+      int userId = storage.read("user_id"); // Retrieve user_id from storage
+      print("Retrieved user_id from storage: $userId");
+      UserModel? user = await _userController.getAuthenticatedUser(context, userId.toString());
+      setState(() {
+        _user = user;
+        _isLoading = false;
+
+        // Populate controllers
+        // _userController.firstNameController.text = user?.firstName ?? '';
+        // _userController.lastNameController.text = user?.lastName ?? '';
+        _userController.emailController.text = user?.email ?? '';
+      });
+        } catch (e) {
+      print("Error fetching user data: $e");
+      setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +103,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  controller: _userController.firstNameController,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -108,7 +146,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  controller: _userController.specializationController,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -150,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -192,7 +231,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  enabled: true,
+                                  controller: _userController.emailController,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -234,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -276,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  enabled: false,
+                                  enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
                                       filled: true,
@@ -313,7 +353,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 40),
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    _authController.logout(context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: Color(0xFF0272B1),
