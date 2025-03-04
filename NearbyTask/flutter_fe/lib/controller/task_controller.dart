@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fe/model/task_model.dart';
 import 'package:flutter_fe/service/job_post_service.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-class TaskController {
+class TaskController extends GetxController {
   final JobPostService _jobPostService = JobPostService();
-  final jobIdController = TextEditingController();
   final jobTitleController = TextEditingController();
   final jobSpecializationController = TextEditingController();
   final jobDescriptionController = TextEditingController();
@@ -16,30 +16,41 @@ class TaskController {
   final contactPriceController = TextEditingController();
   final jobRemarksController = TextEditingController();
   final jobTaskBeginDateController = TextEditingController();
-  final contactpriceController = TextEditingController();
+  final storage = GetStorage();
+  var specializations = <String>[].obs;
+  var isLoading = false.obs;
 
   Future<Map<String, dynamic>> postJob() async {
     try {
-      print('Submitting data:'); // Debug print
+      isLoading.value = true;
+
+      // Fetch user session token and ID
+      String? sessionToken = storage.read('session');
+      int? userId = storage.read('user_id');
+
+      if (sessionToken == null || userId == null) {
+        return {'success': false, 'message': 'User session expired. Please log in again.'};
+      }
+
       final task = TaskModel(
-        id: 0, // Set to 0 for new posts
-        title: jobTitleController.text.trim(),
-        specialization: jobSpecializationController.text.trim(),
-        description: jobDescriptionController.text.trim(),
-        location: jobLocationController.text.trim(),
-        duration: jobDurationController.text.trim(),
-        numberOfDays: int.tryParse(jobDaysController.text.trim()) ?? 0,
-        urgency: jobUrgencyController.text.trim(),
-        contactPrice: int.tryParse(contactPriceController.text.trim()) ?? 0,
-        remarks: jobRemarksController.text.trim(),
-        taskBeginDate: jobTaskBeginDateController.text.trim(),
+        title: jobTitleController.text,
+        specialization: jobSpecializationController.text,
+        description: jobDescriptionController.text,
+        location: jobLocationController.text,
+        duration: jobDurationController.text,
+        numberOfDays: int.tryParse(jobDaysController.text) ?? 0,
+        urgency: jobUrgencyController.text,
+        contactPrice: int.tryParse(contactPriceController.text) ?? 0,
+        remarks: jobRemarksController.text,
+        taskBeginDate: jobTaskBeginDateController.text,
       );
 
-      print('Task data: ${task.toJson()}'); // Debug print
-      return await _jobPostService.postJob(task);
+      final response = await _jobPostService.postJob(task, userId);
+      return response;
     } catch (e) {
-      print('Error in postJob: $e'); // Debug print
-      return {'success': false, 'message': 'Error: $e'};
+      return {'success': false, 'message': 'An error occurred: $e'};
+    } finally {
+      isLoading.value = false;
     }
   }
 }
