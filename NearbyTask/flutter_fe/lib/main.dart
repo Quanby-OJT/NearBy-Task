@@ -20,13 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: isLoggedIn ? '/service-home' : '/welcome',
-      getPages: [
-        GetPage(name: '/welcome', page: () => WelcomePageViewMain()),
-        GetPage(name: '/service-home', page: () => ServiceAccMain()),
-        GetPage(name: '/email-confirmation', page: () => EmailConfirmation())
-      ]
-    );
+        debugShowCheckedModeBanner: false,
+        initialRoute: isLoggedIn ? '/service-home' : '/welcome',
+        getPages: [
+          GetPage(name: '/welcome', page: () => WelcomePageViewMain()),
+          GetPage(name: '/service-home', page: () => ServiceAccMain()),
+          GetPage(name: '/email-confirmation', page: () => EmailConfirmation())
+        ]);
   }
 }

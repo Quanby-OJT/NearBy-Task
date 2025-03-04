@@ -22,7 +22,9 @@ class AuthenticationController {
         emailController.text, passwordController.text);
 
     if (response.containsKey('user_id')) {
-      int userId = response['user_id'];
+      userId = response['user_id'];
+      // Store user ID temporarily until OTP verification
+      storage.write('temp_user_id', userId.toString());
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -64,8 +66,15 @@ class AuthenticationController {
     var response = await ApiService.authOTP(userId, otpController.text);
 
     if (response.containsKey('user_id')) {
-      //Code for redirection to OTP Page
       userId = response['user_id'];
+      // After successful OTP verification, store the permanent user ID
+      await storage.write('user_id', userId.toString());
+      // Remove temporary ID
+      await storage.remove('temp_user_id');
+
+      debugPrint(
+          "User ID stored after OTP verification: ${storage.read('user_id')}");
+
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return ServiceAccMain();
       }));
@@ -84,19 +93,56 @@ class AuthenticationController {
   }
 
   Future<void> logout(BuildContext context) async {
-    var response = await ApiService.logout(userId);
+    try {
+      await _handleLogoutNavigation(context);
+      final storedUserId = storage.read('user_id');
+      debugPrint("Stored user ID for logout: $storedUserId");
 
-    if (response.containsKey('message')) {
-      await storage.remove('user_id');
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => WelcomePageViewMain()),
-          (route) => false);
-    } else {
-      String error = response['error'] ?? "OTP Authentication Failed.";
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error)),
-      );
+      if (storedUserId == null || storedUserId.isEmpty) {
+        debugPrint("No user ID found in storage");
+        await _handleLogoutNavigation(context);
+        return;
+      }
+
+      try {
+        final userIdInt = int.parse(storedUserId);
+        if (userIdInt <= 0) {
+          throw FormatException('Invalid user ID value');
+        }
+
+        final response = await ApiService.logout(userIdInt);
+        debugPrint("Logout response: $response");
+
+        if (response.containsKey('message')) {
+          await _handleLogoutNavigation(context);
+        } else {
+          _showError(context, response['error'] ?? "Logout failed");
+        }
+      } catch (parseError) {
+        debugPrint("Error parsing user ID: $parseError");
+        await _handleLogoutNavigation(context);
+      }
+    } catch (e) {
+      debugPrint("Logout error: $e");
+      _showError(context, "An error occurred during logout");
     }
+  }
+
+  Future<void> _handleLogoutNavigation(BuildContext context) async {
+    await storage.erase();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => WelcomePageViewMain()),
+      (route) => false,
+    );
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 }

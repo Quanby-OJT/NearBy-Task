@@ -1,13 +1,14 @@
-// In JobPostService
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_fe/model/task_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_storage/get_storage.dart';
 
 class JobPostService {
+  final storage = GetStorage();
+
   Future<Map<String, dynamic>> postJob(TaskModel task) async {
-    final url = Uri.parse("http://192.168.110.145:5000/connect/addTask");
+    final url = Uri.parse("http://192.168.110.144:5000/connect/addTask");
 
     try {
       final response = await http.post(
@@ -37,18 +38,19 @@ class JobPostService {
 
   Future<List<TaskModel>> fetchAllJobs() async {
     try {
-      String? userId = await getUserId();
+      final userId = await getUserId();
       if (userId == null) {
+        debugPrint("User not authenticated, cannot fetch jobs");
         return [];
       }
 
       // Fetch all jobs
       final response = await http
-          .get(Uri.parse('http://192.168.110.145:5000/connect/displayTask'));
+          .get(Uri.parse('http://192.168.110.144:5000/connect/displayTask'));
 
       // Fetch liked jobs
       final likedJobsResponse = await http.get(Uri.parse(
-          'http://192.168.110.145:5000/connect/displayLikedJob/${userId}'));
+          'http://192.168.110.144:5000/connect/displayLikedJob/${userId}'));
 
       if (response.statusCode == 200 && likedJobsResponse.statusCode == 200) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -81,7 +83,7 @@ class JobPostService {
 
   Future<Map<String, dynamic>> saveLikedJob(int jobId) async {
     try {
-      final url = Uri.parse('http://192.168.110.145:5000/connect/likeJob');
+      final url = Uri.parse('http://192.168.110.144:5000/connect/likeJob');
       String? userId = await getUserId();
 
       if (userId == null || userId.isEmpty) {
@@ -148,7 +150,7 @@ class JobPostService {
         };
       }
 
-      final url = Uri.parse('http://192.168.110.145:5000/connect/unlikeJob');
+      final url = Uri.parse('http://192.168.110.144:5000/connect/unlikeJob');
       debugPrint("Sending unlike request for jobId: $jobId");
 
       final requestBody = {
@@ -186,27 +188,23 @@ class JobPostService {
     }
   }
 
-  // Get user ID from SharedPreferences
+  // Get user ID from GetStorage
   Future<String?> getUserId() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final userId = prefs.getString('user_id');
+    final userId = storage.read('user_id');
+    debugPrint("Getting user ID from storage: $userId");
 
-      // Log the user ID for debugging
-      debugPrint("Current user ID from prefs: $userId");
-
-      return userId;
-    } catch (e) {
-      debugPrint("Error getting user ID: $e");
+    if (userId == null) {
+      debugPrint("No user ID found in storage");
       return null;
     }
+
+    return userId.toString();
   }
 
-  // Get auth token from SharedPreferences if needed
+  // Get auth token from GetStorage if needed
   Future<String?> getAuthToken() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('authToken');
+      return storage.read('authToken');
     } catch (e) {
       debugPrint("Error getting auth token: $e");
       return null;
@@ -223,7 +221,7 @@ class JobPostService {
       }
 
       final url = Uri.parse(
-          "http://192.168.110.145:5000/connect/displayLikedJob/${userId}");
+          "http://192.168.110.144:5000/connect/displayLikedJob/${userId}");
       debugPrint("Fetching liked jobs from: $url");
 
       final response = await http.get(url);
@@ -240,7 +238,7 @@ class JobPostService {
 
           // Fetch full job details for each liked job
           final jobDetailsResponse = await http.get(
-              Uri.parse('http://192.168.110.145:5000/connect/displayTask'));
+              Uri.parse('http://192.168.110.144:5000/connect/displayTask'));
 
           if (jobDetailsResponse.statusCode == 200) {
             final Map<String, dynamic> allJobsData =
@@ -266,6 +264,24 @@ class JobPostService {
     } catch (e) {
       debugPrint("Exception in fetchUserLikedJobs: $e");
       return [];
+    }
+  }
+
+  Future<void> debugSharedPreferences() async {
+    try {
+      // Print all keys
+      final allData = storage.getKeys();
+      debugPrint("All storage keys: $allData");
+
+      // Check if user_id exists and print its value
+      final userId = storage.read('user_id');
+      debugPrint("Has user_id key: ${userId != null}, Value: $userId");
+
+      // Test storage
+      storage.write('test_key', 'test_value');
+      debugPrint("Test key set, value: ${storage.read('test_key')}");
+    } catch (e) {
+      debugPrint("Error debugging storage: $e");
     }
   }
 }

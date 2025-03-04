@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _fetchUserData();
   }
@@ -31,7 +31,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       int userId = storage.read("user_id"); // Retrieve user_id from storage
       print("Retrieved user_id from storage: $userId");
-      UserModel? user = await _userController.getAuthenticatedUser(context, userId.toString());
+      UserModel? user = await _userController.getAuthenticatedUser(
+          context, userId.toString());
       setState(() {
         _user = user;
         _isLoading = false;
@@ -41,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // _userController.lastNameController.text = user?.lastName ?? '';
         _userController.emailController.text = user?.email ?? '';
       });
-        } catch (e) {
+    } catch (e) {
       print("Error fetching user data: $e");
       setState(() => _isLoading = false);
     }
@@ -103,7 +104,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  controller: _userController.firstNameController,
+                                  controller:
+                                      _userController.firstNameController,
                                   enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
@@ -146,7 +148,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  controller: _userController.specializationController,
+                                  controller:
+                                      _userController.specializationController,
                                   enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
