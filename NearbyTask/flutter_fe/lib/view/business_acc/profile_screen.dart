@@ -27,8 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _fetchUserData() async {
     try {
-      int userId = storage.read("user_id"); // Retrieve user_id from storage
-      print("Retrieved user_id from storage: $userId");
+      int userId = storage.read("user_id");
       UserModel? user = await _userController.getAuthenticatedUser(context, userId.toString());
       setState(() {
         _user = user;
