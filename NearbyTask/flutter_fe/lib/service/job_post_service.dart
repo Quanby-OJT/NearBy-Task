@@ -1,120 +1,88 @@
+// In JobPostService
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_fe/model/specialization.dart';
 import 'package:flutter_fe/model/task_model.dart';
-import 'package:flutter_fe/service/auth_service.dart'; // Ensure session token retrieval
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JobPostService {
-  final String url = "http://10.0.2.2:5000/connect";
-  final storage = GetStorage();
+  Future<Map<String, dynamic>> postJob(TaskModel task) async {
+    final url = Uri.parse("http://192.168.110.145:5000/connect/addTask");
 
-  // Method to get headers with Authorization token
-  Future<Map<String, String>> getHeaders() async {
-    String? token = await AuthService.getSessionToken(); // Retrieve token from storage
-
-    if (token == null) {
-      throw Exception("Session expired. Please log in again.");
-    }
-
-    return {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $token",
-      "Access-Control-Allow-Credentials": "true",
-    };
-  }
-
-  // Generalized HTTP Request Method
-  Future<http.Response> makeRequest({
-    required String endpoint,
-    String method = 'GET',
-    Map<String, dynamic>? body,
-  }) async {
     try {
-      final headers = await getHeaders();
-      final uri = Uri.parse('$url/$endpoint');
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(task.toJson()),
+      );
 
-      switch (method) {
-        case 'POST':
-          return await http.post(uri, headers: headers, body: jsonEncode(body));
-        case 'PUT':
-          return await http.put(uri, headers: headers, body: jsonEncode(body));
-        case 'DELETE':
-          return await http.delete(uri, headers: headers);
-        default:
-          return await http.get(uri, headers: headers);
+      var responseBody = jsonDecode(response.body);
+      if (response.statusCode == 201) {
+        return {
+          'success': true,
+          'message':
+              responseBody['message'] ?? 'Unable  to Read Backend Response'
+        };
+      } else {
+        return {
+          'success': false,
+          'message':
+              responseBody['message'] ?? 'Unable  to Read Backend Response'
+        };
       }
     } catch (e) {
-      throw Exception("Network request error: $e");
+      return {'success': false, 'message': 'Error Occured : $e'};
     }
   }
 
-  // Fetch specializations
-  Future<List<SpecializationModel>> getSpecializations() async {
-    print("Fetching SPecializations...");
-    final response = await makeRequest(endpoint: "specializations");
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      if (data.containsKey('tasks')) {
-        return (data['tasks'] as List)
-            .map((spec) => SpecializationModel.fromJson(spec))
-            .toList();
-      }
-    }
-    throw Exception("Error retrieving specializations.");
-  }
-
-  // Post a new job
-  Future<Map<String, dynamic>> postJob(TaskModel task, int userId) async {
-    final response = await makeRequest(
-      endpoint: "addTask",
-      method: "POST",
-      body: {...task.toJson(), 'user_id': userId},
-    );
-
-
-    final responseBody = jsonDecode(response.body);
-    // print(response.statusCode);
-    // print(responseBody);
-    if (response.statusCode == 201) {
-      return {'success': true, 'message': responseBody['message'] ?? 'Job posted successfully.'};
-    } else if(response.statusCode == 400){
-      return {'success': false, 'message': responseBody['errors']};
-    }
-    return {'success': false, 'message': responseBody['error'] ?? 'Job posting failed.'};
-  }
-
-  // Fetch all available jobs
   Future<List<TaskModel>> fetchAllJobs() async {
-    final response = await makeRequest(endpoint: "displayTask");
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      if (jsonData.containsKey('tasks')) {
-        return (jsonData['tasks'] as List).map((task) => TaskModel.fromJson(task)).toList();
+    try {
+      String? userId = await getUserId();
+      if (userId == null) {
+        return [];
       }
-    }
-    throw Exception("Error retrieving jobs.");
-  }
 
-  // Fetch jobs specific to an authenticated client
-  Future<List<TaskModel>> fetchJobToAuthenticatedClient(int userId) async {
-    final response = await makeRequest(endpoint: "displayTask/$userId");
+      // Fetch all jobs
+      final response = await http
+          .get(Uri.parse('http://192.168.110.145:5000/connect/displayTask'));
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      if (data.containsKey('tasks')) {
-        return (data['tasks'] as List).map((task) => TaskModel.fromJson(task)).toList();
+      // Fetch liked jobs
+      final likedJobsResponse = await http.get(Uri.parse(
+          'http://192.168.110.145:5000/connect/displayLikedJob/${userId}'));
+
+      if (response.statusCode == 200 && likedJobsResponse.statusCode == 200) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+        final Map<String, dynamic> likedJobsData =
+            jsonDecode(likedJobsResponse.body);
+
+        if (jsonData.containsKey('tasks') &&
+            likedJobsData.containsKey('tasks')) {
+          final List<dynamic> taskList = jsonData['tasks'];
+          final List<dynamic> likedJobs = likedJobsData['tasks'];
+
+          // Extract liked job IDs
+          final Set<int> likedJobIds =
+              likedJobs.map<int>((job) => job['job_post_id'] as int).toSet();
+
+          // Filter out liked jobs from all jobs
+          final List<TaskModel> filteredTasks = taskList
+              .map((task) => TaskModel.fromJson(task))
+              .where((task) => !likedJobIds.contains(task.id))
+              .toList();
+
+          return filteredTasks;
+        }
       }
+    } catch (e) {
+      print("Error fetching jobs: $e");
     }
-    throw Exception("Error fetching jobs for user.");
+    return [];
   }
 
   Future<Map<String, dynamic>> saveLikedJob(int jobId) async {
     try {
-      String? userId = await storage.read("user_id");
+      final url = Uri.parse('http://192.168.110.145:5000/connect/likeJob');
+      String? userId = await getUserId();
 
       if (userId == null || userId.isEmpty) {
         debugPrint("User not logged in, cannot like job");
@@ -139,7 +107,7 @@ class JobPostService {
       debugPrint("Request body: ${jsonEncode(requestBody)}");
 
       final response = await http.post(
-        Uri.parse('$url/likeJob'),
+        url,
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -180,7 +148,7 @@ class JobPostService {
         };
       }
 
-      final url = Uri.parse('http://192.168.254.114:5000/connect/unlikeJob');
+      final url = Uri.parse('http://192.168.110.145:5000/connect/unlikeJob');
       debugPrint("Sending unlike request for jobId: $jobId");
 
       final requestBody = {
@@ -219,42 +187,43 @@ class JobPostService {
   }
 
   // Get user ID from SharedPreferences
-  // Future<String?> getUserId() async {
-  //   try {
-  //     final prefs = await SharedPreferences.getInstance();
-  //     final userId = prefs.getString('user_id');
-  //     debugPrint("Current user ID from prefs: $userId");
-  //     return userId;
-  //   } catch (e) {
-  //     debugPrint("Error getting user ID: $e");
-  //     return null;
-  //   }
-  // }
-  //
-  // // Get auth token from SharedPreferences if needed
-  // Future<String?> getAuthToken() async {
-  //   try {
-  //     final prefs = await SharedPreferences.getInstance();
-  //     return prefs.getString('authToken');
-  //   } catch (e) {
-  //     debugPrint("Error getting auth token: $e");
-  //     return null;
-  //   }
-  // }
+  Future<String?> getUserId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString('user_id');
+
+      // Log the user ID for debugging
+      debugPrint("Current user ID from prefs: $userId");
+
+      return userId;
+    } catch (e) {
+      debugPrint("Error getting user ID: $e");
+      return null;
+    }
+  }
+
+  // Get auth token from SharedPreferences if needed
+  Future<String?> getAuthToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString('authToken');
+    } catch (e) {
+      debugPrint("Error getting auth token: $e");
+      return null;
+    }
+  }
 
   // Method to fetch liked jobs for a user
   Future<List<TaskModel>> fetchUserLikedJobs() async {
     try {
-      final uri = Uri.parse("$url/likeJob");
-      String? userId = await storage.read("user_id");
-
+      String? userId = await getUserId();
       if (userId == null || userId.isEmpty) {
         debugPrint("Cannot fetch liked jobs: User not logged in");
         return [];
       }
 
       final url = Uri.parse(
-          "http://192.168.254.114:5000/connect/displayLikedJob/${userId}");
+          "http://192.168.110.145:5000/connect/displayLikedJob/${userId}");
       debugPrint("Fetching liked jobs from: $url");
 
       final response = await http.get(url);
@@ -271,7 +240,7 @@ class JobPostService {
 
           // Fetch full job details for each liked job
           final jobDetailsResponse = await http.get(
-              Uri.parse('http://192.168.254.114:5000/connect/displayTask'));
+              Uri.parse('http://192.168.110.145:5000/connect/displayTask'));
 
           if (jobDetailsResponse.statusCode == 200) {
             final Map<String, dynamic> allJobsData =
@@ -299,33 +268,4 @@ class JobPostService {
       return [];
     }
   }
-/// The Session Token is already defined from AuthService.dart where we will use GetStorage to Store Sessions.
-/// 
-/// -Ces
-/// 
-  
-
-  // Get user ID from SharedPreferences
-  // Future<String?> getUserId() async {
-  //   try {
-  //     final userId = storage.get('user_id');
-  //     debugPrint("Current user ID from prefs: $userId");
-  //     return userId;
-  //   } catch (e) {
-  //     debugPrint("Error getting user ID: $e");
-  //     return null;
-  //   }
-  // }
-
-  ///
-
-  // Future<String?> getAuthToken() async {
-  //   try {
-  //     final prefs = await get;
-  //     return prefs.getString('authToken');
-  //   } catch (e) {
-  //     debugPrint("Error getting auth token: $e");
-  //     return null;
-  //   }
-  // }
 }

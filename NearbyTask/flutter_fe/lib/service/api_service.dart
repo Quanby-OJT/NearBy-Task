@@ -8,7 +8,7 @@ import '../model/tasker_model.dart';
 
 class ApiService {
   static const String apiUrl =
-      "http://192.168.254.114:5000/connect"; // Adjust if needed
+      "http://192.168.110.145:5000/connect"; // Adjust if needed
 
   static final http.Client _client = http.Client();
   static final Map<String, String> _cookies = {};

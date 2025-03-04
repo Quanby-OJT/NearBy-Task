@@ -11,20 +11,21 @@ class ProfileController {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController roleController = TextEditingController();
   final TextEditingController middleNameController = TextEditingController();
   // Fetched user inputs End
 
   //Tasker Text Controller
   final TextEditingController bioController = TextEditingController();
-  final TextEditingController specializationController = TextEditingController();
+  final TextEditingController specializationController =
+      TextEditingController();
   final TextEditingController skillsController = TextEditingController();
   final TextEditingController availabilityController = TextEditingController();
   final TextEditingController wageController = TextEditingController();
   final TextEditingController tesdaController = TextEditingController();
   final TextEditingController socialMediaeController = TextEditingController();
-
 
   // Byte for the image start
   // void setImage(File image, String name) {
@@ -43,17 +44,18 @@ class ProfileController {
 
 // Store the inputs Start
     UserModel user = UserModel(
-      firstName: firstNameController.text,
-      middleName: middleNameController.text,
-      lastName: lastNameController.text,
-      email: emailController.text,
-      password: passwordController.text,
-      role: roleController.text
-    );
+        firstName: firstNameController.text,
+        middleName: middleNameController.text,
+        lastName: lastNameController.text,
+        email: emailController.text,
+        password: passwordController.text,
+        role: roleController.text);
     bool success = await ApiService.registerUser(user);
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registration Successful! Please Check your Email to confirm your email.")),
+        SnackBar(
+            content: Text(
+                "Registration Successful! Please Check your Email to confirm your email.")),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -69,13 +71,13 @@ class ProfileController {
         skills: skillsController.text,
         wage_per_hour: double.parse(wageController.text),
         tesda_documents_link: tesdaController.text,
-        social_media_links: socialMediaeController.text
-    );
+        social_media_links: socialMediaeController.text);
 
     //Code to create tasker information.
   }
 
-  Future<UserModel?> getAuthenticatedUser(BuildContext context, String userId) async {
+  Future<UserModel?> getAuthenticatedUser(
+      BuildContext context, String userId) async {
     try {
       var result = await ApiService.fetchAuthenticatedUser(userId);
 
