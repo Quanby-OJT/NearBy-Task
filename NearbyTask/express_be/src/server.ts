@@ -14,15 +14,24 @@ dotenv.config();
 const app: Application = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Accept']
+}));
+
 app.use(express.json());
 app.use(session({ 
   secret: session_key,
   resave: false,
   saveUninitialized: false,
-  cookie: {maxAge: 1000 * 60 * 60} //1 hour only
-}))
-
+  cookie: {
+    maxAge: 1000 * 60 * 60,
+    secure: false,
+    httpOnly: true
+  }
+}));
 
 // Routes
 app.use(

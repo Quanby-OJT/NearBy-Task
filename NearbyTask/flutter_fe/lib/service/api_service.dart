@@ -1,5 +1,6 @@
 // service/api_service.dart
 
+import 'package:flutter/material.dart';
 import 'package:flutter_fe/model/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -8,7 +9,7 @@ import '../model/tasker_model.dart';
 
 class ApiService {
   static const String apiUrl =
-      "http://192.168.110.145:5000/connect"; // Adjust if needed
+      "http://192.168.110.144:5000/connect"; // Adjust if needed
 
   static final http.Client _client = http.Client();
   static Map<String, String> _cookies = {};
@@ -196,31 +197,41 @@ class ApiService {
 
   static Future<Map<String, dynamic>> logout(int userId) async {
     try {
-      final response = await http.post(
+      debugPrint('Attempting logout for user ID: $userId');
+
+      if (userId <= 0) {
+        return {"error": "Invalid user ID"};
+      }
+
+      final requestBody = {
+        "user_id": userId, // Send as integer, not string
+        "status": 0 // Use numeric status for database compatibility
+      };
+
+      debugPrint('Request Body: ${json.encode(requestBody)}');
+
+      final response = await _client.post(
         Uri.parse("$apiUrl/logout"),
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          "user_id": userId,
-        }),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: json.encode(requestBody),
       );
 
-      print('Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-
-      var data = json.decode(response.body);
+      debugPrint('Logout Status Code: ${response.statusCode}');
+      debugPrint('Logout Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        return {"message": data['message']};
+        _cookies.clear();
+        return {"message": "Logged out successfully"};
       } else {
-        return {
-          "error": data.containsKey('error')
-              ? data['error']
-              : "Error while Logging Out"
-        };
+        var data = json.decode(response.body);
+        return {"error": data['message'] ?? "Failed to logout"};
       }
     } catch (e) {
-      print('Error: $e');
-      return {"error": "An error occured: $e"};
+      debugPrint('Logout Error: $e');
+      return {"error": "Connection error during logout"};
     }
   }
 }
