@@ -1,6 +1,7 @@
 import express, { Application } from "express";
 import cors from "cors";
 import { port, session_key } from "./config/configuration";
+import { port, session_key } from "./config/configuration";
 import server from "./routes/apiRoutes";
 import userRoute from "./routes/userRoutes";
 import userAccountRoute from "./routes/userAccountRoutes";
@@ -8,6 +9,7 @@ import taskRoutes from "./routes/taskRoutes";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
 import session from "express-session";
+import likeRoutes from "./routes/likeRoutes";
 
 dotenv.config();
 const app: Application = express();
@@ -29,7 +31,8 @@ app.use(
   userAccountRoute,
   userRoute,
   taskRoutes,
-  authRoutes
+  authRoutes,
+  likeRoutes
 );
 
 // Start server

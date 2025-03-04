@@ -7,7 +7,8 @@ import '../model/user_model.dart';
 import '../model/tasker_model.dart';
 
 class ApiService {
-  static const String apiUrl = "http://10.0.2.2:5000/connect"; // Adjust if needed
+  static const String apiUrl =
+      "http://192.168.254.114:5000/connect"; // Adjust if needed
 
   static final http.Client _client = http.Client();
   static final Map<String, String> _cookies = {};
@@ -29,7 +30,8 @@ class ApiService {
 
   // Function to add cookies to requests
   static Map<String, String> _getHeaders() {
-    String cookieHeader = _cookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
+    String cookieHeader =
+        _cookies.entries.map((e) => '${e.key}=${e.value}').join('; ');
     return {
       "Content-Type": "application/json",
       "Accept": "application/json",
@@ -39,12 +41,12 @@ class ApiService {
 
   static Future<bool> registerUser(UserModel user) async {
     //Tell Which Route the Backend we going to Use
-    var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/create-new-user"));
+    var request =
+        http.MultipartRequest("POST", Uri.parse("$apiUrl/create-new-user"));
 
     // Add text fields
     request.fields["first_name"] = user.firstName;
-    request.fields["middle_name"] =
-    request.fields["last_name"] = user.lastName;
+    request.fields["middle_name"] = request.fields["last_name"] = user.lastName;
     request.fields["email"] = user.email;
     request.fields["password"] = user.password;
     request.fields["user_role"] = user.role;
@@ -68,7 +70,8 @@ class ApiService {
   //   var request = http.MultipartRequest("POST", Uri.parse("$apiUrl/"))
   // }
 
-  static Future<Map<String, dynamic>> fetchAuthenticatedUser(String userId) async {
+  static Future<Map<String, dynamic>> fetchAuthenticatedUser(
+      String userId) async {
     try {
       final response = await http.get(Uri.parse("$apiUrl/getUserData/$userId"));
       var data = json.decode(response.body);
@@ -77,14 +80,12 @@ class ApiService {
         if (data.containsKey('user')) {
           //print("User Data: " + data['user'].toString());
           return {"user": UserModel.fromJson(data['user'])};
-        }
-        else {
+        } else {
           return {"error": "User not found"};
         }
-      } else if(response.statusCode == 401){
-        return {"error": data['errors'] };
-      }
-      else {
+      } else if (response.statusCode == 401) {
+        return {"error": data['errors']};
+      } else {
         return {"error": data['error'] ?? "Failed to fetch user data"};
       }
     } catch (e) {
@@ -104,7 +105,7 @@ class ApiService {
         }),
       );
 
-      _updateCookies(response);  // 🔥 Store session cookies here
+      _updateCookies(response); // 🔥 Store session cookies here
 
       var data = json.decode(response.body);
 
@@ -163,7 +164,7 @@ class ApiService {
     try {
       final response = await _client.post(
         Uri.parse("$apiUrl/otp-auth"),
-        headers: _getHeaders(),  // 🔥 Send stored cookies
+        headers: _getHeaders(), // 🔥 Send stored cookies
         body: json.encode({
           "user_id": userId,
           "otp": otp,
@@ -172,8 +173,6 @@ class ApiService {
 
       //print('Sent Headers: ${_getHeaders()}'); // Debugging
       _updateCookies(response); // 🔥 Store session cookies
-
-
 
       var data = json.decode(response.body);
       print('Decoded Data Type: ${data.runtimeType}');
@@ -214,14 +213,16 @@ class ApiService {
 
       var data = json.decode(response.body);
 
-
-
       if (response.statusCode == 200) {
         return {"message": data['message']};
       } else {
-        return {"error": data.containsKey('error') ? data['error'] : "Error while Logging Out"};
+        return {
+          "error": data.containsKey('error')
+              ? data['error']
+              : "Error while Logging Out"
+        };
       }
-    }catch(e){
+    } catch (e) {
       print('Error: $e');
       return {"error": "An error occured: $e"};
     }

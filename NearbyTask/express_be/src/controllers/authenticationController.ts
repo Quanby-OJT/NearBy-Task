@@ -3,6 +3,11 @@ import { Auth } from "../models/authenticationModel";
 import bcrypt from "bcrypt";
 import generateOTP from "otp-generator";
 import { mailer } from "../config/configuration";
+declare module "express-session" {
+  interface SessionData {
+    userId: string;
+  }
+}
 
 class AuthenticationController {
   static async loginAuthentication(req: Request, res: Response): Promise<void> {
@@ -11,25 +16,13 @@ class AuthenticationController {
       const verifyLogin = await Auth.authenticateLogin(email);
 
       if (!verifyLogin) {
-        res
-          .status(404)
-          .json({
-            error:
-              "Sorry, your email does not exist. Maybe you can sign up to find your clients/taskers.",
-          });
+        res.status(404).json({ error: "Sorry, your email does not exist. Maybe you can sign up to find your clients/taskers." });
         return;
       }
 
-      //console.log(await bcrypt.hash(password, 10))
-
-      const isPasswordValid = await bcrypt.compare(
-        password,
-        verifyLogin.hashed_password
-      );
+      const isPasswordValid = await bcrypt.compare(password, verifyLogin.hashed_password);
       if (!isPasswordValid) {
-        res
-          .status(414)
-          .json({ error: "Password is incorrect. Please try again." });
+        res.status(414).json({ error: "Password is incorrect. Please try again." });
         return;
       }
 
@@ -70,12 +63,7 @@ class AuthenticationController {
       res.status(200).json({ user_id: verifyLogin.user_id });
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .json({
-          error:
-            "An error occurred while logging in. If the issue persists, contact Us.",
-        });
+      res.status(500).json({ error: "An error occurred while logging in. If the issue persists, contact the Administrator." });
     }
   }
 
@@ -92,19 +80,10 @@ class AuthenticationController {
 
       await Auth.createOTP({ user_id: userId, two_fa_code: otp });
 
-      res
-        .status(200)
-        .json({
-          message: "Successfully Regenrated OTP. Please Check Your Email.",
-        });
+      res.status(200).json({ message: "Successfully Regenerated OTP. Please Check Your Email." });
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .json({
-          error:
-            "An Error Occured while regenearating OTP. Please Try Again. If Issue persists, contact the Administrator.",
-        });
+      res.status(500).json({ error: "An Error Occurred while regenerating OTP. Please Try Again. If Issue persists, contact the Administrator." });
     }
   }
 
@@ -124,10 +103,8 @@ class AuthenticationController {
       }
 
       if (Date.parse(verifyOtp.two_fa_code_expires_at) <= Date.now()) {
-        res
-          .status(401)
-          .json({ error: "Your OTP has been expired. Please Sign In again." });
-        await Auth.resetOTP(user_id);
+        res.status(401).json({ error: "Your OTP has expired. Please Sign In again." });
+        return;
       }
 
       const session_id = req.sessionID
