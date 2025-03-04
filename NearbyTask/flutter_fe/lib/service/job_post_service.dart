@@ -11,12 +11,17 @@ class JobPostService {
   static final String apiUrl = "http://10.0.2.2:5000/connect";
 
   Future<Map<String, dynamic>> postJob(TaskModel task, int userId) async {
-    final url = Uri.parse("http://192.168.110.145:5000/connect/addTask");
+    final url = Uri.parse("$apiUrl/addTask");
+    final String token = await AuthService.getSessionToken();
 
     try {
       final response = await http.post(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authentication": "Bearer $token",
+          "Access-Control-Allow-Credentials": "true"
+        },
         body: jsonEncode(task.toJson()),
       );
 
@@ -116,8 +121,9 @@ class JobPostService {
 
   Future<Map<String, dynamic>> saveLikedJob(int jobId) async {
     try {
-      final url = Uri.parse('http://192.168.110.145:5000/connect/likeJob');
+      final url = Uri.parse('$apiUrl/likeJob');
       String? userId = await getUserId();
+      final String token = await AuthService.getSessionToken();
 
       if (userId == null || userId.isEmpty) {
         debugPrint("User not logged in, cannot like job");
@@ -146,6 +152,7 @@ class JobPostService {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
+          "Authentication": "Bearer "
         },
         body: jsonEncode(requestBody),
       );
@@ -183,7 +190,7 @@ class JobPostService {
         };
       }
 
-      final url = Uri.parse('http://192.168.110.145:5000/connect/unlikeJob');
+      final url = Uri.parse('$apiUrl/unlikeJob');
       debugPrint("Sending unlike request for jobId: $jobId");
 
       final requestBody = {
@@ -258,7 +265,7 @@ class JobPostService {
       }
 
       final url = Uri.parse(
-          "http://192.168.110.145:5000/connect/displayLikedJob/${userId}");
+          "$apiUrl/displayLikedJob/${userId}");
       debugPrint("Fetching liked jobs from: $url");
 
       final response = await http.get(url);

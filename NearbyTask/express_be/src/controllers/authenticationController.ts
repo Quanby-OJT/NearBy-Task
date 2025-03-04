@@ -108,7 +108,7 @@ class AuthenticationController {
       }
 
       const session_id = req.sessionID
-      console.log(session_id)
+      //console.log(session_id)
 
       await Auth.resetOTP(user_id)
       const userRole = await Auth.getUserRole(user_id)
@@ -124,7 +124,7 @@ class AuthenticationController {
               if (err) {
                   console.error("Session save error:", err);
               }
-              console.log("Session after save:", req.session);
+              //console.log("Session after save:", req.session);
               res.status(200).json({ user_id: user_id, user_role: userRole.user_role, session_id: session_id});
           });
       });
@@ -144,12 +144,12 @@ class AuthenticationController {
         res.clearCookie("cookie.sid");
         
           res.status(200).json({ message: "Successfully logged out." });
-          req.session.regenerate((error) => {
-              if (error) {
-                  res.status(500).json({ error: "An error occurred while logging out. Please try again." })
-                  return
-              }
-          })
+          // req.session.regenerate((error) => {
+          //     if (error) {
+          //         res.status(500).json({ error: "An error occurred while logging out. Please try again." })
+          //         return
+          //     }
+          // })
       })
     } else {
       res.status(400).json({ error: "User is not logged in." });

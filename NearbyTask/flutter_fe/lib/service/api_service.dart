@@ -1,14 +1,18 @@
 // service/api_service.dart
 
+import 'package:flutter_fe/model/client_model.dart';
 import 'package:flutter_fe/model/user_model.dart';
 import 'package:flutter_fe/service/auth_service.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../model/user_model.dart';
 import '../model/tasker_model.dart';
+import 'package:flutter/material.dart';
 
 class ApiService {
   static const String apiUrl = "http://10.0.2.2:5000/connect"; // Adjust if needed
+  static final storage = GetStorage();
 
 
   static final http.Client _client = http.Client();
@@ -81,15 +85,20 @@ class ApiService {
             "Content-Type": "application/json"
           }
       );
+
+      debugPrint("Retreived Data: " + response.body);
       var data = json.decode(response.body);
-      print("Retrieved Data: " + data.toString());
 
       if (response.statusCode == 200) {
-        if (data.containsKey('user')) {
-          print(UserModel.fromJson(data['user']));
-          return {"user": UserModel.fromJson(data['user'])};
-        } else {
-          return {"error": "User not found"};
+        UserModel user = UserModel.fromJson(data['user']);
+        if(data['user']['user_role'] == "Client"){
+          ClientModel client = ClientModel.fromJson(data['client']);
+          return{"user": user, "client": client};
+        }else if(data['user']['user_role'] == "Tasker"){
+          TaskerModel tasker = TaskerModel.fromJson(data['tasker']);
+          return{"user": user, "tasker": tasker};
+        }else{
+          return{"error": data['error'] ?? "An Error Occured while retrieving data"};
         }
       } else {
         return {"error": data['error'] ?? "Failed to fetch user data"};
@@ -181,7 +190,8 @@ class ApiService {
       _updateCookies(response); // 🔥 Store session cookies
 
       var data = json.decode(response.body);
-      print('Decoded Data Type: ${data.runtimeType}');
+      // print('Decoded Data Type: ${data.runtimeType}');
+      // print("Data: $data");
 
       if (response.statusCode == 200) {
         return {"user_id": data['user_id'], "role": data['user_role'], "session": data['session_id']};

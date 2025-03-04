@@ -128,21 +128,19 @@ class UserAccountController {
 
   static async getUserData(req: Request, res: Response): Promise<void> {
     try {
-      const userID = req.params.id;
-      console.log(userID);
+      const userID = req.params.id; 
+      console.log("Retrieving User Data for..." + userID)
 
-      const { data, error } = await supabase
-        .from("user")
-        .select("first_name, middle_name, last_name, birthdate, email, acc_status, user_role")
-        .eq("user_id", userID)
-        .single();
+      const userData = await UserAccount.showUser(userID);
 
-      if (error) {
-        res.status(500).json({ error: error.message });
-      } else if (!data) {
-        res.status(404).json({ error: "User not found" });
-      } else {
-        res.status(200).json({ user: data });
+      if(userData.user_role === "Client"){
+        const clientData = await UserAccount.showClient(userID);
+        console.log(clientData)
+        res.status(200).json({ user: userData, client: clientData });
+      }else if(userData.user_role === "Tasker"){
+        const taskerData = await UserAccount.showTasker(userID);
+        console.log(taskerData)
+        res.status(200).json({ user: userData, tasker: taskerData });
       }
     } catch (error) {
       res.status(500).json({

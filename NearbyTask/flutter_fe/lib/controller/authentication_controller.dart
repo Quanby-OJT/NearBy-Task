@@ -60,16 +60,17 @@ class AuthenticationController {
 
   Future<void> otpAuth(BuildContext context) async {
     var response = await ApiService.authOTP(userId, otpController.text);
+    debugPrint(response.toString());
 
     if(response.containsKey('user_id') && response.containsKey('role') && response.containsKey('session')){
       await storage.write('user_id', response['user_id']);
       await storage.write('role', response['role']); //If the user is logged in to the app, this will be the determinant if where they will be assigned.
       await storage.write('session', response['session']);
-      if(response['role'] == "client"){
+      if(response['role'] == "Client"){
         Navigator.push(context, MaterialPageRoute(builder: (context){
           return BusinessAccMain();
         }));
-      }else if(response['role'] == "tasker"){
+      }else if(response['role'] == "Tasker"){
         Navigator.push(context, MaterialPageRoute(builder: (context){
           return ServiceAccMain();
         }));
