@@ -22,6 +22,4 @@ export class TaskService {
     return this.http.put(`http://localhost:5000/connect/disableTask/${id}`, {}); 
   }
   
-  
-  
 }
