@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _fetchUserData();
   }
@@ -112,7 +112,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  controller: _userController.firstNameController,
+                                  controller:
+                                      _userController.firstNameController,
                                   enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(
@@ -155,7 +156,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 TextField(
-                                  controller: _userController.specializationController,
+                                  controller:
+                                      _userController.specializationController,
                                   enabled: true,
                                   cursorColor: Color(0xFF0272B1),
                                   decoration: InputDecoration(

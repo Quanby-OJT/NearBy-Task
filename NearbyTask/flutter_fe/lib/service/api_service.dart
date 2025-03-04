@@ -224,23 +224,19 @@ class ApiService {
         }),
       );
 
-      print('Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-
-      var data = json.decode(response.body);
+      debugPrint('Logout Status Code: ${response.statusCode}');
+      debugPrint('Logout Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        return {"message": data['message']};
+        _cookies.clear();
+        return {"message": "Logged out successfully"};
       } else {
-        return {
-          "error": data.containsKey('error')
-              ? data['error']
-              : "Error while Logging Out"
-        };
+        var data = json.decode(response.body);
+        return {"error": data['message'] ?? "Failed to logout"};
       }
     } catch (e) {
-      print('Error: $e');
-      return {"error": "An error occured: $e"};
+      debugPrint('Logout Error: $e');
+      return {"error": "Connection error during logout"};
     }
   }
 }

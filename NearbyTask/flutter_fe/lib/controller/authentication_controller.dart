@@ -20,7 +20,9 @@ class AuthenticationController {
         emailController.text, passwordController.text);
 
     if (response.containsKey('user_id')) {
-      int userId = response['user_id'];
+      userId = response['user_id'];
+      // Store user ID temporarily until OTP verification
+      storage.write('temp_user_id', userId.toString());
       Navigator.push(
         context,
         MaterialPageRoute(
