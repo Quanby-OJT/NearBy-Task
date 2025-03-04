@@ -32,6 +32,7 @@ class _JobPostPageState extends State<JobPostPage> {
 
   Future<void> fetchSpecialization() async{
     try {
+      print("Fetching SPecializations...");
       List<SpecializationModel> fetchedSpecializations =
       await jobPostService.getSpecializations(); // Fetch from API
       setState(() {

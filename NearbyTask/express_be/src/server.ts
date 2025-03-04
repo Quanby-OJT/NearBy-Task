@@ -1,7 +1,6 @@
 import express, { Application } from "express";
 import cors from "cors";
 import { port, session_key } from "./config/configuration";
-import { port, session_key } from "./config/configuration";
 import server from "./routes/apiRoutes";
 import userRoute from "./routes/userRoutes";
 import userAccountRoute from "./routes/userAccountRoutes";
