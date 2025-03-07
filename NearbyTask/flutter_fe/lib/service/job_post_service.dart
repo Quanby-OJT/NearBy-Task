@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 
 class JobPostService {
   static final String apiUrl = "http://10.0.2.2:5000/connect";
+  static final storage = GetStorage();
 
   Future<Map<String, dynamic>> postJob(TaskModel task, int userId) async {
     final url = Uri.parse("$apiUrl/addTask");
